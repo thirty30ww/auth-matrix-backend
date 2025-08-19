@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+spring:
+  web:
+    resources:
+      add-mappings: false  # 禁用默认的静态资源映射，确保NoHandlerFoundException可以被触发
+  servlet:
+    multipart:
+      max-file-size: 10MB      # 单个文件最大大小
+      max-request-size: 20MB   # 整个请求最大大小
+      file-size-threshold: 2KB # 文件写入磁盘的阈值
+  jackson:
+    default-property-inclusion: non_null  # 设置JSON序列化时忽略null值
+    date-format: yyyy-MM-dd HH:mm:ss  # 日期格式（仅对Date类型有效）
+    time-zone: GMT+8 # 时间 zone
+    serialization:
+      write-dates-as-timestamps: false  # 禁用时间戳格式
+  devtools:
+    restart:
+      enabled: true  # 开启热部署
+  datasource:
+    dynamic:
+      primary: pp_user
+      strict: false   # 开启严格模式,默认false（非严格模式）. 严格模式下未匹配到数据源会抛出异常,非严格模式下则使用默认数据源.
+      datasource:
+        pp_user:
+          url: ${DB_URL:jdbc:mysql://localhost:3306/pp_user?allowPublicKeyRetrieval=true&useSSL=false}
+          username: ${DB_USERNAME:your_db_username}
+          password: ${DB_PASSWORD:your_db_password}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+jwt:
+  secret: ${JWT_SECRET:your_jwt_secret_key_here}  # JWT密钥，请使用安全的256位随机字符串
+  expiration: ${JWT_EXPIRATION:86400000}  # 24小时, 单位: 毫秒
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7天, 单位: 毫秒
+
+logging:
+  level:
+    root: info
+    com.thirty: debug  # 设置项目包路径的日志级别为debug
+
+mybatis-plus:
+  global-config:
+    banner: false  # 关闭MyBatis-Plus的启动logo
+
+aliyun:
+  oss:
+    endpoint: ${ALIYUN_OSS_ENDPOINT:your_oss_endpoint}  # 阿里云OSS服务的Endpoint
+    accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID:your_access_key_id}  # 阿里云OSS服务的AccessKeyId
+    accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:your_access_key_secret}  # 阿里云OSS服务的AccessKeySecret
+    bucketName: ${ALIYUN_OSS_BUCKET_NAME:your_bucket_name}  # 阿里云OSS服务的BucketName
+    domain: ${ALIYUN_OSS_DOMAIN:your_oss_domain}  # 阿里云OSS服务的域名
