@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * 用户管理
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -138,18 +141,5 @@ public class UserController {
         // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
         return ResultDTO.of(UserResultCode.USER_LIST_GET_SUCCESS, userService.getUserList(username, request));
-    }
-
-    /**
-     * 获取角色列表
-     * @param isChild 是否仅获取子角色列表
-     * @return 角色列表
-     */
-    @GetMapping("/role/list")
-    public ResultDTO<List<Role>> getRoleList(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "isChild", defaultValue = "false") Boolean isChild) {
-        // 从Authorization头中提取用户名
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-
-        return ResultDTO.of(UserResultCode.ROLE_LIST_GET_SUCCESS, userService.getRoleList(username, isChild));
     }
 }

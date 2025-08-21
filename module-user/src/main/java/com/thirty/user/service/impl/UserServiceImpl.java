@@ -74,7 +74,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public boolean validateRolesContainChildRoles(String username, List<Integer> roleIds) {
-        List<Role> roleList = getRoleList(username, true);
+        List<Role> roleList = roleService.getRoleList(username, true);
 
         // 获取当前用户有权限的角色ID列表
         List<Integer> permittedRoleIds = userUtil.getRoleIdsFromRoles(roleList);
@@ -260,7 +260,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         IPage<UserVO> userList = userMapper.getUserList(page, params);
 
         // 获取当前用户有权限的角色ID列表
-        List<Role> roleList = getRoleList(username, true);
+        List<Role> roleList = roleService.getRoleList(username, true);
         List<Integer> permittedRoleIds = userUtil.getRoleIdsFromRoles(roleList);
 
         // 校验用户权限
@@ -269,22 +269,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return userList;
     }
 
-    /**
-     * 获取角色列表
-     * @param username 用户名
-     * @param isChild 是否仅获取子角色
-     * @return 角色列表
-     */
-    @Override
-    public List<Role> getRoleList(String username, Boolean isChild) {
-        // 从数据库中查询用户
-        User user = userUtil.getUserByUsername(username);
 
-        // 从数据库中查询用户角色
-        List<Role> roles = userRoleService.getRolesByUserId(user.getId());
-
-        return isChild ? roleService.getChildRoleList(roles) : roleService.list();
-    }
 }
 
 

@@ -2,8 +2,12 @@ package com.thirty.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.model.entity.Role;
+import com.thirty.user.model.entity.User;
 import com.thirty.user.service.RoleService;
 import com.thirty.user.mapper.RoleMapper;
+import com.thirty.user.service.UserRoleService;
+import com.thirty.user.utils.UserUtil;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,6 +21,29 @@ import java.util.stream.Collectors;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
     implements RoleService{
+
+    @Resource
+    private UserRoleService userRoleService;
+
+    @Resource
+    private UserUtil userUtil;
+
+    /**
+     * 获取角色列表
+     * @param username 用户名
+     * @param isChild 是否仅获取子角色
+     * @return 角色列表
+     */
+    @Override
+    public List<Role> getRoleList(String username, Boolean isChild) {
+        // 从数据库中查询用户
+        User user = userUtil.getUserByUsername(username);
+
+        // 从数据库中查询用户角色
+        List<Role> roles = userRoleService.getRolesByUserId(user.getId());
+
+        return isChild ? getChildRoleList(roles) : list();
+    }
 
     /**
      * 获取子角色列表

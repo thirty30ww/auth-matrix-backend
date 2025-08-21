@@ -12,6 +12,8 @@ import java.util.List;
 */
 public interface RoleService extends IService<Role> {
 
+    List<Role> getRoleList(String username, Boolean isChild);
+
     /**
      * 获取子角色列表
      * @param roles 当前用户的角色列表

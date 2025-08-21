@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 页面管理
+ */
 @RestController
 @RequestMapping("/view")
 public class ViewController {

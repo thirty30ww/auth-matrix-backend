@@ -90,10 +90,4 @@ public interface UserService extends IService<User> {
      * @return 用户列表
      */
     IPage<UserVO> getUserList(String username, PageQueryDTO<GetUserListDTO> request);
-
-    /**
-     * 获取角色列表
-     * @return 角色列表
-     */
-    List<Role> getRoleList(String username, Boolean isChild);
 }

@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import static com.thirty.common.utils.FileUtil.*;
 
 /**
- * OSS文件上传控制器
+ * 文件上传
  */
 @RestController
 @RequestMapping("/file")
