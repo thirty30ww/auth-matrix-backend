@@ -9,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ViewResultCode implements IResult {
 
-    GET_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取目录树成功"),
-    GET_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取视图列表成功"),
+    GET_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取菜单树成功"),
+    GET_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取页面列表成功"),
     ;
 
     private final Integer code;

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.thirty.common.api.SettingApi;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.converter.UserDtoConverter;
@@ -53,6 +54,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private SettingApi settingApi;
 
     /**
      * 检查用户是否存在
@@ -264,7 +268,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         List<Integer> permittedRoleIds = userUtil.getRoleIdsFromRoles(roleList);
 
         // 校验用户权限
-        userUtil.validateHasPermission(permittedRoleIds, userList);
+        userUtil.setHasPermission(permittedRoleIds, userList);
+
+        // 是否仅显示有权限操作的用户
+        if (settingApi.isPermissionDisplay()) {
+            // 过滤出有权限的用户
+            userUtil.filterHasPermission(permittedRoleIds, userList);
+        }
         
         return userList;
     }

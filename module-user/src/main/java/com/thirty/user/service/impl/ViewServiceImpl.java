@@ -51,7 +51,7 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
     public List<View> getViewList(String keyword) {
         QueryWrapper<View> wrapper = new QueryWrapper<>();
         wrapper.like("name", keyword)
-                .ne("type", ViewType.DIRECTORY.getCode()); // 筛选不为目录的节点
+                .ne("type", ViewType.DIRECTORY); // 筛选不为目录的节点
         return list(wrapper);
     }
 
@@ -62,7 +62,7 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
     private List<ViewVO> getMenuTree() {
         // 菜单节点
         QueryWrapper<View> menuWrapper = new QueryWrapper<>();
-        menuWrapper.ne("type", ViewType.PAGE.getCode());    // 筛选不为页面的节点
+        menuWrapper.ne("type", ViewType.PAGE);    // 筛选不为页面的节点
         List<View> nodes = list(menuWrapper);
 
         // 创建以ID为键的视图Map，提高查找效率
@@ -79,7 +79,7 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
     private List<ViewVO> getNotMenuNode() {
         // 非菜单节点
         QueryWrapper<View> notMenuWrapper = new QueryWrapper<>();
-        notMenuWrapper.eq("type", ViewType.PAGE.getCode()); // 筛选为页面的节点
+        notMenuWrapper.eq("type", ViewType.PAGE); // 筛选为页面的节点
 
         List<View> notMenus = list(notMenuWrapper);
         return ViewDtoConverter.INSTANCE.toViewResponseList(notMenus);

@@ -66,17 +66,17 @@ public class ViewUtil {
     public static List<ViewVO> getTreeByParentNodeId(List<View> nodes, Map<Integer, View> nodeMap, Integer parentNodeId) {
         // 按照节点顺序构建树
         View currentNode = findFirstNode(nodes, parentNodeId);
-        List<ViewVO> viewRespons = new ArrayList<>();
+        List<ViewVO> response = new ArrayList<>();
 
         while (currentNode != null) {
             ViewVO viewVO = ViewDtoConverter.INSTANCE.toViewResponse(currentNode);
             viewVO.setChildren(getTreeByParentNodeId(nodes, nodeMap, currentNode.getId()));
-            viewRespons.add(viewVO);
+            response.add(viewVO);
 
             Integer nextNodeId = currentNode.getBehindNodeId();
             currentNode = nextNodeId != 0 ? nodeMap.get(nextNodeId) : null;
         }
 
-        return viewRespons;
+        return response;
     }
 }

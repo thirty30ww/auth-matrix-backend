@@ -51,7 +51,7 @@ public class UserUtil {
      * @param permittedRoleIds 权限角色ID列表
      * @param userList 用户列表
      */
-    public void validateHasPermission(List<Integer> permittedRoleIds, IPage<UserVO> userList) {
+    public void setHasPermission(List<Integer> permittedRoleIds, IPage<UserVO> userList) {
         // 遍历每个UserVO，检查权限
         for (UserVO userVO : userList.getRecords()) {
             // 获取列表用户的角色
@@ -64,5 +64,14 @@ public class UserUtil {
             boolean hasPermission = new HashSet<>(permittedRoleIds).containsAll(userRoleIds);
             userVO.setHasPermission(hasPermission);
         }
+    }
+
+    /**
+     * 过滤出用户列表中有权限的用户
+     * @param permittedRoleIds 权限角色ID列表
+     * @param userList 用户列表
+     */
+    public void filterHasPermission(List<Integer> permittedRoleIds, IPage<UserVO> userList) {
+        userList.getRecords().removeIf(userVO -> !userVO.getHasPermission());
     }
 }

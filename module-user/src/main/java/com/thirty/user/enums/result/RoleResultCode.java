@@ -8,7 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum RoleResultCode implements IResult {
-    ROLE_LIST_GET_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "角色列表获取成功"),
+    ROLE_LIST_GET_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取角色列表成功"),
+    ROLE_TREE_GET_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取角色树成功"),
     ;
 
     private final Integer code;
