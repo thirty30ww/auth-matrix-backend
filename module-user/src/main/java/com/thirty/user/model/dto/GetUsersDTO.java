@@ -9,7 +9,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class GetUserListDTO extends BaseListDTO {
+public class GetUsersDTO extends BaseListDTO {
     private String username;
     private String name;
     private UserSex sex;

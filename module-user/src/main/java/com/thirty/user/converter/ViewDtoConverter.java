@@ -16,17 +16,17 @@ public interface ViewDtoConverter {
     ViewDtoConverter INSTANCE = Mappers.getMapper(ViewDtoConverter.class);
     
     /**
-     * 将View对象转换为ViewResponse对象
+     * 将View对象转换为ViewVO对象
      * @param view View对象
-     * @return ViewResponse对象
+     * @return ViewVO对象
      */
     @Mapping(source = ".", target = "node")
-    ViewVO toViewResponse(View view);
+    ViewVO toViewVO(View view);
     
     /**
-     * 将View列表转换为ViewResponse列表
+     * 将View列表转换为ViewVO列表
      * @param views View列表
-     * @return ViewResponse列表
+     * @return ViewVO列表
      */
-    List<ViewVO> toViewResponseList(List<View> views);
+    List<ViewVO> toViewVOS(List<View> views);
 }

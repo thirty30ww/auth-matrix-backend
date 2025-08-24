@@ -1,4 +1,4 @@
-package com.thirty.user.service;
+package com.thirty.user.service.basic;
 
 import com.thirty.user.model.entity.Detail;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -9,5 +9,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2025-07-18 12:09:47
 */
 public interface DetailService extends IService<Detail> {
-
+    /**
+     * 创建用户详情
+     * @param userId 用户ID
+     * @param detail 用户详情
+     */
+    void createDetail(Integer userId, Detail detail);
 }

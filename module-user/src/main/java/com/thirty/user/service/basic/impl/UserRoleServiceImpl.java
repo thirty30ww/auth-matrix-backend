@@ -1,4 +1,4 @@
-package com.thirty.user.service.impl;
+package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -6,7 +6,7 @@ import com.thirty.common.exception.BusinessException;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.UserRole;
-import com.thirty.user.service.UserRoleService;
+import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.mapper.UserRoleMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -68,6 +68,12 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
         QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         remove(wrapper);
+    }
+
+    @Override
+    public void updateUserRoles(Integer userId, List<Integer> roleIds) {
+        deleteUserRoles(userId);
+        addUserRoles(userId, roleIds);
     }
 }
 

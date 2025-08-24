@@ -28,7 +28,7 @@
     </select>
 
     <!-- 主查询：获取用户基本信息 -->
-    <select id="getUserList" resultMap="UserVOResultMap">
+    <select id="getUsers" resultMap="UserVOResultMap">
         SELECT DISTINCT
             u.id,
             u.username,

@@ -5,7 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.Data;
 
 /**
@@ -53,4 +57,26 @@ public class Role implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 从角色列表中提取角色ID
+     * @param roles 角色列表
+     * @return 角色ID列表
+     */
+    public static List<Integer> extractIds(Collection<Role> roles) {
+        return roles.stream()
+                .map(Role::getId)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 从角色列表中提取全局角色
+     * @param roles 角色列表
+     * @return 全局角色列表
+     */
+    public static List<Role> getGlobalRoles(List<Role> roles) {
+        return roles.stream()
+                .filter(role -> role.getParentNodeId() == -1)
+                .collect(Collectors.toList());
+    }
 }

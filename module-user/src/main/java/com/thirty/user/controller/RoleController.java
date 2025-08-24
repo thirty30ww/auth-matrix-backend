@@ -4,7 +4,7 @@ import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.RoleResultCode;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
-import com.thirty.user.service.RoleService;
+import com.thirty.user.service.facade.RoleFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/role")
 public class RoleController {
     @Resource
-    private RoleService roleService;
+    private RoleFacade roleFacade;
     @Resource
     private JwtUtil jwtUtil;
 
@@ -28,10 +28,8 @@ public class RoleController {
      */
     @GetMapping("/tree")
     public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-
-        return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleService.getRoleTree(username));
+        return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(username));
     }
 
     /**
@@ -40,7 +38,7 @@ public class RoleController {
      */
     @GetMapping("/global/list")
     public ResultDTO<List<Role>> getGlobalRoleList() {
-        return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleService.getGlobalRoleList());
+        return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleFacade.getGlobalRoles());
     }
 
     /**
@@ -50,9 +48,7 @@ public class RoleController {
      */
     @GetMapping("/list")
     public ResultDTO<List<Role>> getRoleList(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "isChild", defaultValue = "false") Boolean isChild) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-
-        return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleService.getRoleList(username, isChild));
+        return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleFacade.getRoles(username, isChild));
     }
 }

@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import com.thirty.user.enums.model.ViewType;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 页面表
@@ -75,4 +78,8 @@ public class View implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public static Map<Integer, View> listToMap(List<View> views) {
+        return views.stream().collect(Collectors.toMap(View::getId, view -> view));
+    }
 }

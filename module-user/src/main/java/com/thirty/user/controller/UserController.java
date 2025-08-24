@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.AuthResultCode;
-import com.thirty.user.model.dto.*;
-import com.thirty.user.model.entity.Role;
-import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.enums.result.UserResultCode;
-import com.thirty.user.service.UserService;
+import com.thirty.user.model.dto.*;
+import com.thirty.user.model.vo.UserVO;
+import com.thirty.user.service.facade.UserFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -22,32 +21,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
+    @Resource
+    private UserFacade userFacade;
     @Resource
     private JwtUtil jwtUtil;
-
-    @Resource
-    private UserService userService;
 
     /**
      * 添加用户
      */
     @PostMapping("/add")
     public ResultDTO<Void> addUser(@RequestBody @Valid AddUserDTO addUserDTO, @RequestHeader(value = "Authorization") String authHeader) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-
-        // 校验角色是否仅包含子角色
-        if (!userService.validateRolesContainChildRoles(username, addUserDTO.getRoleIds())) {
-            return ResultDTO.of(UserResultCode.ROLE_NOT_AUTHORIZED_ADD);
-        }
-
-        // 校验用户名是否存在
-        if (userService.validateUserExists(addUserDTO.getUsername())) {
-            return ResultDTO.of(AuthResultCode.USERNAME_EXISTS);
-        }
-
-        userService.addUser(addUserDTO);
+        userFacade.addUser(username, addUserDTO);
         return ResultDTO.of(UserResultCode.USER_ADD_SUCCESS);
     }
 
@@ -56,9 +41,19 @@ public class UserController {
      */
     @GetMapping("/get")
     public ResultDTO<UserVO> getUser(@RequestHeader(value = "Authorization") String authHeader) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        return ResultDTO.of(UserResultCode.USER_INFO_GET_SUCCESS, userService.getByUsername(username));
+        return ResultDTO.of(UserResultCode.USER_INFO_GET_SUCCESS, userFacade.getUser(username));
+    }
+
+    /**
+     * 获取用户列表
+     * @param request 获取用户列表请求参数
+     * @return 用户列表
+     */
+    @PostMapping("/list")
+    public ResultDTO<IPage<UserVO>> getUserList(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid PageQueryDTO<GetUsersDTO> request) {
+        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
+        return ResultDTO.of(UserResultCode.USER_LIST_GET_SUCCESS, userFacade.getUsers(username, request));
     }
 
     /**
@@ -66,15 +61,8 @@ public class UserController {
      */
     @PostMapping("/modify")
     public ResultDTO<Void> modifyUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ModifyUserDTO modifyUserDTO) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-
-        // 校验角色是否仅包含子角色
-        if (!userService.validateRolesContainChildRoles(username, modifyUserDTO.getRoleIds())) {
-            return ResultDTO.of(UserResultCode.ROLE_NOT_AUTHORIZED_MODIFY);
-        }
-
-        userService.modifyUser(modifyUserDTO);
+        userFacade.modifyUser(username, modifyUserDTO);
         return ResultDTO.of(UserResultCode.USER_MODIFY_SUCCESS);
     }
 
@@ -83,9 +71,8 @@ public class UserController {
      */
     @PostMapping("/update")
     public ResultDTO<Void> updateUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid UpdateUserDTO request) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userService.updateByUsername(username, request);
+        userFacade.updateUser(username, request);
         return ResultDTO.of(UserResultCode.USER_INFO_UPDATE_SUCCESS);
     }
 
@@ -95,11 +82,7 @@ public class UserController {
     @PostMapping("/ban")
     public ResultDTO<Void> banUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        // 校验角色是否仅包含子角色
-        if (!userService.validateUserIdsRolesContainChildRoles(username, userIds)) {
-            return ResultDTO.of(UserResultCode.ROLE_NOT_AUTHORIZED_BAN);
-        }
-        userService.banUser(userIds);
+        userFacade.banUsers(username, userIds);
         return ResultDTO.of(UserResultCode.USER_BAN_SUCCESS);
     }
 
@@ -109,10 +92,7 @@ public class UserController {
     @PostMapping("/unban")
     public ResultDTO<Void> unbanUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        if (!userService.validateUserIdsRolesContainChildRoles(username, userIds)) {
-            return ResultDTO.of(UserResultCode.ROLE_NOT_AUTHORIZED_UNBAN);
-        }
-        userService.unbanUser(userIds);
+        userFacade.unbanUsers(username, userIds);
         return ResultDTO.of(UserResultCode.USER_UNBAN_SUCCESS);
     }
 
@@ -122,24 +102,20 @@ public class UserController {
      */
     @PostMapping("/change-password")
     public ResultDTO<Void> changePassword(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
-        // 从Authorization头中提取用户名
         String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-
-        // 调用service修改密码
-        userService.changePassword(username, changePasswordDTO);
-
+        userFacade.changePassword(username, changePasswordDTO);
         return ResultDTO.of(UserResultCode.CHANGE_PASSWORD_SUCCESS);
     }
 
     /**
-     * 获取用户列表
-     * @param request 获取用户列表请求参数
-     * @return 用户列表
+     * 退出登录
+     * 将当前访问令牌和对应的刷新令牌都加入Redis黑名单，使其立即失效
+     * 同时清除SecurityContext
      */
-    @PostMapping("/list")
-    public ResultDTO<IPage<UserVO>> getUserList(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid PageQueryDTO<GetUserListDTO> request) {
-        // 从Authorization头中提取用户名
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        return ResultDTO.of(UserResultCode.USER_LIST_GET_SUCCESS, userService.getUserList(username, request));
+    @GetMapping("/logout")
+    public ResultDTO<Void> logout(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(required = false) String refreshToken) {
+        String accessToken = jwtUtil.extractToken(authHeader);
+        userFacade.logout(accessToken, refreshToken);
+        return ResultDTO.of(AuthResultCode.LOGOUT_SUCCESS);
     }
 }

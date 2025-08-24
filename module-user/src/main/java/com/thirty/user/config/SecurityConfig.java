@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thirty.common.enums.result.GlobalResultCode;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.filter.JwtAuthenticationFilter;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -31,12 +32,10 @@ import java.io.IOException;
 @Slf4j
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Resource
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 安全过滤器链

@@ -1,4 +1,4 @@
-package com.thirty.user.service;
+package com.thirty.user.service.basic;
 
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.UserRole;
@@ -39,4 +39,11 @@ public interface UserRoleService extends IService<UserRole> {
      * @param userId 用户ID
      */
     void deleteUserRoles(Integer userId);
+
+    /**
+     * 更新用户角色
+     * @param userId 用户ID
+     * @param roleIds 角色ID列表
+     */
+    void updateUserRoles(Integer userId, List<Integer> roleIds);
 }

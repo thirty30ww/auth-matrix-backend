@@ -1,20 +1,18 @@
 package com.thirty.user.utils;
 
-import com.thirty.common.exception.BusinessException;
 import com.thirty.user.constant.AuthConstant;
-import com.thirty.user.enums.result.AuthResultCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.Resource;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,9 +62,6 @@ public class JwtUtil {
      * 从Authorization头中提取token
      */
     public String extractToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith(AuthConstant.BEARER_PREFIX)) {
-            throw new BusinessException(AuthResultCode.INVALID_CREDENTIALS);
-        }
         return authHeader.substring(AuthConstant.BEARER_PREFIX_LENGTH);
     }
 
@@ -77,6 +72,8 @@ public class JwtUtil {
         String token = extractToken(authHeader);
         return extractUsername(token);
     }
+
+
 
     /**
      * 从token中提取过期时间

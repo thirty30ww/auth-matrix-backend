@@ -5,37 +5,36 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
- * 用户主表
- * @TableName user
+ * 角色页面表
+ * @TableName role_view
  */
-@TableName(value ="user")
+@TableName(value ="role_view")
 @Data
-@Accessors(chain = true)
-public class User implements Serializable {
+public class RoleView implements Serializable {
     /**
-     * 用户ID
+     * 角色页面ID
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 用户名
+     * 角色ID（关联role表）
      */
-    private String username;
+    private Integer roleId;
 
     /**
-     * 用户密码
+     * 页面ID（关联view表）
      */
-    private String password;
+    private Integer viewId;
 
     /**
-     * 是否有效(1:有效 0:无效)
+     * 创建时间
      */
-    private Boolean isValid;
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

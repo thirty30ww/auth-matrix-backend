@@ -2,6 +2,7 @@ package com.thirty.common.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.thirty.common.enums.model.SettingField;
 import com.thirty.common.model.entity.Setting;
 import com.thirty.common.service.SettingService;
 import com.thirty.common.mapper.SettingMapper;
@@ -15,6 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     implements SettingService{
+
+    @Override
+    public boolean getBooleanSetting(SettingField settingField) {
+        Setting setting = getSettingByField(settingField.getCode());
+        return setting.getValue() == 1;
+    }
 
     /**
      * 根据字段名获取设置

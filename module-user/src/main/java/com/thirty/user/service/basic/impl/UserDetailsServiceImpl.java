@@ -1,4 +1,4 @@
-package com.thirty.user.service.impl;
+package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thirty.user.enums.result.AuthResultCode;

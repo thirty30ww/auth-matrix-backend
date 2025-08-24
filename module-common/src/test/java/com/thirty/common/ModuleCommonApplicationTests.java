@@ -13,7 +13,7 @@ class ModuleCommonApplicationTests {
 
     @Test
     void contextLoads() {
-        boolean isPermissionDisplay = settingApi.isPermissionDisplay();
+        boolean isPermissionDisplay = settingApi.hasPermissionDisplay();
         System.out.println(isPermissionDisplay);
     }
 
