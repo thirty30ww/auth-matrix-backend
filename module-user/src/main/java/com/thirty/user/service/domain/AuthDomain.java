@@ -7,11 +7,10 @@ public interface AuthDomain {
     /**
      * 用户登录
      * @param username 用户名
-     * @param password 密码
      * @param authentication 认证信息
      * @return JwtVO
      */
-    JwtVO login(String username, String password, Authentication authentication);
+    JwtVO login(String username, Authentication authentication);
 
     /**
      * 刷新访问令牌

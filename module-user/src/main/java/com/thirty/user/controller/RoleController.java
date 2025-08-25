@@ -28,8 +28,8 @@ public class RoleController {
      */
     @GetMapping("/tree")
     public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(username));
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(userId));
     }
 
     /**
@@ -48,7 +48,7 @@ public class RoleController {
      */
     @GetMapping("/list")
     public ResultDTO<List<Role>> getRoleList(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "isChild", defaultValue = "false") Boolean isChild) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleFacade.getRoles(username, isChild));
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleFacade.getRoles(userId, isChild));
     }
 }

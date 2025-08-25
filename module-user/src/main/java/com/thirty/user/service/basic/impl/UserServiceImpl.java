@@ -41,6 +41,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
+     * 检查用户是否存在
+     * @param userId 用户ID
+     * @return 如果用户存在则返回true, 否则返回false
+     */
+    @Override
+    public boolean validateUserExists(Integer userId) {
+        return getById(userId) != null;
+    }
+
+    /**
      * 创建用户
      * @param username 用户名
      * @param password 密码

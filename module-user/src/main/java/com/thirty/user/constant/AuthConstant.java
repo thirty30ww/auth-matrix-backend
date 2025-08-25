@@ -11,6 +11,7 @@ public class AuthConstant {
     
     // JWT Token 类型常量
     public static final String TOKEN_TYPE_CLAIM = "type";
+    public static final String USER_ID_CLAIM = "userId";
     public static final String ACCESS_TOKEN_TYPE = "access";
     public static final String REFRESH_TOKEN_TYPE = "refresh";
     

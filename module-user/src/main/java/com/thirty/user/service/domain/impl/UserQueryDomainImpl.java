@@ -1,8 +1,10 @@
 package com.thirty.user.service.domain.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.converter.UserDtoConverter;
+import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.Detail;
 import com.thirty.user.model.entity.Role;
@@ -28,6 +30,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Resource
     private UserRoleService userRoleService;
 
+
     /**
      * 获取用户
      * @param currentUsername 当前用户名
@@ -37,6 +40,30 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     public UserVO getUser(String currentUsername) {
         // 获取用户
         User user = userService.getUser(currentUsername);
+
+        // 获取用户详情
+        Detail detail = detailService.getById(user.getId());
+
+        // 获取用户角色
+        List<Role> roles = userRoleService.getRolesByUserId(user.getId());
+
+        return UserDtoConverter.INSTANCE.toUserResponse(user, detail, roles);
+    }
+
+    /**
+     * 获取用户
+     * @param userId 用户ID
+     * @return 用户VO
+     */
+    @Override
+    public UserVO getUser(Integer userId) {
+        // 获取用户
+        User user = userService.getById(userId);
+
+        // 校验用户是否存在
+        if (!userService.validateUserExists(userId)) {
+            throw new BusinessException(UserResultCode.USER_NOT_EXISTS);
+        }
 
         // 获取用户详情
         Detail detail = detailService.getById(user.getId());

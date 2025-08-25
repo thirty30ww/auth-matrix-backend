@@ -59,6 +59,13 @@ public class JwtUtil {
     }
 
     /**
+     * 从token中提取用户ID
+     */
+    public Integer extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get(AuthConstant.USER_ID_CLAIM, Integer.class));
+    }
+
+    /**
      * 从Authorization头中提取token
      */
     public String extractToken(String authHeader) {
@@ -73,7 +80,13 @@ public class JwtUtil {
         return extractUsername(token);
     }
 
-
+    /**
+     * 从Authorization头中提取用户ID
+     */
+    public Integer getUserIdFromAuthHeader(String authHeader) {
+        String token = extractToken(authHeader);
+        return extractUserId(token);
+    }
 
     /**
      * 从token中提取过期时间
@@ -109,21 +122,24 @@ public class JwtUtil {
     }
 
     /**
-     * 为用户生成访问令牌
+     * 为用户生成访问令牌（包含用户ID）
+     * @param username 用户名
+     * @param userId 用户ID
+     * @return 访问令牌
      */
-    public String generateAccessToken(UserDetails userDetails) {
+    public String generateAccessToken(String username, Integer userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(AuthConstant.TOKEN_TYPE_CLAIM, AuthConstant.ACCESS_TOKEN_TYPE);
-        return createToken(claims, userDetails.getUsername(), expiration);
+        claims.put(AuthConstant.USER_ID_CLAIM, userId);
+        return createToken(claims, username, expiration);
     }
-    
-    /**
-     * 为用户生成刷新令牌
-     */
-    public String generateRefreshToken(UserDetails userDetails) {
+
+
+    public String generateRefreshToken(String username, Integer userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(AuthConstant.TOKEN_TYPE_CLAIM, AuthConstant.REFRESH_TOKEN_TYPE);
-        return createToken(claims, userDetails.getUsername(), refreshExpiration);
+        claims.put(AuthConstant.USER_ID_CLAIM, userId);
+        return createToken(claims, username, refreshExpiration);
     }
 
     /**

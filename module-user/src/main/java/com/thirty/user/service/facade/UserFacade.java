@@ -10,60 +10,60 @@ import java.util.List;
 public interface UserFacade {
     /**
      * 添加用户
-     * @param operatorUsername 操作人用户名
+     * @param operatorUserId 操作人用户ID
      * @param addUserDTO 添加用户DTO
      */
-    void addUser(String operatorUsername, AddUserDTO addUserDTO);
+    void addUser(Integer operatorUserId, AddUserDTO addUserDTO);
 
     /**
      * 获取用户
-     * @param currentUsername 当前用户名
+     * @param userId 用户ID
      * @return 用户VO
      */
-    UserVO getUser(String currentUsername);
+    UserVO getUser(Integer userId);
 
     /**
      * 修改用户
-     * @param operatorUsername 操作人用户名
+     * @param operatorUserId 操作人用户ID
      * @param modifyUserDTO 修改用户DTO
      */
-    void modifyUser(String operatorUsername, ModifyUserDTO modifyUserDTO);
+    void modifyUser(Integer operatorUserId, ModifyUserDTO modifyUserDTO);
 
     /**
      * 更新用户
-     * @param currentUsername 当前用户名
+     * @param operatorUserId 操作人用户ID
      * @param updateUserDTO 更新用户DTO
      */
-    void updateUser(String currentUsername, UpdateUserDTO updateUserDTO);
+    void updateUser(Integer operatorUserId, UpdateUserDTO updateUserDTO);
 
     /**
      * 封禁用户
-     * @param operatorUsername 操作人用户名
+     * @param operatorUserId 操作人用户ID
      * @param userIds 用户ID列表
      */
-    void banUsers(String operatorUsername, List<Integer> userIds);
+    void banUsers(Integer operatorUserId, List<Integer> userIds);
 
     /**
      * 解封用户
-     * @param operatorUsername 操作人用户名
+     * @param operatorUserId 操作人用户ID
      * @param userIds 用户ID列表
      */
-    void unbanUsers(String operatorUsername, List<Integer> userIds);
+    void unbanUsers(Integer operatorUserId, List<Integer> userIds);
 
     /**
      * 改变密码
-     * @param username 用户名
+     * @param userId 用户ID
      * @param changePasswordDTO 改变密码DTO
      */
-    void changePassword(String username, ChangePasswordDTO changePasswordDTO);
+    void changePassword(Integer userId, ChangePasswordDTO changePasswordDTO);
 
     /**
      * 获取用户列表
-     * @param currentUsername 当前用户名
+     * @param currentUserId 当前用户ID
      * @param pageQueryDTO 分页查询DTO
      * @return 用户VO分页
      */
-    IPage<UserVO> getUsers(String currentUsername, PageQueryDTO<GetUsersDTO> pageQueryDTO);
+    IPage<UserVO> getUsers(Integer currentUserId, PageQueryDTO<GetUsersDTO> pageQueryDTO);
 
     /**
      * 退出登录

@@ -18,6 +18,13 @@ public interface UserService extends IService<User> {
     boolean validateUserExists(String username);
 
     /**
+     * 校验用户ID是否存在
+     * @param userId 用户ID
+     * @return true 存在 false 不存在
+     */
+    boolean validateUserExists(Integer userId);
+
+    /**
      * 创建用户
      * @param username 用户名
      * @param encodedPassword 加密后的密码

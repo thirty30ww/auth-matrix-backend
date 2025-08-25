@@ -17,6 +17,13 @@ public interface UserQueryDomain {
     UserVO getUser(String currentUsername);
 
     /**
+     * 获取用户
+     * @param userId 用户ID
+     * @return 用户VO
+     */
+    UserVO getUser(Integer userId);
+
+    /**
      * 获取用户列表
      * @param pageQueryDTO 获取用户列表请求参数
      * @param permittedRoleIds 有权限的角色ID列表

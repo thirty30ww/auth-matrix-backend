@@ -113,13 +113,13 @@ public class UserOperationDomainImpl implements UserOperationDomain {
 
     /**
      * 修改密码
-     * @param username 用户名
+     * @param userId 用户ID
      * @param changePasswordDTO 修改密码请求参数
      */
     @Override
-    public void changePassword(String username, ChangePasswordDTO changePasswordDTO) {
+    public void changePassword(Integer userId, ChangePasswordDTO changePasswordDTO) {
         // 获取用户
-        User user = userService.getUser(username);
+        User user = userService.getById(userId);
 
         // 加密并更新密码
         String encodedPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());

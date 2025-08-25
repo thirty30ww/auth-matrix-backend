@@ -41,7 +41,7 @@ public class AuthFacadeImpl implements AuthFacade {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 生成JwtVO
-        return authDomain.login(username, password, authentication);
+        return authDomain.login(username, authentication);
     }
 
     /**

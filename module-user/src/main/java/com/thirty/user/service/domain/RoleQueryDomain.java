@@ -14,25 +14,25 @@ public interface RoleQueryDomain {
 
     /**
      * 获取子角色列表
-     * @param username 用户名
+     * @param userId 用户ID
      * @return 子角色列表
      */
-    List<Role> getChildRoles(String username);
+    List<Role> getChildRoles(Integer userId);
 
     /**
      * 获取子角色ID列表
-     * @param username 用户名
+     * @param userId 用户ID
      * @return 子角色ID列表
      */
-    List<Integer> getChildRoleIds(String username);
+    List<Integer> getChildRoleIds(Integer userId);
 
     /**
      * 获取角色VO列表
-     * @param username 用户名
+     * @param userId 用户ID
      * @param hasPermissionDisplay 是否仅显示有权限操作的角色
      * @return 角色VO列表
      */
-    List<RoleVO> getRoleTree(String username, boolean hasPermissionDisplay);
+    List<RoleVO> getRoleTree(Integer userId, boolean hasPermissionDisplay);
 
     /**
      * 获取全局角色列表

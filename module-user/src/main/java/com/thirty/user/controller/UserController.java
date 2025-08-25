@@ -31,8 +31,8 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResultDTO<Void> addUser(@RequestBody @Valid AddUserDTO addUserDTO, @RequestHeader(value = "Authorization") String authHeader) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userFacade.addUser(username, addUserDTO);
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.addUser(userId, addUserDTO);
         return ResultDTO.of(UserResultCode.USER_ADD_SUCCESS);
     }
 
@@ -41,8 +41,8 @@ public class UserController {
      */
     @GetMapping("/get")
     public ResultDTO<UserVO> getUser(@RequestHeader(value = "Authorization") String authHeader) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        return ResultDTO.of(UserResultCode.USER_INFO_GET_SUCCESS, userFacade.getUser(username));
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        return ResultDTO.of(UserResultCode.USER_INFO_GET_SUCCESS, userFacade.getUser(userId));
     }
 
     /**
@@ -52,8 +52,8 @@ public class UserController {
      */
     @PostMapping("/list")
     public ResultDTO<IPage<UserVO>> getUserList(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid PageQueryDTO<GetUsersDTO> request) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        return ResultDTO.of(UserResultCode.USER_LIST_GET_SUCCESS, userFacade.getUsers(username, request));
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        return ResultDTO.of(UserResultCode.USER_LIST_GET_SUCCESS, userFacade.getUsers(userId, request));
     }
 
     /**
@@ -61,8 +61,8 @@ public class UserController {
      */
     @PostMapping("/modify")
     public ResultDTO<Void> modifyUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ModifyUserDTO modifyUserDTO) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userFacade.modifyUser(username, modifyUserDTO);
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.modifyUser(userId, modifyUserDTO);
         return ResultDTO.of(UserResultCode.USER_MODIFY_SUCCESS);
     }
 
@@ -71,8 +71,8 @@ public class UserController {
      */
     @PostMapping("/update")
     public ResultDTO<Void> updateUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid UpdateUserDTO request) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userFacade.updateUser(username, request);
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.updateUser(userId, request);
         return ResultDTO.of(UserResultCode.USER_INFO_UPDATE_SUCCESS);
     }
 
@@ -81,8 +81,8 @@ public class UserController {
      */
     @PostMapping("/ban")
     public ResultDTO<Void> banUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userFacade.banUsers(username, userIds);
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.banUsers(userId, userIds);
         return ResultDTO.of(UserResultCode.USER_BAN_SUCCESS);
     }
 
@@ -91,8 +91,8 @@ public class UserController {
      */
     @PostMapping("/unban")
     public ResultDTO<Void> unbanUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userFacade.unbanUsers(username, userIds);
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.unbanUsers(userId, userIds);
         return ResultDTO.of(UserResultCode.USER_UNBAN_SUCCESS);
     }
 
@@ -102,8 +102,8 @@ public class UserController {
      */
     @PostMapping("/change-password")
     public ResultDTO<Void> changePassword(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
-        String username = jwtUtil.getUsernameFromAuthHeader(authHeader);
-        userFacade.changePassword(username, changePasswordDTO);
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.changePassword(userId, changePasswordDTO);
         return ResultDTO.of(UserResultCode.CHANGE_PASSWORD_SUCCESS);
     }
 

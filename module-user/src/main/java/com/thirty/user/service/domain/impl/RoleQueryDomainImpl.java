@@ -33,13 +33,13 @@ public class RoleQueryDomainImpl implements RoleQueryDomain {
 
     /**
      * 获取角色列表
-     * @param username 用户名
+     * @param userId 用户ID
      * @return 角色列表
      */
     @Override
-    public List<Role> getChildRoles(String username) {
+    public List<Role> getChildRoles(Integer userId) {
         // 获取用户
-        User user = userService.getUser(username);
+        User user = userService.getById(userId);
 
         // 获取所有角色
         List<Role> allRoles = roleService.list();
@@ -72,29 +72,29 @@ public class RoleQueryDomainImpl implements RoleQueryDomain {
 
     /**
      * 获取子角色ID列表
-     * @param username 用户名
+     * @param userId 用户ID
      * @return 子角色ID列表
      */
     @Override
-    public List<Integer> getChildRoleIds(String username) {
+    public List<Integer> getChildRoleIds(Integer userId) {
         // 获取子角色列表
-        List<Role> childRoles = getChildRoles(username);
+        List<Role> childRoles = getChildRoles(userId);
         // 返回子角色ID列表
         return Role.extractIds(childRoles);
     }
 
     /**
      * 获取角色VO列表
-     * @param username 用户名
+     * @param userId 用户ID
      * @param hasPermissionDisplay 是否仅显示有权限操作的角色
      * @return 角色VO列表
      */
     @Override
-    public List<RoleVO> getRoleTree(String username, boolean hasPermissionDisplay) {
+    public List<RoleVO> getRoleTree(Integer userId, boolean hasPermissionDisplay) {
         // 获取所有角色
         List<Role> allRoles = roleService.list();
         // 获取当前用户有权限的角色
-        List<Role> permittedRoles = getChildRoles(username);
+        List<Role> permittedRoles = getChildRoles(userId);
 
         Map<Integer, RoleVO> roleVOMap;
         // 是否仅显示有权限操作的角色

@@ -2,19 +2,19 @@ package com.thirty.user.service.domain.impl;
 
 import com.thirty.common.exception.BusinessException;
 import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.JwtVO;
+import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.AuthDomain;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthDomainImpl implements AuthDomain {
     @Resource
-    private UserDetailsService userDetailsService;
+    private UserService userService;
 
     @Resource
     private JwtUtil jwtUtil;
@@ -22,16 +22,15 @@ public class AuthDomainImpl implements AuthDomain {
     /**
      * 用户登录
      * @param username 用户名
-     * @param password 密码
      * @param authentication 认证信息
      * @return JwtVO
      */
     @Override
-    public JwtVO login(String username, String password, Authentication authentication) {
+    public JwtVO login(String username, Authentication authentication) {
         // 生成访问令牌和刷新令牌
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String accessToken = jwtUtil.generateAccessToken(userDetails);
-        String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+        User user = userService.getUser(username);
+        String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), user.getId());
 
         // 生成JwtVO
         return new JwtVO(accessToken, refreshToken, username);
@@ -51,18 +50,18 @@ public class AuthDomainImpl implements AuthDomain {
         String username = jwtUtil.extractUsername(refreshToken);
 
         // 加载用户详情
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        User user = userService.getUser(username);
 
         // 检查用户是否被禁用
-        if (!userDetails.isEnabled()) {
+        if (!user.getIsValid()) {
             throw new BusinessException(AuthResultCode.USER_BANNED);
         }
 
-        // 生成新的访问令牌和刷新令牌
-        String newAccessToken = jwtUtil.generateAccessToken(userDetails);
-        String newRefreshToken = jwtUtil.generateRefreshToken(userDetails);
+        // 生成新访问令牌和刷新令牌
+        String newAccessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId());
+        String newRefreshToken = jwtUtil.generateRefreshToken(user.getUsername(), user.getId());
 
-        // 将旧的刷新令牌加入黑名单（防止刷新令牌被重复使用）
+        // 将旧刷新令牌加入黑名单（防止刷新令牌被重复使用）
         jwtUtil.addRefreshTokenToBlacklist(refreshToken);
 
         // 生成JwtVO

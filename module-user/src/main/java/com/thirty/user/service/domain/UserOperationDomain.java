@@ -41,10 +41,10 @@ public interface UserOperationDomain {
 
     /**
      * 修改密码
-     * @param username 用户名
+     * @param userId 用户ID
      * @param changePasswordDTO 修改密码请求参数
      */
-    void changePassword(String username, ChangePasswordDTO changePasswordDTO);
+    void changePassword(Integer userId, ChangePasswordDTO changePasswordDTO);
 
     /**
      * 退出登录

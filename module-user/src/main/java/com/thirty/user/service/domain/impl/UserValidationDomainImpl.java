@@ -25,17 +25,25 @@ public class UserValidationDomainImpl implements UserValidationDomain {
         return userService.validateUserExists(username);
     }
 
+    /**
+     * 校验用户ID是否存在
+     * @param userId 用户ID
+     * @return true 存在 false 不存在
+     */
+    @Override
+    public boolean validateUserExists(Integer userId) {
+        return userService.validateUserExists(userId);
+    }
 
     /**
      * 校验用户ID是否匹配
-     * @param username 用户名
-     * @param userId 用户ID
+     * @param currentUserId 当前用户ID
+     * @param targetUserId 目标用户ID
      * @return true 匹配 false 不匹配
      */
     @Override
-    public boolean validateUserIdMatch(String username, Integer userId) {
-        User user = userService.getUser(username);
-        return user.getId().equals(userId);
+    public boolean validateUserIdMatch(Integer currentUserId, Integer targetUserId) {
+        return currentUserId.equals(targetUserId);
     }
 
     /**
@@ -51,13 +59,13 @@ public class UserValidationDomainImpl implements UserValidationDomain {
 
     /**
      * 校验密码是否正确
-     * @param currentUsername 当前用户名
+     * @param currentUserId 当前用户ID
      * @param currentPassword 当前密码
      * @return true 正确 false 错误
      */
     @Override
-    public boolean validatePassword(String currentUsername, String currentPassword) {
-        User user = userService.getUser(currentUsername);
+    public boolean validatePassword(Integer currentUserId, String currentPassword) {
+        User user = userService.getById(currentUserId);
         return passwordEncoder.matches(currentPassword, user.getPassword());
     }
 }
