@@ -1,5 +1,7 @@
 package com.thirty.user.service.facade;
 
+import com.thirty.user.enums.model.RoleListType;
+import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
 
@@ -17,14 +19,28 @@ public interface RoleFacade {
     /**
      * 获取角色列表
      * @param currentUserId 当前用户ID
-     * @param isChild 是否仅获取子角色
+     * @param type 类型
      * @return 角色列表
      */
-    List<Role> getRoles(Integer currentUserId, boolean isChild);
+    List<Role> getRoles(Integer currentUserId, RoleListType type);
 
     /**
-     * 获取全局子角色列表
-     * @return 全局子角色列表
+     * 添加角色
+     * @param roleDTO 角色dto
      */
-    List<Role> getGlobalRoles();
+    void addRole(RoleDTO roleDTO, Integer userId);
+
+    /**
+     * 更新角色
+     * @param roleDTO 角色dto
+     * @param userId 用户ID
+     */
+    void updateRole(RoleDTO roleDTO, Integer userId);
+
+    /**
+     * 删除角色
+     * @param roleId 角色ID
+     * @param userId 用户ID
+     */
+    void deleteRole(Integer roleId, Integer userId);
 }

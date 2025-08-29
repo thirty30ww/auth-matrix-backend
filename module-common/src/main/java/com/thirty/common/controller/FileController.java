@@ -2,7 +2,7 @@ package com.thirty.common.controller;
 
 import com.thirty.common.constant.FileConstant;
 import com.thirty.common.enums.result.FileResultCode;
-import com.thirty.common.service.FileService;
+import com.thirty.common.service.basic.FileService;
 import com.thirty.common.model.dto.ResultDTO;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;

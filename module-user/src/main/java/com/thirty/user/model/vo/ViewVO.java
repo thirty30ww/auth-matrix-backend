@@ -8,5 +8,6 @@ import java.util.List;
 @Data
 public class ViewVO {
     private View node;
+    private boolean hasPermission;
     private List<ViewVO> children;
 }

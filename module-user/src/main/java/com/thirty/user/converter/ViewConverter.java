@@ -1,19 +1,21 @@
 package com.thirty.user.converter;
 
-import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.model.entity.View;
+import com.thirty.user.model.vo.ViewVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * View实体与DTO之间的转换器
  */
 @Mapper
-public interface ViewDtoConverter {
-    ViewDtoConverter INSTANCE = Mappers.getMapper(ViewDtoConverter.class);
+public interface ViewConverter {
+    ViewConverter INSTANCE = Mappers.getMapper(ViewConverter.class);
     
     /**
      * 将View对象转换为ViewVO对象
@@ -29,4 +31,13 @@ public interface ViewDtoConverter {
      * @return ViewVO列表
      */
     List<ViewVO> toViewVOS(List<View> views);
+
+    /**
+     * 将View列表转换为ViewVO Map，key为视图ID，value为ViewVO
+     * @param views View列表
+     * @return ViewVO Map
+     */
+    default Map<Integer, ViewVO> toViewVOMap(List<View> views) {
+        return views.stream().collect(Collectors.toMap(View::getId, this::toViewVO));
+    }
 }

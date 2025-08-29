@@ -1,8 +1,8 @@
-package com.thirty.user.service.domain.impl;
+package com.thirty.user.service.domain.user.impl;
 
 import com.thirty.user.model.entity.User;
 import com.thirty.user.service.basic.UserService;
-import com.thirty.user.service.domain.UserValidationDomain;
+import com.thirty.user.service.domain.user.UserValidationDomain;
 import jakarta.annotation.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

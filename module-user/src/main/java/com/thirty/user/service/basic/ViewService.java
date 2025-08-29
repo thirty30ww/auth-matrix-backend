@@ -27,10 +27,10 @@ public interface ViewService extends IService<View> {
     List<View> getNotPageViews();
 
     /**
-     * 获取非页面视图Map，key为视图ID，value为View
+     * 获取非页面视图Map，key为视图ID，value为ViewVO
      * @return 非页面视图Map
      */
-    Map<Integer, View> getNotPageViewMap();
+    Map<Integer, ViewVO> getNotPageViewVOMap();
 
     /**
      * 获取页面列表（仅包含PAGE）

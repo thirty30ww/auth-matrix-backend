@@ -1,4 +1,4 @@
-package com.thirty.user.service.domain;
+package com.thirty.user.service.domain.user;
 
 import com.thirty.user.model.dto.AddUserDTO;
 import com.thirty.user.model.dto.ChangePasswordDTO;

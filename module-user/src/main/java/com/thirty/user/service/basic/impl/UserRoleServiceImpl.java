@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.user.enums.result.UserResultCode;
+import com.thirty.user.mapper.UserRoleMapper;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.UserRole;
 import com.thirty.user.service.basic.UserRoleService;
-import com.thirty.user.mapper.UserRoleMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * @author Lenovo
@@ -37,6 +38,19 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
             throw new BusinessException(UserResultCode.USER_ROLE_NOT_FOUND);
         }
         return roles;
+    }
+
+    /**
+     * 根据用户ID查询角色ID列表
+     * @param userId 用户ID
+     * @return 角色ID列表
+     */
+    @Override
+    public List<Integer> getRoleIds(Integer userId) {
+        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        List<UserRole> userRoles = list(wrapper);
+        return userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
     }
 
     /**

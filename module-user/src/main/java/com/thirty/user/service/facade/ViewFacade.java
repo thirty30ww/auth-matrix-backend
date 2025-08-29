@@ -8,10 +8,17 @@ import java.util.List;
 public interface ViewFacade {
     /**
      * 获取视图树
-     * @param onlyMenu 是否只获取菜单
      * @return 视图树
      */
-    List<ViewVO> getViewTree(boolean onlyMenu);
+    List<ViewVO> getViewTree();
+
+    /**
+     * 获取菜单树
+     * @param userId 用户ID
+     * @param targetRoleId 目标角色ID
+     * @return 菜单树
+     */
+    List<ViewVO> getMenuTree(Integer userId, Integer targetRoleId);
 
     /**
      * 获取视图列表

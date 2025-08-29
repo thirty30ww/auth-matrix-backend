@@ -2,7 +2,7 @@ package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thirty.user.converter.ViewDtoConverter;
+import com.thirty.user.converter.ViewConverter;
 import com.thirty.user.enums.model.ViewType;
 import com.thirty.user.mapper.ViewMapper;
 import com.thirty.user.model.entity.View;
@@ -51,9 +51,9 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
      * @return 非页面视图Map
      */
     @Override
-    public Map<Integer, View> getNotPageViewMap() {
+    public Map<Integer, ViewVO> getNotPageViewVOMap() {
         List<View> notPageViews = getNotPageViews();
-        return View.listToMap(notPageViews);
+        return ViewConverter.INSTANCE.toViewVOMap(notPageViews);
     }
 
     /**
@@ -74,7 +74,7 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
     @Override
     public List<ViewVO> getPageViewVOS() {
         List<View> pageViews = getPageViews();
-        return ViewDtoConverter.INSTANCE.toViewVOS(pageViews);
+        return ViewConverter.INSTANCE.toViewVOS(pageViews);
     }
 }
 

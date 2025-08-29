@@ -5,6 +5,8 @@ import com.thirty.common.enums.result.GlobalResultCode;
 import com.thirty.common.model.dto.ResultDTO;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
@@ -57,6 +60,35 @@ public class GlobalExceptionHandler {
 
         return ResultDTO.failure(GlobalResultCode.PARAM_ERROR.getCode(), errorMessage);
     }
+
+    /**
+     * 处理参数类型转换异常（包括枚举转换失败）
+     */
+    @ExceptionHandler({
+            MethodArgumentTypeMismatchException.class,
+            TypeMismatchException.class,
+            ConversionFailedException.class
+    })
+    public ResultDTO<?> handleTypeMismatchException(Exception e) {
+        if (e instanceof MethodArgumentTypeMismatchException ex) {
+            // 提取参数名、无效值和目标类型
+            String paramName = ex.getName();
+            String invalidValue = ex.getValue() != null ? ex.getValue().toString() : "null";
+            Class<?> requiredType = ex.getRequiredType();
+
+            // 记录详细的异常信息
+            if (requiredType != null && requiredType.isEnum()) {
+                log.warn("枚举参数转换失败：参数[{}]，值[{}]，目标类型[{}]",
+                        paramName, invalidValue, requiredType.getSimpleName());
+            } else {
+                log.warn("参数类型转换失败：参数[{}]，值[{}]，目标类型[{}]",
+                        paramName, invalidValue, requiredType != null ? requiredType.getSimpleName() : "unknown");
+            }
+        }
+
+        return ResultDTO.of(GlobalResultCode.ENUM_ERROR);
+    }
+    
     
     /**
      * 处理JSON反序列化异常（包括枚举值不匹配等）
@@ -69,10 +101,13 @@ public class GlobalExceptionHandler {
             // 提取字段名和无效值
             String fieldName = ife.getPath().isEmpty() ? "未知字段" : ife.getPath().get(ife.getPath().size() - 1).getFieldName();
             String invalidValue = ife.getValue() != null ? ife.getValue().toString() : "null";
-            log.warn("参数格式异常：字段[{}]，值[{}]", fieldName, invalidValue);
+            String targetType = ife.getTargetType() != null ? ife.getTargetType().getSimpleName() : "unknown";
+
+            // 记录详细的异常信息
+            log.warn("JSON参数转换失败：字段[{}]，值[{}]，目标类型[{}]", fieldName, invalidValue, targetType);
         }
-        
-        return ResultDTO.of(GlobalResultCode.ENUM_ERROR);
+
+        return ResultDTO.of(GlobalResultCode.PARAM_ERROR);
     }
     
     /**

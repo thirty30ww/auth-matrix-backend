@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import lombok.Data;
 
 /**
  * 角色表
@@ -78,5 +79,16 @@ public class Role implements Serializable {
         return roles.stream()
                 .filter(role -> role.getParentNodeId() == -1)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 构建父角色ID到子角色列表的映射
+     * @param roles 角色列表
+     * @return 父角色ID到子角色列表的映射
+     */
+    public static Map<Integer, List<Role>> buildParentChildMap(List<Role> roles) {
+        return roles.stream()
+                .filter(role -> role.getParentNodeId() != 0)
+                .collect(Collectors.groupingBy(Role::getParentNodeId));
     }
 }

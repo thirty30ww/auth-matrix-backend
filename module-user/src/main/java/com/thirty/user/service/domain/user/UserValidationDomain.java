@@ -1,4 +1,4 @@
-package com.thirty.user.service.domain;
+package com.thirty.user.service.domain.user;
 
 public interface UserValidationDomain {
     /**

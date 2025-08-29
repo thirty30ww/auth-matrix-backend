@@ -1,9 +1,9 @@
-package com.thirty.user.service.domain.impl;
+package com.thirty.user.service.domain.user.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
-import com.thirty.user.converter.UserDtoConverter;
+import com.thirty.user.converter.UserConverter;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.Detail;
@@ -13,7 +13,7 @@ import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.basic.DetailService;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
-import com.thirty.user.service.domain.UserQueryDomain;
+import com.thirty.user.service.domain.user.UserQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         // 获取用户角色
         List<Role> roles = userRoleService.getRolesByUserId(user.getId());
 
-        return UserDtoConverter.INSTANCE.toUserResponse(user, detail, roles);
+        return UserConverter.INSTANCE.toUserResponse(user, detail, roles);
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         // 获取用户角色
         List<Role> roles = userRoleService.getRolesByUserId(user.getId());
 
-        return UserDtoConverter.INSTANCE.toUserResponse(user, detail, roles);
+        return UserConverter.INSTANCE.toUserResponse(user, detail, roles);
     }
 
     /**
@@ -92,7 +92,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         // 是否仅显示有权限操作的用户
         if (hasPermissionDisplay) {
             // 过滤出有权限操作的用户
-            filterUsersHasPermission(permittedRoleIds, users);
+            filterUsersHasPermission(users);
         }
 
         return users;
@@ -120,10 +120,9 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     /**
      * 过滤出用户列表中有权限的用户
-     * @param permittedRoleIds 权限角色ID列表
      * @param users 用户列表
      */
-    private void filterUsersHasPermission(List<Integer> permittedRoleIds, IPage<UserVO> users) {
+    private void filterUsersHasPermission(IPage<UserVO> users) {
         users.getRecords().removeIf(userVO -> !userVO.getHasPermission());
     }
 }

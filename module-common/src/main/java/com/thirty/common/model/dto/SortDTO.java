@@ -2,7 +2,6 @@ package com.thirty.common.model.dto;
 
 import com.thirty.common.enums.model.SortDirection;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

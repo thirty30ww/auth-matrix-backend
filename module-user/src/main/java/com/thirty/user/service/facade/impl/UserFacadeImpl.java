@@ -7,7 +7,11 @@ import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.*;
 import com.thirty.user.model.vo.UserVO;
-import com.thirty.user.service.domain.*;
+import com.thirty.user.service.domain.role.builder.RoleListBuilderFactory;
+import com.thirty.user.service.domain.role.builder.RoleValidationBuilderFactory;
+import com.thirty.user.service.domain.user.UserOperationDomain;
+import com.thirty.user.service.domain.user.UserQueryDomain;
+import com.thirty.user.service.domain.user.UserValidationDomain;
 import com.thirty.user.service.facade.UserFacade;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,9 +29,9 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private UserQueryDomain userQueryDomain;
     @Resource
-    private RoleQueryDomain roleQueryDomain;
+    private RoleListBuilderFactory roleListBuilderFactory;
     @Resource
-    private RoleValidationDomain roleValidationDomain;
+    private RoleValidationBuilderFactory roleValidationBuilderFactory;
 
     @Resource
     private SettingApi settingApi;
@@ -44,7 +48,8 @@ public class UserFacadeImpl implements UserFacade {
             throw new BusinessException(UserResultCode.USERNAME_ALREADY_EXISTS);
         }
         // 对操作人是否有权限添加用户做角色校验
-        if (!roleValidationDomain.validateRolesContainChildRoles(operatorUserId, addUserDTO.getRoleIds())) {
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId)
+                .validateRoles(addUserDTO.getRoleIds())) {
             throw new BusinessException(UserResultCode.ROLE_NOT_AUTHORIZED_ADD);
         }
         userOperationDomain.addUser(addUserDTO);
@@ -68,10 +73,10 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void modifyUser(Integer operatorUserId, ModifyUserDTO modifyUserDTO) {
         // 对操作人是否有权限修改用户做角色校验
-        if (!roleValidationDomain.validateUserIdRolesContainChildRoles(operatorUserId, modifyUserDTO.getId())) {
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId).validateUser(modifyUserDTO.getId())) {
             throw new BusinessException(UserResultCode.USER_NOT_AUTHORIZED_MODIFY);
         }
-        if (!roleValidationDomain.validateRolesContainChildRoles(operatorUserId, modifyUserDTO.getRoleIds())) {
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId).validateRoles(modifyUserDTO.getRoleIds())) {
             throw new BusinessException(UserResultCode.ROLE_NOT_AUTHORIZED_MODIFY);
         }
         userOperationDomain.modifyUser(modifyUserDTO);
@@ -99,7 +104,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void banUsers(Integer operatorUserId, List<Integer> userIds) {
         // 对操作人是否有权限封禁用户做角色校验
-        if (!roleValidationDomain.validateUserIdsRolesContainChildRoles(operatorUserId, userIds)) {
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId).validateUsers(userIds)) {
             throw new BusinessException(UserResultCode.ROLE_NOT_AUTHORIZED_BAN);
         }
         userOperationDomain.banUsers(userIds);
@@ -113,7 +118,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public void unbanUsers(Integer operatorUserId, List<Integer> userIds) {
         // 对操作人是否有权限解封用户做角色校验
-        if (!roleValidationDomain.validateUserIdsRolesContainChildRoles(operatorUserId, userIds)) {
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId).validateUsers(userIds)) {
             throw new BusinessException(UserResultCode.ROLE_NOT_AUTHORIZED_UNBAN);
         }
         userOperationDomain.unbanUsers(userIds);
@@ -147,7 +152,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public IPage<UserVO> getUsers(Integer currentUserId, PageQueryDTO<GetUsersDTO> pageQueryDTO) {
         // 获取当前用户有权限的角色ID列表
-        List<Integer> permittedRoleIds = roleQueryDomain.getChildRoleIds(currentUserId);
+        List<Integer> permittedRoleIds = roleListBuilderFactory.createWithChildAndGlobal(currentUserId)
+                .buildIds();
 
         // 获取用户列表
         return userQueryDomain.getUsers(pageQueryDTO, permittedRoleIds, settingApi.hasPermissionDisplay());

@@ -1,4 +1,4 @@
-package com.thirty.common.service;
+package com.thirty.common.service.basic;
 
 import org.springframework.web.multipart.MultipartFile;
 

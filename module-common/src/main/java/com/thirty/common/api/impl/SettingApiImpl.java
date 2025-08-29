@@ -2,7 +2,7 @@ package com.thirty.common.api.impl;
 
 import com.thirty.common.api.SettingApi;
 import com.thirty.common.enums.model.SettingField;
-import com.thirty.common.service.SettingService;
+import com.thirty.common.service.basic.SettingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 

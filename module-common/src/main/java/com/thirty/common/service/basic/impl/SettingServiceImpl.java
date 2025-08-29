@@ -1,10 +1,10 @@
-package com.thirty.common.service.impl;
+package com.thirty.common.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.enums.model.SettingField;
 import com.thirty.common.model.entity.Setting;
-import com.thirty.common.service.SettingService;
+import com.thirty.common.service.basic.SettingService;
 import com.thirty.common.mapper.SettingMapper;
 import org.springframework.stereotype.Service;
 

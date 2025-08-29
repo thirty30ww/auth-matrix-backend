@@ -5,11 +5,9 @@ import com.thirty.user.enums.result.ViewResultCode;
 import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.facade.ViewFacade;
+import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,16 +19,24 @@ import java.util.List;
 public class ViewController {
     @Resource
     private ViewFacade viewFacade;
+    @Resource
+    private JwtUtil jwtUtil;
 
     /**
      * 获取视图树
-     * @param onlyMenu 是否只获取菜单节点
      * @return 视图树
      */
     @GetMapping("/tree")
-    public ResultDTO<List<ViewVO>> getViewTree(@RequestParam(defaultValue = "false", required = false) boolean onlyMenu) {
-        List<ViewVO> viewTree = viewFacade.getViewTree(onlyMenu);
-        return ResultDTO.of(ViewResultCode.GET_TREE_SUCCESS, viewTree);
+    public ResultDTO<List<ViewVO>> getViewTree() {
+        List<ViewVO> viewTree = viewFacade.getViewTree();
+        return ResultDTO.of(ViewResultCode.GET_VIEW_TREE_SUCCESS, viewTree);
+    }
+
+    @GetMapping("/menu/tree")
+    public ResultDTO<List<ViewVO>> getMenuTree(@RequestParam(required = false) Integer targetRoleId, @RequestHeader("Authorization") String authHeader) {
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        List<ViewVO> menuTree = viewFacade.getMenuTree(userId, targetRoleId);
+        return ResultDTO.of(ViewResultCode.GET_MENU_TREE_SUCCESS, menuTree);
     }
 
     /**

@@ -1,7 +1,9 @@
 package com.thirty.user.constant;
 
 public class AuthConstant {
-    
+    // 角色相关常量
+    public static final String ROLE_PREFIX = "role:";
+
     // JWT相关常量
     public static final String TOKEN_BLACKLIST_PREFIX = "token:blacklist:";
     

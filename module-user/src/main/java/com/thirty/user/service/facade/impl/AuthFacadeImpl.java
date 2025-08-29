@@ -2,7 +2,7 @@ package com.thirty.user.service.facade.impl;
 
 import com.thirty.user.model.dto.LoginDTO;
 import com.thirty.user.model.vo.JwtVO;
-import com.thirty.user.service.domain.AuthDomain;
+import com.thirty.user.service.domain.auth.AuthDomain;
 import com.thirty.user.service.facade.AuthFacade;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;

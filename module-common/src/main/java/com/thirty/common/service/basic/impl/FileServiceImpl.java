@@ -1,4 +1,4 @@
-package com.thirty.common.service.impl;
+package com.thirty.common.service.basic.impl;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -7,7 +7,7 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.thirty.common.config.OssConfig;
 import com.thirty.common.enums.result.FileResultCode;
 import com.thirty.common.exception.BusinessException;
-import com.thirty.common.service.FileService;
+import com.thirty.common.service.basic.FileService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

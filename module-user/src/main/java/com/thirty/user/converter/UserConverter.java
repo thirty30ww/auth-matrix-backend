@@ -17,8 +17,8 @@ import java.util.List;
  * DTO与实体类之间的转换器
  */
 @Mapper
-public interface UserDtoConverter {
-    UserDtoConverter INSTANCE = Mappers.getMapper(UserDtoConverter.class);
+public interface UserConverter {
+    UserConverter INSTANCE = Mappers.getMapper(UserConverter.class);
 
     /**
      * 将AddUserDTO对象转换为Detail对象

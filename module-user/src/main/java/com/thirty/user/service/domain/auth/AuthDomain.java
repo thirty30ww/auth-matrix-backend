@@ -1,4 +1,4 @@
-package com.thirty.user.service.domain;
+package com.thirty.user.service.domain.auth;
 
 import com.thirty.user.model.vo.JwtVO;
 import org.springframework.security.core.Authentication;

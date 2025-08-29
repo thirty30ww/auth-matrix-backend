@@ -1,7 +1,7 @@
-package com.thirty.user.service.domain.impl;
+package com.thirty.user.service.domain.user.impl;
 
 import com.thirty.common.exception.BusinessException;
-import com.thirty.user.converter.UserDtoConverter;
+import com.thirty.user.converter.UserConverter;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.AddUserDTO;
 import com.thirty.user.model.dto.ChangePasswordDTO;
@@ -12,7 +12,7 @@ import com.thirty.user.model.entity.User;
 import com.thirty.user.service.basic.DetailService;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
-import com.thirty.user.service.domain.UserOperationDomain;
+import com.thirty.user.service.domain.user.UserOperationDomain;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,7 +47,7 @@ public class UserOperationDomainImpl implements UserOperationDomain {
         Integer userId = userService.createUser(addUserDTO.getUsername(), encodedPassword);
 
         // 绑定用户详情
-        Detail detail = UserDtoConverter.INSTANCE.addUserDTOToDetail(addUserDTO);
+        Detail detail = UserConverter.INSTANCE.addUserDTOToDetail(addUserDTO);
         detailService.createDetail(userId, detail);
 
         // 关联用户角色
@@ -69,7 +69,7 @@ public class UserOperationDomainImpl implements UserOperationDomain {
         }
 
         // 转换为Detail对象
-        Detail detail = UserDtoConverter.INSTANCE.modifyUserDTOToDetail(modifyUserDTO);
+        Detail detail = UserConverter.INSTANCE.modifyUserDTOToDetail(modifyUserDTO);
 
         // 更新Detail信息
         detailService.updateById(detail);
@@ -85,7 +85,7 @@ public class UserOperationDomainImpl implements UserOperationDomain {
     @Override
     public void updateUser(UpdateUserDTO updateUserDTO) {
         // 转换为Detail对象
-        Detail detail = UserDtoConverter.INSTANCE.updateUserDTOToDetail(updateUserDTO);
+        Detail detail = UserConverter.INSTANCE.updateUserDTOToDetail(updateUserDTO);
 
         // 更新Detail信息
         detailService.updateById(detail);

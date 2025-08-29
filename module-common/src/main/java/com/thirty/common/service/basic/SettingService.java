@@ -1,4 +1,4 @@
-package com.thirty.common.service;
+package com.thirty.common.service.basic;
 
 import com.thirty.common.enums.model.SettingField;
 import com.thirty.common.model.entity.Setting;
