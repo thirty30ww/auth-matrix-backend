@@ -1,7 +1,7 @@
 package com.thirty.user.service.facade.impl;
 
-import com.thirty.common.api.SettingApi;
 import com.thirty.common.exception.BusinessException;
+import com.thirty.system.api.SettingApi;
 import com.thirty.user.enums.model.RoleListType;
 import com.thirty.user.enums.result.RoleResultCode;
 import com.thirty.user.model.dto.RoleDTO;

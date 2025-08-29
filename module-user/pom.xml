@@ -20,6 +20,11 @@
             <groupId>com.thirty</groupId>
             <artifactId>module-common</artifactId>
         </dependency>
+        <!--    依赖system模块    -->
+        <dependency>
+            <groupId>com.thirty</groupId>
+            <artifactId>module-system</artifactId>
+        </dependency>
 
         <!--    引入spring security    -->
         <dependency>

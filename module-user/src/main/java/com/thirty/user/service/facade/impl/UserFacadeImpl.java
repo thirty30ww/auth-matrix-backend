@@ -1,7 +1,7 @@
 package com.thirty.user.service.facade.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.thirty.common.api.SettingApi;
+import com.thirty.system.api.SettingApi;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.enums.result.UserResultCode;

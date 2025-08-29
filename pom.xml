@@ -20,6 +20,7 @@
         <module>module-user</module>
         <module>module-core</module>
         <module>module-common</module>
+        <module>module-system</module>
     </modules>
 
     <properties>
@@ -49,6 +50,11 @@
             <dependency>
                 <groupId>com.thirty</groupId>
                 <artifactId>module-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.thirty</groupId>
+                <artifactId>module-system</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

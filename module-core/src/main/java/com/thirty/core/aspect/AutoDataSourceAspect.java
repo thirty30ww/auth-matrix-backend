@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 @Order(1) // 确保在事务之前执行
 @Slf4j
 public class AutoDataSourceAspect {
-    @Before("execution(* com.thirty.common.service..*(..))")
+    @Before("execution(* com.thirty.system.service..*(..))")
     public void setCommonDataSource() {
-        DynamicDataSourceContextHolder.push("common");
+        DynamicDataSourceContextHolder.push("system");
     }
 
     @Before("execution(* com.thirty.user.service..*(..))")
@@ -27,7 +27,7 @@ public class AutoDataSourceAspect {
         DynamicDataSourceContextHolder.push("user");
     }
 
-    @After("execution(* com.thirty.common.service..*(..))")
+    @After("execution(* com.thirty.system.service..*(..))")
     public void clearCommonDataSource() {
         DynamicDataSourceContextHolder.clear();
     }

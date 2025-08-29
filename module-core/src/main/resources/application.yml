@@ -29,8 +29,8 @@ spring:
           username: ${DB_USERNAME:your_db_username}
           password: ${DB_PASSWORD:your_db_password}
           driver-class-name: com.mysql.cj.jdbc.Driver
-        common:
-          url: jdbc:mysql://localhost:3306/pp_common?allowPublicKeyRetrieval=true&useSSL=false
+        system:
+          url: jdbc:mysql://localhost:3306/pp_system?allowPublicKeyRetrieval=true&useSSL=false
           username: ${DB_USERNAME:your_db_username}
           password: ${DB_PASSWORD:your_db_password}
           driver-class-name: com.mysql.cj.jdbc.Driver

@@ -1,0 +1,41 @@
+package com.thirty.system.service.basic.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.thirty.system.enums.model.SettingField;
+import com.thirty.system.model.entity.Setting;
+import com.thirty.system.service.basic.SettingService;
+import com.thirty.system.mapper.SettingMapper;
+import org.springframework.stereotype.Service;
+
+/**
+* @author Lenovo
+* @description 针对表【setting(全局设置表)】的数据库操作Service实现
+* @createDate 2025-08-22 09:04:37
+*/
+@Service
+public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
+    implements SettingService{
+
+    @Override
+    public boolean getBooleanSetting(SettingField settingField) {
+        Setting setting = getSettingByField(settingField.getCode());
+        return setting.getValue() == 1;
+    }
+
+    /**
+     * 根据字段名获取设置
+     * @param field 字段名
+     * @return 设置
+     */
+    @Override
+    public Setting getSettingByField(String field) {
+        QueryWrapper<Setting> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("field", field);
+        return getOne(queryWrapper);
+    }
+}
+
+
+
+

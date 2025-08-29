@@ -21,6 +21,10 @@
         </dependency>
         <dependency>
             <groupId>com.thirty</groupId>
+            <artifactId>module-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.thirty</groupId>
             <artifactId>module-common</artifactId>
         </dependency>
     </dependencies>
