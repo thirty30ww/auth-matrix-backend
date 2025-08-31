@@ -1,4 +1,4 @@
-package com.thirty.user.validation;
+package com.thirty.user.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

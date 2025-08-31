@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class exceptionUtil {
+public class ExceptionUtil {
 
     /**
      * 根据字段在类中的声明顺序获取第一个字段错误

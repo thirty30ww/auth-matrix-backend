@@ -1,6 +1,7 @@
 package com.thirty.user.service.facade;
 
 import com.thirty.user.enums.model.RoleListType;
+import com.thirty.user.model.dto.AssignViewDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
@@ -43,4 +44,11 @@ public interface RoleFacade {
      * @param userId 用户ID
      */
     void deleteRole(Integer roleId, Integer userId);
+
+    /**
+     * 分配视图权限
+     * @param userId 当前操作用户ID
+     * @param assignViewDTO 分配视图dto
+     */
+    void assignView(Integer userId, AssignViewDTO assignViewDTO);
 }

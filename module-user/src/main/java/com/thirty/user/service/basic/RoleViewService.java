@@ -24,4 +24,31 @@ public interface RoleViewService extends IService<RoleView> {
      * @return 视图id列表
      */
     List<Integer> getViewIds(List<Integer> roleIds);
+
+    /**
+     * 根据角色删除角色视图
+     * @param roleId 角色id
+     */
+    void deleteByRoleId(Integer roleId);
+
+    /**
+     * 添加角色视图
+     * @param roleId 角色id
+     * @param viewIds 视图id列表
+     */
+    void addRoleViews(Integer roleId, List<Integer> viewIds);
+
+    /**
+     * 删除角色视图
+     * @param roleId 角色id
+     * @param viewIds 视图id列表
+     */
+    void deleteRoleViews(Integer roleId, List<Integer> viewIds);
+
+    /**
+     * 删除角色视图
+     * @param roleIds 角色id列表
+     * @param viewIds 视图id列表
+     */
+    void deleteRoleViews(List<Integer> roleIds, List<Integer> viewIds);
 }

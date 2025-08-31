@@ -2,7 +2,7 @@ package com.thirty.user.model.dto;
 
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
-import com.thirty.user.validation.ValidPassword;
+import com.thirty.user.annotation.ValidPassword;
 
 @Data
 public class ChangePasswordDTO {

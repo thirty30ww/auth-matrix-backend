@@ -16,9 +16,6 @@ spring:
     time-zone: GMT+8 # 时间 zone
     serialization:
       write-dates-as-timestamps: false  # 禁用时间戳格式
-  devtools:
-    restart:
-      enabled: true  # 开启热部署
   datasource:
     dynamic:
       primary: user

@@ -2,6 +2,7 @@ package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.converter.ViewConverter;
 import com.thirty.user.enums.model.ViewType;
 import com.thirty.user.mapper.ViewMapper;
@@ -9,9 +10,9 @@ import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.basic.ViewService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author Lenovo
@@ -76,6 +77,81 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
         List<View> pageViews = getPageViews();
         return ViewConverter.INSTANCE.toViewVOS(pageViews);
     }
+
+    /**
+     * 获取视图的所有祖先ID
+     * @param viewId 视图ID
+     * @return 祖先ID列表
+     */
+    @Override
+    public List<Integer> getAncestorIds(Integer viewId) {
+        List<Integer> ancestorIds = new ArrayList<>();
+        List<View> views = list();
+
+        Map<Integer, View> viewMap = View.buildViewMap(views);
+
+        View currentView = viewMap.get(viewId);
+        while (!Objects.equals(currentView.getParentNodeId(), RoleConstant.ROOT_ROLE_PARENT_ID)) {
+            ancestorIds.add(currentView.getParentNodeId());
+            currentView = viewMap.get(currentView.getParentNodeId());
+        }
+
+        return ancestorIds;
+    }
+
+    /**
+     * 获取视图列表的所有祖先ID
+     * @param viewIds 视图ID列表
+     * @return 祖先ID列表
+     */
+    @Override
+    public List<Integer> getAncestorIds(List<Integer> viewIds) {
+        Set<Integer> ancestorIds = new HashSet<>();
+        for (Integer viewId : viewIds) {
+            ancestorIds.addAll(getAncestorIds(viewId));
+        }
+        return new ArrayList<>(ancestorIds);
+    }
+
+    /**
+     * 获取视图的所有后代ID
+     * @param viewId 视图ID
+     * @return 后代ID列表
+     */
+    @Override
+    public List<Integer> getDescendantIds(Integer viewId) {
+        List<Integer> descendantIds = new ArrayList<>();
+        List<View> views = list();
+
+        Map<Integer, List<View>> parentChildMap = View.buildParentChildMap(views);
+
+        List<View> currentLevel = parentChildMap.get(viewId);
+        while (!CollectionUtils.isEmpty(currentLevel)) {
+            List<View> nextLevel = new ArrayList<>();
+            for (View view : currentLevel) {
+                descendantIds.add(view.getId());
+                nextLevel.addAll(parentChildMap.getOrDefault(view.getId(), new ArrayList<>()));
+            }
+            currentLevel = nextLevel;
+        }
+
+        return descendantIds;
+    }
+
+    /**
+     * 获取视图列表的所有后代ID
+     * @param viewIds 视图ID列表
+     * @return 后代ID列表
+     */
+    @Override
+    public List<Integer> getDescendantIds(List<Integer> viewIds)  {
+        Set<Integer> descendantIds = new HashSet<>();
+        for (Integer viewId : viewIds) {
+            descendantIds.addAll(getDescendantIds(viewId));
+        }
+        return new ArrayList<>(descendantIds);
+    }
+
 }
 
 

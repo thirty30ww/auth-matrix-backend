@@ -7,7 +7,8 @@ import com.thirty.user.model.entity.Role;
 import com.thirty.user.service.basic.RoleService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
@@ -50,6 +51,58 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     /**
+     * 获取子角色列表
+     * @param roleIds 角色id列表
+     * @return 子角色列表
+     */
+    @Override
+    public List<Role> getChildRoles(List<Integer> roleIds) {
+        List<Role> allRoles = list();
+
+        // 建立角色关系映射，key为父角色ID，value为子角色列表
+        Map<Integer, List<Role>> parentChildMap = Role.buildParentChildMap(allRoles);
+
+        // 递归收集所有子孙角色ID
+        Set<Integer> childRoleIds = new HashSet<>();
+        addChildRoleIds(roleIds, parentChildMap, childRoleIds);
+
+        // 返回子孙角色列表
+        return allRoles.stream()
+                .filter(role -> childRoleIds.contains(role.getId()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取子角色列表
+     * @param roleId 角色id
+     * @return 子角色列表
+     */
+    @Override
+    public List<Role> getChildRoles(Integer roleId) {
+        return getChildRoles(List.of(roleId));
+    }
+
+    /**
+     * 获取子角色id列表
+     * @param roleIds 角色id列表
+     * @return 子角色id列表
+     */
+    @Override
+    public List<Integer> getChildRoleIds(List<Integer> roleIds) {
+        return Role.extractIds(getChildRoles(roleIds));
+    }
+
+    /**
+     * 获取子角色id列表
+     * @param roleId 角色id
+     * @return 子角色id列表
+     */
+    @Override
+    public List<Integer> getChildRoleIds(Integer roleId) {
+        return Role.extractIds(getChildRoles(roleId));
+    }
+
+    /**
      * 更新角色
      * @param role 角色
      */
@@ -68,5 +121,34 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     private Integer getLevel(Integer parentNodeId) {
         Role parentRole = getById(parentNodeId);
         return parentRole.getLevel() + 1;
+    }
+
+    /**
+     * 递归收集子角色ID
+     * @param parentIds 父角色ID集合
+     * @param parentChildMap 父子关系映射
+     * @param resultIds 结果集合
+     */
+    private void addChildRoleIds(List<Integer> parentIds,
+                                 Map<Integer, List<Role>> parentChildMap,
+                                 Set<Integer> resultIds) {
+        List<Integer> nextLevelIds = new ArrayList<>();
+
+        for (Integer parentId : parentIds) {
+            List<Role> children = parentChildMap.get(parentId);
+            if (children != null) {
+                for (Role child : children) {
+                    if (!resultIds.contains(child.getId())) {
+                        resultIds.add(child.getId());
+                        nextLevelIds.add(child.getId());
+                    }
+                }
+            }
+        }
+
+        // 如果还有下一层子角色，继续递归
+        if (!nextLevelIds.isEmpty()) {
+            addChildRoleIds(nextLevelIds, parentChildMap, resultIds);
+        }
     }
 }

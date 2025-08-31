@@ -1,7 +1,7 @@
 package com.thirty.user.model.dto;
 
 import com.thirty.user.enums.model.UserSex;
-import com.thirty.user.validation.ValidPassword;
+import com.thirty.user.annotation.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

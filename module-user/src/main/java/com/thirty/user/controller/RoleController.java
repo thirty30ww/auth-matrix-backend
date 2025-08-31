@@ -3,6 +3,7 @@ package com.thirty.user.controller;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.model.RoleListType;
 import com.thirty.user.enums.result.RoleResultCode;
+import com.thirty.user.model.dto.AssignViewDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
@@ -79,5 +80,16 @@ public class RoleController {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.deleteRole(roleId, userId);
         return ResultDTO.of(RoleResultCode.ROLE_DELETE_SUCCESS);
+    }
+
+    /**
+     * 分配视图权限
+     * @return 角色dto
+     */
+    @PostMapping("/assign/view")
+    public ResultDTO<Void> assignView(@RequestBody AssignViewDTO assignViewDTO, @RequestHeader(value = "Authorization") String authHeader) {
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        roleFacade.assignView(userId, assignViewDTO);
+        return ResultDTO.of(RoleResultCode.ROLE_ASSIGN_VIEW_SUCCESS);
     }
 }

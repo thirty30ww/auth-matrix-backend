@@ -20,7 +20,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 
-import static com.thirty.common.utils.exceptionUtil.getFirstFieldErrorByOrder;
+import static com.thirty.common.utils.ExceptionUtil.getFirstFieldErrorByOrder;
 
 /**
  * 全局异常处理

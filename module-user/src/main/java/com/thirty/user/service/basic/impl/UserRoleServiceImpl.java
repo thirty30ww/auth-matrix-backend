@@ -89,6 +89,26 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
         deleteUserRoles(userId);
         addUserRoles(userId, roleIds);
     }
+
+    /**
+     * 根据角色ID删除用户角色
+     * @param roleId 角色ID
+     */
+    @Override
+    public void deleteByRoleId(Integer roleId) {
+        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id", roleId);
+        remove(wrapper);
+    }
+
+    /**
+     * 根据角色删除用户角色
+     * @param role 角色
+     */
+    @Override
+    public void deleteByRoleId(Role role) {
+        deleteByRoleId(role.getId());
+    }
 }
 
 

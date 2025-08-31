@@ -2,12 +2,13 @@ package com.thirty.user.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import com.thirty.user.enums.model.UserSex;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 用户的具体信息
@@ -52,6 +53,12 @@ public class Detail implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 是否被删除(1:是 0:否)
+     */
+    @TableLogic
+    private Boolean isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

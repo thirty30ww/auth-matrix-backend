@@ -1,12 +1,10 @@
 package com.thirty.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 全局设置表
@@ -45,6 +43,12 @@ public class Setting implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 是否被删除(1:是 0:否)
+     */
+    @TableLogic
+    private Boolean isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

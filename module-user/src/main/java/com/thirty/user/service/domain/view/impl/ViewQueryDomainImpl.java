@@ -1,5 +1,6 @@
 package com.thirty.user.service.domain.view.impl;
 
+import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.basic.RoleService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class ViewQueryDomainImpl implements ViewQueryDomain {
@@ -99,6 +101,22 @@ public class ViewQueryDomainImpl implements ViewQueryDomain {
         return viewTree;
     }
 
+    /**
+     * 获取菜单id列表
+     * @param roleId 角色id
+     * @return 菜单id列表
+     */
+    @Override
+    public List<Integer> getMenuIds(Integer roleId) {
+        Integer level = roleService.getById(roleId).getLevel();
+        if (level == 0) {
+            // 最高级角色，返回所有菜单
+            return viewService.getNotPageViews().stream().map(View::getId).toList();
+        }
+        // 否则返回角色菜单列表
+        return roleViewService.getViewIds(roleId);
+    }
+
 
     /**
      * 查找第一个节点
@@ -143,28 +161,13 @@ public class ViewQueryDomainImpl implements ViewQueryDomain {
 
     /**
      * 获取菜单id列表
-     * @param roleId 角色id
-     * @return 菜单id列表
-     */
-    private List<Integer> getMenuIds(Integer roleId) {
-        Integer level = roleService.getById(roleId).getLevel();
-        if (level == 0) {
-            // 最高级角色，返回所有菜单
-            return viewService.getNotPageViews().stream().map(View::getId).toList();
-        }
-        // 否则返回角色菜单列表
-        return roleViewService.getViewIds(roleId);
-    }
-
-    /**
-     * 获取菜单id列表
      * @param roleIds 角色id列表
      * @return 菜单id列表
      */
     private List<Integer> getMenuIds(List<Integer> roleIds) {
         // 获取最高级角色
         Integer highestLevel = roleService.getHighestLevel(roleIds);
-        if (highestLevel ==  0) {
+        if (Objects.equals(highestLevel, RoleConstant.ROLE_HIGHEST_LEVEL)) {
             // 最高级角色为0，说明是最高级角色，返回所有菜单
             return viewService.getNotPageViews().stream().map(View::getId).toList();
         }

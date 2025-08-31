@@ -43,4 +43,32 @@ public interface ViewService extends IService<View> {
      * @return 页面VO列表
      */
     List<ViewVO> getPageViewVOS();
+
+    /**
+     * 获取视图的所有祖先ID（不包含当前视图）
+     * @param viewId 视图ID
+     * @return 祖先ID列表
+     */
+    List<Integer> getAncestorIds(Integer viewId);
+
+    /**
+     * 获取视图列表的所有祖先ID（不包含当前视图）
+     * @param viewIds 视图ID列表
+     * @return 祖先ID列表
+     */
+    List<Integer> getAncestorIds(List<Integer> viewIds);
+
+    /**
+     * 获取视图的所有后代ID（不包含当前视图）
+     * @param viewId 视图ID
+     * @return 后代ID列表
+     */
+    List<Integer> getDescendantIds(Integer viewId);
+
+    /**
+     * 获取视图列表的所有后代ID（不包含当前视图）
+     * @param viewIds 视图ID列表
+     * @return 后代ID列表
+     */
+    List<Integer> getDescendantIds(List<Integer> viewIds);
 }

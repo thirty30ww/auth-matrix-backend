@@ -1,10 +1,8 @@
 package com.thirty.user.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -19,6 +17,7 @@ import java.util.stream.Collectors;
  */
 @TableName(value ="role")
 @Data
+@EqualsAndHashCode(of = "id") // 仅使用 id 字段计算 equals 和 hashCode
 public class Role implements Serializable {
     /**
      * 角色ID
@@ -55,6 +54,13 @@ public class Role implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 是否被删除(1:是 0:否)
+     */
+    @TableLogic
+    private Boolean isDelete;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

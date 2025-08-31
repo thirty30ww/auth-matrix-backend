@@ -17,10 +17,12 @@ import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserOperationDomainImpl implements UserOperationDomain {
     @Resource
     private UserService userService;

@@ -4,12 +4,14 @@ import com.thirty.common.exception.BusinessException;
 import com.thirty.system.api.SettingApi;
 import com.thirty.user.enums.model.RoleListType;
 import com.thirty.user.enums.result.RoleResultCode;
+import com.thirty.user.model.dto.AssignViewDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
 import com.thirty.user.service.domain.role.RoleOperationDomain;
 import com.thirty.user.service.domain.role.builder.RoleListBuilderFactory;
 import com.thirty.user.service.domain.role.builder.RoleValidationBuilderFactory;
+import com.thirty.user.service.domain.view.ViewQueryDomain;
 import com.thirty.user.service.facade.RoleFacade;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class RoleFacadeImpl implements RoleFacade {
 
     @Resource
     private RoleOperationDomain roleOperationDomain;
+    @Resource
+    private ViewQueryDomain viewQueryDomain;
+
     @Resource
     private RoleListBuilderFactory roleListBuilderFactory;
     @Resource
@@ -49,23 +54,11 @@ public class RoleFacadeImpl implements RoleFacade {
     @Override
     public List<Role> getRoles(Integer currentUserId, RoleListType type) {
         return switch (type) {
-            case ALL -> roleListBuilderFactory.create()
-                    .includeAllRoles()
-                    .build();
-            case CHILD -> roleListBuilderFactory.create()
-                    .forUser(currentUserId)
-                    .includeChildRoles()
-                    .build();
-            case CHILD_AND_GLOBAL -> roleListBuilderFactory.createWithChildAndGlobal(currentUserId)
-                    .build();
-            case GLOBAL -> roleListBuilderFactory.create()
-                    .includeGlobalRoles()
-                    .build();
-            case CHILD_AND_SELF -> roleListBuilderFactory.create()
-                    .forUser(currentUserId)
-                    .includeChildRoles()
-                    .includeUserRoles()
-                    .build();
+            case ALL -> roleListBuilderFactory.createWithAll().build();
+            case CHILD -> roleListBuilderFactory.createWithChild(currentUserId).build();
+            case CHILD_AND_GLOBAL -> roleListBuilderFactory.createWithChildAndGlobal(currentUserId).build();
+            case GLOBAL -> roleListBuilderFactory.createWithGlobal().build();
+            case CHILD_AND_SELF -> roleListBuilderFactory.createWithChildAndUser(currentUserId).build();
         };
     }
 
@@ -75,8 +68,7 @@ public class RoleFacadeImpl implements RoleFacade {
      */
     @Override
     public void addRole(RoleDTO roleDTO, Integer userId) {
-        if (!roleValidationBuilderFactory.createWithChildAndGlobal(userId)
-                .includeUserRoles()
+        if (!roleValidationBuilderFactory.createWithChildAndUser(userId)
                 .validateRole(roleDTO.getParentNodeId())) {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_ADD);
         }
@@ -93,8 +85,7 @@ public class RoleFacadeImpl implements RoleFacade {
         if (!roleValidationBuilderFactory.createWithChildAndGlobal(userId).validateRole(roleDTO.getId())) {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_UPDATE);
         }
-        if (!roleValidationBuilderFactory.createWithChildAndGlobal(userId)
-                .includeUserRoles()
+        if (!roleValidationBuilderFactory.createWithChildAndUser(userId)
                 .validateRole(roleDTO.getParentNodeId())) {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_UPDATE);
         }
@@ -112,5 +103,22 @@ public class RoleFacadeImpl implements RoleFacade {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_DELETE);
         }
         roleOperationDomain.deleteRole(roleId);
+    }
+
+    /**
+     * 分配视图权限
+     * @param userId 当前操作用户ID
+     * @param assignViewDTO 分配视图dto
+     */
+    @Override
+    public void assignView(Integer userId, AssignViewDTO assignViewDTO) {
+        Integer roleId = assignViewDTO.getRoleId();
+        List<Integer> viewIds = assignViewDTO.getViewIds();
+
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(userId).validateRole(roleId)) {
+            throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_ASSIGN);
+        }
+        List<Integer> oldViewIds = viewQueryDomain.getMenuIds(roleId);
+        roleOperationDomain.assignView(roleId, oldViewIds, viewIds);
     }
 }

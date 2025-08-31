@@ -1,9 +1,6 @@
 package com.thirty.user.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.thirty.user.enums.model.ViewType;
 import lombok.Data;
 
@@ -76,10 +73,30 @@ public class View implements Serializable {
      */
     private LocalDateTime updateTime;
 
+    /**
+     * 是否被删除(1:是 0:否)
+     */
+    @TableLogic
+    private Boolean isDelete;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    public static Map<Integer, View> listToMap(List<View> views) {
+    /**
+     * 构建视图Map，key为视图ID，value为View
+     * @param views 视图列表
+     * @return 视图Map
+     */
+    public static Map<Integer, View> buildViewMap(List<View> views) {
         return views.stream().collect(Collectors.toMap(View::getId, view -> view));
+    }
+
+    /**
+     * 构建父节点ID和子节点列表的Map，key为父节点ID，value为子节点列表
+     * @param views 视图列表
+     * @return 父节点ID和子节点列表的Map
+     */
+    public static Map<Integer, List<View>> buildParentChildMap(List<View> views) {
+        return views.stream().collect(Collectors.groupingBy(View::getParentNodeId));
     }
 }

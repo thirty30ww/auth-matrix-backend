@@ -22,11 +22,11 @@ public enum RoleListType implements CodeEnum<Integer> {
     /**
      * 全局角色
      */
-    GLOBAL(4),
+    GLOBAL(3),
     /**
      * 子角色和当前用户角色
      */
-    CHILD_AND_SELF(5),
+    CHILD_AND_SELF(4),
     ;
 
     private final Integer code;

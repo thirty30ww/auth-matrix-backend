@@ -4,27 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thirty.user.mapper.UserRoleMapper">
     <insert id="addUserRoles">
-        insert into user_role (user_id, role_id)
-        values
+        INSERT INTO user_role (user_id, role_id)
+        VALUES
         <foreach collection="roleIds" item="roleId" separator=",">
             (#{userId}, #{roleId})
         </foreach>
     </insert>
 
     <select id="selectRolesByUserId" resultType="com.thirty.user.model.entity.Role">
-        select
-            role.id,
-            role.name,
-            role.level
-        from user_role ur
-        join role on ur.role_id = role.id
-        where ur.user_id = #{userId}
+        SELECT
+            role.*
+        FROM user_role ur
+        INNER JOIN role ON ur.role_id = role.id
+        WHERE ur.user_id = #{userId}
+        AND ur.is_delete = 0
+        AND role.is_delete = 0
     </select>
 
     <select id="selectRoleIdsByUserIds" resultType="java.lang.Integer">
-        select role_id from user_role where user_id in
+        SELECT role_id FROM user_role WHERE user_id IN
         <foreach collection="userIds" item="userId" separator="," open="(" close=")">
             #{userId}
         </foreach>
+        and is_delete = 0
     </select>
 </mapper>

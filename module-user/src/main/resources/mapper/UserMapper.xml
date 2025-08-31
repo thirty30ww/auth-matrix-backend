@@ -19,11 +19,9 @@
     <!-- 嵌套查询：根据用户ID获取角色列表 -->
     <select id="getUserRoles" resultType="com.thirty.user.model.entity.Role">
         SELECT
-            r.id,
-            r.name,
-            r.level
+            r.*
         FROM user_role ur
-                 INNER JOIN role r ON ur.role_id = r.id
+        INNER JOIN role r ON ur.role_id = r.id AND ur.is_delete = 0 AND r.is_delete = 0
         WHERE ur.user_id = #{id}
     </select>
 

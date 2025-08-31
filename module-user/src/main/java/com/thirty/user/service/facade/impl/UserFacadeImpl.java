@@ -48,8 +48,7 @@ public class UserFacadeImpl implements UserFacade {
             throw new BusinessException(UserResultCode.USERNAME_ALREADY_EXISTS);
         }
         // 对操作人是否有权限添加用户做角色校验
-        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId)
-                .validateRoles(addUserDTO.getRoleIds())) {
+        if (!roleValidationBuilderFactory.createWithChildAndGlobal(operatorUserId).validateRoles(addUserDTO.getRoleIds())) {
             throw new BusinessException(UserResultCode.ROLE_NOT_AUTHORIZED_ADD);
         }
         userOperationDomain.addUser(addUserDTO);
@@ -153,7 +152,7 @@ public class UserFacadeImpl implements UserFacade {
     public IPage<UserVO> getUsers(Integer currentUserId, PageQueryDTO<GetUsersDTO> pageQueryDTO) {
         // 获取当前用户有权限的角色ID列表
         List<Integer> permittedRoleIds = roleListBuilderFactory.createWithChildAndGlobal(currentUserId)
-                .buildIds();
+            .buildIds();
 
         // 获取用户列表
         return userQueryDomain.getUsers(pageQueryDTO, permittedRoleIds, settingApi.hasPermissionDisplay());

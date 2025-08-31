@@ -31,4 +31,11 @@ public interface ViewQueryDomain {
      * @return 视图树
      */
     List<ViewVO> getViewTree();
+
+    /**
+     * 获取菜单id列表
+     * @param roleId 角色id
+     * @return 菜单id列表
+     */
+    List<Integer> getMenuIds(Integer roleId);
 }

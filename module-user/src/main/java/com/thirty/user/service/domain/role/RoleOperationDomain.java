@@ -2,6 +2,8 @@ package com.thirty.user.service.domain.role;
 
 import com.thirty.user.model.dto.RoleDTO;
 
+import java.util.List;
+
 public interface RoleOperationDomain {
     /**
      * 添加角色
@@ -20,4 +22,12 @@ public interface RoleOperationDomain {
      * @param roleId 角色ID
      */
     void deleteRole(Integer roleId);
+
+    /**
+     * 分配视图权限
+     * @param roleId 角色ID
+     * @param oldViewIds 旧视图ID列表
+     * @param newViewIds 新视图ID列表
+     */
+    void assignView(Integer roleId, List<Integer> oldViewIds, List<Integer> newViewIds);
 }

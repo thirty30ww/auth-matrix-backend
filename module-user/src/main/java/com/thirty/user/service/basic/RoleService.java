@@ -27,6 +27,34 @@ public interface RoleService extends IService<Role> {
     void addRole(Role role);
 
     /**
+     * 获取子角色列表
+     * @param roleIds 角色id列表
+     * @return 子角色列表
+     */
+    List<Role> getChildRoles(List<Integer> roleIds);
+
+    /**
+     * 获取子角色列表
+     * @param roleId 角色id
+     * @return 子角色列表
+     */
+    List<Role> getChildRoles(Integer roleId);
+
+    /**
+     * 获取子角色id列表
+     * @param roleIds 角色id列表
+     * @return 子角色id列表
+     */
+    List<Integer> getChildRoleIds(List<Integer> roleIds);
+
+    /**
+     * 获取子角色id列表
+     * @param roleId 角色id
+     * @return 子角色id列表
+     */
+    List<Integer> getChildRoleIds(Integer roleId);
+
+    /**
      * 更新角色
      * @param role 角色
      */
