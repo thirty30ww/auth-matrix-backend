@@ -7,7 +7,7 @@ import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.*;
 import com.thirty.user.model.vo.UserVO;
-import com.thirty.user.service.domain.role.builder.RoleListBuilderFactory;
+import com.thirty.user.service.domain.role.builder.RolesBuilderFactory;
 import com.thirty.user.service.domain.role.builder.RoleValidationBuilderFactory;
 import com.thirty.user.service.domain.user.UserOperationDomain;
 import com.thirty.user.service.domain.user.UserQueryDomain;
@@ -29,7 +29,7 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private UserQueryDomain userQueryDomain;
     @Resource
-    private RoleListBuilderFactory roleListBuilderFactory;
+    private RolesBuilderFactory rolesBuilderFactory;
     @Resource
     private RoleValidationBuilderFactory roleValidationBuilderFactory;
 
@@ -151,7 +151,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public IPage<UserVO> getUsers(Integer currentUserId, PageQueryDTO<GetUsersDTO> pageQueryDTO) {
         // 获取当前用户有权限的角色ID列表
-        List<Integer> permittedRoleIds = roleListBuilderFactory.createWithChildAndGlobal(currentUserId)
+        List<Integer> permittedRoleIds = rolesBuilderFactory.createWithChildAndGlobal(currentUserId)
             .buildIds();
 
         // 获取用户列表

@@ -1,5 +1,6 @@
 package com.thirty.user.converter;
 
+import com.thirty.user.model.dto.ViewDTO;
 import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 import org.mapstruct.Mapper;
@@ -40,4 +41,11 @@ public interface ViewConverter {
     default Map<Integer, ViewVO> toViewVOMap(List<View> views) {
         return views.stream().collect(Collectors.toMap(View::getId, this::toViewVO));
     }
+
+    /**
+     * 将ViewDTO对象转换为View对象
+     * @param viewDTO ViewDTO对象
+     * @return View对象
+     */
+    View toView(ViewDTO viewDTO);
 }

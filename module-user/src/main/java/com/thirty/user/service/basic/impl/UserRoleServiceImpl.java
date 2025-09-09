@@ -1,8 +1,10 @@
 package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.exception.BusinessException;
+import com.thirty.common.utils.CollectionUtil;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.mapper.UserRoleMapper;
 import com.thirty.user.model.entity.Role;
@@ -12,7 +14,6 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
 * @author Lenovo
@@ -47,10 +48,13 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
      */
     @Override
     public List<Integer> getRoleIds(Integer userId) {
+        if (userId == null) {
+            return List.of();
+        }
         QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         List<UserRole> userRoles = list(wrapper);
-        return userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+        return UserRole.extractRoleIds(userRoles);
     }
 
     /**
@@ -64,12 +68,25 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
     }
 
     /**
+     * 根据用户ID查询角色ID列表
+     * @param userId 用户ID
+     * @return 角色ID列表
+     */
+    @Override
+    public List<Integer> getRoleIdsByUserId(Integer userId) {
+        return getRoleIdsByUserIds(List.of(userId));
+    }
+
+    /**
      * 为用户添加角色
      * @param userId 用户ID
      * @param roleIds 角色ID列表
      */
     @Override
     public void addUserRoles(Integer userId, List<Integer> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
         userRoleMapper.addUserRoles(userId, roleIds);
     }
 
@@ -84,10 +101,33 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
         remove(wrapper);
     }
 
+    /**
+     * 删除用户角色
+     * @param userId 用户ID
+     * @param roleIds 角色ID列表
+     */
+    public void deleteUserRoles(Integer userId, List<Integer> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
+        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        wrapper.in("role_id", roleIds);
+        remove(wrapper);
+    }
+
+    /**
+     * 更新用户角色
+     * @param userId 用户ID
+     * @param roleIds 角色ID列表
+     */
     @Override
     public void updateUserRoles(Integer userId, List<Integer> roleIds) {
-        deleteUserRoles(userId);
-        addUserRoles(userId, roleIds);
+        List<Integer> oldRoleIds = getRoleIdsByUserId(userId);
+        List<Integer> added = CollectionUtil.AddedCompare(oldRoleIds, roleIds);
+        List<Integer> removed = CollectionUtil.RemovedCompare(oldRoleIds, roleIds);
+        addUserRoles(userId, added);
+        deleteUserRoles(userId, removed);
     }
 
     /**

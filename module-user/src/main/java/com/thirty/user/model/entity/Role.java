@@ -88,6 +88,15 @@ public class Role implements Serializable {
     }
 
     /**
+     * 构建角色ID到角色的映射
+     * @param roles 角色列表
+     * @return 角色ID到角色的映射
+     */
+    public static Map<Integer, Role> buildMap(List<Role> roles) {
+        return roles.stream().collect(Collectors.toMap(Role::getId, role -> role));
+    }
+
+    /**
      * 构建父角色ID到子角色列表的映射
      * @param roles 角色列表
      * @return 父角色ID到子角色列表的映射

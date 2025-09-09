@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色页面表
@@ -42,4 +44,17 @@ public class RoleView implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 从角色视图列表中提取视图id列表
+     * @param roleViews 角色视图列表
+     * @return 视图id列表
+     */
+    public static List<Integer> extractViewIds(List<RoleView> roleViews) {
+        return roleViews.stream().map(RoleView::getViewId).distinct().collect(Collectors.toList());
+    }
+
+    public static List<String> spliceRoleViewIds(List<RoleView> roleViews) {
+        return roleViews.stream().map(rv -> rv.getRoleId() + "_" + rv.getViewId()).distinct().collect(Collectors.toList());
+    }
 }

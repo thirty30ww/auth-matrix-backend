@@ -14,12 +14,12 @@ public class RoleDTO {
     @NotNull(groups = Update.class, message = "角色ID不能为空")
     private Integer id;
     
-    @NotBlank(message = "角色名不能为空")
+    @NotBlank(groups = {Add.class, Update.class}, message = "角色名不能为空")
     private String name;
     
-    @NotBlank(message = "角色描述不能为空")
+    @NotBlank(groups = {Add.class, Update.class}, message = "角色描述不能为空")
     private String description;
     
-    @NotNull(message = "父ID不能为空")
+    @NotNull(groups = {Add.class, Update.class}, message = "父ID不能为空")
     private Integer parentNodeId;
 }

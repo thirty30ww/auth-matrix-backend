@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户和角色表
@@ -42,4 +44,13 @@ public class UserRole implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 从用户角色列表中提取角色ID列表
+     * @param userRoles 用户角色列表
+     * @return 角色ID列表
+     */
+    public static List<Integer> extractRoleIds(List<UserRole> userRoles) {
+        return userRoles.stream().map(UserRole::getRoleId).distinct().collect(Collectors.toList());
+    }
 }

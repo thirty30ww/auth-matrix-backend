@@ -35,6 +35,13 @@ public interface UserRoleService extends IService<UserRole> {
     List<Integer> getRoleIdsByUserIds(List<Integer> userIds);
 
     /**
+     * 根据用户ID查询角色ID列表
+     * @param userId 用户ID
+     * @return 角色ID列表
+     */
+    List<Integer> getRoleIdsByUserId(Integer userId);
+
+    /**
      * 为用户添加角色
      * @param userId 用户ID
      * @param roleIds 角色ID列表

@@ -1,7 +1,7 @@
 package com.thirty.user.controller;
 
 import com.thirty.common.model.dto.ResultDTO;
-import com.thirty.user.enums.model.RoleListType;
+import com.thirty.user.enums.model.RolesType;
 import com.thirty.user.enums.result.RoleResultCode;
 import com.thirty.user.model.dto.AssignViewDTO;
 import com.thirty.user.model.dto.RoleDTO;
@@ -31,9 +31,9 @@ public class RoleController {
      * @return 角色树
      */
     @GetMapping("/tree")
-    public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader) {
+    public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "NOT_GLOBAL") RolesType type) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
-        return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(userId));
+        return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(userId, type));
     }
 
     /**
@@ -41,7 +41,7 @@ public class RoleController {
      * @return 角色列表
      */
     @GetMapping("/list")
-    public ResultDTO<List<Role>> getRoleList(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "ALL") RoleListType type) {
+    public ResultDTO<List<Role>> getRoleList(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "ALL") RolesType type) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleFacade.getRoles(userId, type));
     }

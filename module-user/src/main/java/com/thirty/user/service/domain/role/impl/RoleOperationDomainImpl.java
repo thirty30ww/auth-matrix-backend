@@ -80,7 +80,9 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
         roleViewService.deleteRoleViews(roleId, removedAndDescendantViewIds);
 
         // 修改当前角色的所有子角色视图
-        List<Integer> childRoleIds = roleService.getChildRoleIds(roleId);
+        List<Integer> childRoleIds = roleService.getDescendantRoleIds(roleId);
+        List<Integer> ancestorRoleIds = roleService.getAncestorRoleIds(roleId);
+        roleViewService.addRoleViews(ancestorRoleIds, addedAndAncestorViewIds);
         roleViewService.deleteRoleViews(childRoleIds, removedAndDescendantViewIds);
     }
 

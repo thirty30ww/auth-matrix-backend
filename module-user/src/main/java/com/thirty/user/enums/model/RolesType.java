@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum RoleListType implements CodeEnum<Integer> {
+public enum RolesType implements CodeEnum<Integer> {
     /**
      * 所有角色
      */
@@ -27,11 +27,15 @@ public enum RoleListType implements CodeEnum<Integer> {
      * 子角色和当前用户角色
      */
     CHILD_AND_SELF(4),
+    /**
+     * 非全局角色
+     */
+    NOT_GLOBAL(5),
     ;
 
     private final Integer code;
 
-    public static RoleListType getByCode(Integer code) {
-        return CodeEnum.getByCode(RoleListType.class, code);
+    public static RolesType getByCode(Integer code) {
+        return CodeEnum.getByCode(RolesType.class, code);
     }
 }

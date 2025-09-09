@@ -29,7 +29,7 @@ public class RoleViewServiceImpl extends ServiceImpl<RoleViewMapper, RoleView>
     public List<Integer> getViewIds(Integer roleId) {
         QueryWrapper<RoleView> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_id", roleId);
-        return list(queryWrapper).stream().map(RoleView::getViewId).toList();
+        return RoleView.extractViewIds(list(queryWrapper));
     }
 
     /**
@@ -41,8 +41,8 @@ public class RoleViewServiceImpl extends ServiceImpl<RoleViewMapper, RoleView>
     public List<Integer> getViewIds(List<Integer> roleIds) {
         QueryWrapper<RoleView> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("role_id", roleIds);
-        // distinct是java的流式去重
-        return list(queryWrapper).stream().map(RoleView::getViewId).distinct().toList();
+
+        return RoleView.extractViewIds(list(queryWrapper));
     }
 
     /**
@@ -57,6 +57,19 @@ public class RoleViewServiceImpl extends ServiceImpl<RoleViewMapper, RoleView>
     }
 
     /**
+     * 获取存在的角色视图
+     * @param roleIds 角色id列表
+     * @param viewIds 视图id列表
+     * @return 存在的角色视图列表
+     */
+    @Override
+    public List<String> getExists(List<Integer> roleIds, List<Integer> viewIds) {
+        QueryWrapper<RoleView> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("role_id", roleIds).in("view_id", viewIds);
+        return RoleView.spliceRoleViewIds(list(queryWrapper));
+    }
+
+    /**
      * 添加角色视图
      * @param roleId 角色id
      * @param viewIds 视图id列表
@@ -64,6 +77,24 @@ public class RoleViewServiceImpl extends ServiceImpl<RoleViewMapper, RoleView>
     @Override
     public void addRoleViews(Integer roleId, List<Integer> viewIds) {
         List<RoleView> roleViews = RoleConverter.INSTANCE.toRoleViews(roleId, viewIds);
+        saveBatch(roleViews);
+    }
+
+    /**
+     * 添加角色视图
+     * @param roleIds 角色id列表
+     * @param viewIds 视图id列表
+     */
+    @Override
+    public void addRoleViews(List<Integer> roleIds, List<Integer> viewIds) {
+        if (CollectionUtils.isEmpty(roleIds) || CollectionUtils.isEmpty(viewIds)) {
+            return;
+        }
+
+        List<RoleView> roleViews = RoleConverter.INSTANCE.toRoleViews(roleIds, viewIds);
+        List<String> exists = getExists(roleIds, viewIds);
+        roleViews.removeIf(rv -> exists.contains(rv.getRoleId() + "_" + rv.getViewId()));
+
         saveBatch(roleViews);
     }
 

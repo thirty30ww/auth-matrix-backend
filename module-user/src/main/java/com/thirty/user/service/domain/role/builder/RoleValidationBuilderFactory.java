@@ -13,13 +13,13 @@ public class RoleValidationBuilderFactory {
     @Resource
     private UserRoleService userRoleService;
     @Resource
-    private RoleListBuilderFactory roleListBuilderFactory;
+    private RolesBuilderFactory rolesBuilderFactory;
     
     /**
      * 创建新的角色验证构建器实例
      */
     public RoleValidationBuilder create() {
-        return new RoleValidationBuilder(userRoleService, roleListBuilderFactory);
+        return new RoleValidationBuilder(userRoleService, rolesBuilderFactory);
     }
 
     /**

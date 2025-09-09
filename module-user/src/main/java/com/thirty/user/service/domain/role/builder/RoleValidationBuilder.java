@@ -14,7 +14,7 @@ import java.util.List;
 public class RoleValidationBuilder {
     
     final UserRoleService userRoleService;
-    final RoleListBuilderFactory roleListBuilderFactory;
+    final RolesBuilderFactory rolesBuilderFactory;
 
     /**
      * 验证信息
@@ -31,9 +31,9 @@ public class RoleValidationBuilder {
     /**
      * 构造函数 - 通过工厂创建
      */
-    public RoleValidationBuilder(UserRoleService userRoleService, RoleListBuilderFactory roleListBuilderFactory) {
+    public RoleValidationBuilder(UserRoleService userRoleService, RolesBuilderFactory rolesBuilderFactory) {
         this.userRoleService = userRoleService;
-        this.roleListBuilderFactory = roleListBuilderFactory;
+        this.rolesBuilderFactory = rolesBuilderFactory;
     }
     
     /**
@@ -79,7 +79,7 @@ public class RoleValidationBuilder {
         }
         
         // 构建当前用户的权限范围
-        var builder = roleListBuilderFactory.create()
+        var builder = rolesBuilderFactory.create()
                 .forUser(userId);
         
         if (includeUserRoles) builder.includeUserRoles();

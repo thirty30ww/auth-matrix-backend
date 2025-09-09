@@ -7,7 +7,10 @@ import com.thirty.user.service.domain.role.RoleQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RoleQueryDomainImpl implements RoleQueryDomain {
@@ -56,7 +59,7 @@ public class RoleQueryDomainImpl implements RoleQueryDomain {
         List<Integer> parentRoleIds = getRoleIds(userId);
 
         // 获取子角色
-        return roleService.getChildRoles(parentRoleIds);
+        return roleService.getDescendantRoles(parentRoleIds);
     }
 
     /**
@@ -67,6 +70,39 @@ public class RoleQueryDomainImpl implements RoleQueryDomain {
     public List<Role> getGlobalRoles() {
         List<Role> allRoles = roleService.list();
         return Role.getGlobalRoles(allRoles);
+    }
+
+    /**
+     * 获取子角色ID列表（包含自身）
+     * @param roleId 角色ID
+     * @return 子角色ID列表
+     */
+    @Override
+    public List<Integer> getChildAndSelfRoleIds(Integer roleId) {
+        return getChildAndSelfRoleIds(List.of(roleId));
+    }
+
+    /**
+     * 获取子角色ID列表（包含自身）
+     * @param roleIds 角色ID列表
+     * @return 子角色ID列表
+     */
+    @Override
+    public List<Integer> getChildAndSelfRoleIds(List<Integer> roleIds) {
+        Set<Integer> roleSet = new HashSet<>(roleIds);
+        List<Integer> childRoleIds = getChildRoleIds(roleIds);
+        roleSet.addAll(childRoleIds);
+        return new ArrayList<>(roleSet);
+    }
+
+    /**
+     * 获取子角色ID列表
+     * @param roleIds 角色ID列表
+     * @return 子角色ID列表
+     */
+    @Override
+    public List<Integer> getChildRoleIds(List<Integer> roleIds) {
+        return roleService.getDescendantRoleIds(roleIds);
     }
 
 

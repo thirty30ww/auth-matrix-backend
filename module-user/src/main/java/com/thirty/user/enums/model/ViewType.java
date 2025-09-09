@@ -11,7 +11,9 @@ import lombok.Getter;
 public enum ViewType implements CodeEnum<Integer> {
     DIRECTORY(1, "目录"),
     MENU(2, "菜单"),
-    PAGE(3, "页面");
+    PAGE(3, "页面"),
+    BUTTON(4, "按钮"),
+    ;
 
     @EnumValue  // MyBatis-Plus会使用这个值存储到数据库
     private final Integer code;

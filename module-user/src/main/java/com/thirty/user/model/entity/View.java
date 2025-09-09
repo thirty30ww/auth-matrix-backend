@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,6 +65,11 @@ public class View implements Serializable {
     private ViewType type;
 
     /**
+     * 权限码
+     */
+    private String permissionCode;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -72,6 +78,11 @@ public class View implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    /**
+     * 是否启用(1:有效 0:无效)
+     */
+    private Boolean isValid;
 
     /**
      * 是否被删除(1:是 0:否)
@@ -87,7 +98,7 @@ public class View implements Serializable {
      * @param views 视图列表
      * @return 视图Map
      */
-    public static Map<Integer, View> buildViewMap(List<View> views) {
+    public static Map<Integer, View> buildMap(List<View> views) {
         return views.stream().collect(Collectors.toMap(View::getId, view -> view));
     }
 
@@ -98,5 +109,32 @@ public class View implements Serializable {
      */
     public static Map<Integer, List<View>> buildParentChildMap(List<View> views) {
         return views.stream().collect(Collectors.groupingBy(View::getParentNodeId));
+    }
+
+    /**
+     * 从视图列表中提取视图ID列表
+     * @param views 视图列表
+     * @return 视图ID列表
+     */
+    public static List<Integer> extractViewIds(List<View> views) {
+        return views.stream().map(View::getId).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 从视图列表中提取权限码列表
+     * @param views 视图列表
+     * @return 权限码列表
+     */
+    public static List<String> extractPermissionCodes(List<View> views) {
+        return views.stream().map(View::getPermissionCode).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 从视图列表中提取最大的前一个节点ID的视图
+     * @param views 视图列表
+     * @return 最大的前一个节点ID的视图
+     */
+    public static View extractMaxFrontIdView(List<View> views) {
+        return views.stream().max(Comparator.comparingInt(View::getFrontNodeId)).orElse(null);
     }
 }
