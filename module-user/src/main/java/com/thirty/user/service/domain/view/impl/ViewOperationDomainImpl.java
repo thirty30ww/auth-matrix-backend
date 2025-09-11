@@ -3,6 +3,7 @@ package com.thirty.user.service.domain.view.impl;
 import com.thirty.user.converter.ViewConverter;
 import com.thirty.user.model.dto.ViewDTO;
 import com.thirty.user.model.entity.View;
+import com.thirty.user.service.basic.RoleViewService;
 import com.thirty.user.service.basic.ViewService;
 import com.thirty.user.service.domain.view.ViewOperationDomain;
 import jakarta.annotation.Resource;
@@ -15,6 +16,8 @@ public class ViewOperationDomainImpl implements ViewOperationDomain {
 
     @Resource
     private ViewService viewService;
+    @Resource
+    private RoleViewService roleViewService;
 
     /**
      * 添加视图
@@ -43,6 +46,7 @@ public class ViewOperationDomainImpl implements ViewOperationDomain {
     @Override
     public void deleteView(Integer viewId) {
         viewService.deleteView(viewId);
+        roleViewService.deleteByViewId(viewId);
     }
 
     /**

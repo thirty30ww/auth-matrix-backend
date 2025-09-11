@@ -55,6 +55,16 @@ public class RoleViewServiceImpl extends ServiceImpl<RoleViewMapper, RoleView>
         queryWrapper.eq("role_id", roleId);
         remove(queryWrapper);
     }
+    /**
+     * 根据视图删除角色视图
+     * @param viewId 视图id
+     */
+    @Override
+    public void deleteByViewId(Integer viewId) {
+        QueryWrapper<RoleView> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("view_id", viewId);
+        remove(queryWrapper);
+    }
 
     /**
      * 获取存在的角色视图

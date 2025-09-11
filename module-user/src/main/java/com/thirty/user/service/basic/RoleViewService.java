@@ -32,6 +32,12 @@ public interface RoleViewService extends IService<RoleView> {
     void deleteByRoleId(Integer roleId);
 
     /**
+     * 根据视图删除角色视图
+     * @param viewId 视图id
+     */
+    void deleteByViewId(Integer viewId);
+
+    /**
      * 获取存在的角色视图
      * @param roleIds 角色id列表
      * @param viewIds 视图id列表
