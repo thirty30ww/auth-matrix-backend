@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // 检查访问令牌是否在黑名单中
             if (!jwtUtils.isAccessTokenInBlacklist(jwt)) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 if (!userDetails.isEnabled()) {
                     // 用户被禁用，拒绝访问

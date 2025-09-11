@@ -53,4 +53,17 @@ public class AuthFacadeImpl implements AuthFacade {
     public JwtVO refreshToken(String refreshToken) {
         return authDomain.refreshToken(refreshToken);
     }
+
+    /**
+     * 退出登录
+     * @param accessToken 访问令牌
+     * @param refreshToken 刷新令牌
+     */
+    @Override
+    public void logout(String accessToken, String refreshToken) {
+        // 将令牌加入黑名单
+        authDomain.logout(accessToken, refreshToken);
+        // 清除SecurityContext
+        SecurityContextHolder.clearContext();
+    }
 }

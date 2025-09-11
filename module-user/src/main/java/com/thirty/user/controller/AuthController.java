@@ -5,6 +5,7 @@ import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.model.dto.LoginDTO;
 import com.thirty.user.model.vo.JwtVO;
 import com.thirty.user.service.facade.AuthFacade;
+import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ public class AuthController {
 
     @Resource
     private AuthFacade authFacade;
+    @Resource
+    private JwtUtil jwtUtil;
 
     /**
      * 用户登录
@@ -36,5 +39,17 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResultDTO<JwtVO> refreshToken(@RequestParam String refreshToken) {
         return ResultDTO.of(AuthResultCode.LOGIN_SUCCESS, authFacade.refreshToken(refreshToken));
+    }
+
+    /**
+     * 退出登录
+     * 将当前访问令牌和对应的刷新令牌都加入Redis黑名单，使其立即失效
+     * 同时清除SecurityContext
+     */
+    @GetMapping("/logout")
+    public ResultDTO<Void> logout(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(required = false) String refreshToken) {
+        String accessToken = jwtUtil.extractToken(authHeader);
+        authFacade.logout(accessToken, refreshToken);
+        return ResultDTO.of(AuthResultCode.LOGOUT_SUCCESS);
     }
 }

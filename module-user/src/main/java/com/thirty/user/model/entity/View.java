@@ -94,6 +94,20 @@ public class View implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 构建无效视图列表
+     * @param viewIds 视图ID列表
+     * @return 无效视图列表
+     */
+    public static List<View> toNotValidView(List<Integer> viewIds) {
+        return viewIds.stream().map(viewId -> {
+            View view = new View();
+            view.setId(viewId);
+            view.setIsValid(false);
+            return view;
+        }).collect(Collectors.toList());
+    }
+
+    /**
      * 构建视图Map，key为视图ID，value为View
      * @param views 视图列表
      * @return 视图Map

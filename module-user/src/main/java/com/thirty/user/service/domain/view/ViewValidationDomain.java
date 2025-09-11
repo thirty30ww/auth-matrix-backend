@@ -50,4 +50,13 @@ public interface ViewValidationDomain {
      * @return 是否可以下移
      */
     boolean validateMoveDown(Integer viewId);
+
+    /**
+     * 校验视图是否可以修改状态
+     * @param userId 用户ID
+     * @param viewId 视图ID
+     * @param isValid 视图状态
+     * @return 是否可以修改状态
+     */
+    boolean validateModifyValid(Integer userId, Integer viewId, Boolean isValid);
 }

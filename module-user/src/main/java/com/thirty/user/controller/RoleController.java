@@ -10,6 +10,7 @@ import com.thirty.user.model.vo.RoleVO;
 import com.thirty.user.service.facade.RoleFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +53,7 @@ public class RoleController {
      * @return 角色dto
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('permission:role:add')")
     public ResultDTO<Void> addRole(@Validated(RoleDTO.Add.class) @RequestBody RoleDTO roleDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.addRole(roleDTO, userId);
@@ -63,7 +65,8 @@ public class RoleController {
      * @param roleDTO 角色dto
      * @return 角色dto
      */
-    @PostMapping("/update")
+    @PostMapping("/modify")
+    @PreAuthorize("hasAuthority('permission:role:modify')")
     public ResultDTO<Void> updateRole(@Validated(RoleDTO.Update.class) @RequestBody RoleDTO roleDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.updateRole(roleDTO, userId);
@@ -76,6 +79,7 @@ public class RoleController {
      * @return 角色dto
      */
     @GetMapping("/delete")
+    @PreAuthorize("hasAuthority('permission:role:delete')")
     public ResultDTO<Void> deleteRole(@RequestParam(value = "roleId") Integer roleId, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.deleteRole(roleId, userId);
@@ -87,6 +91,7 @@ public class RoleController {
      * @return 角色dto
      */
     @PostMapping("/assign/view")
+    @PreAuthorize("hasAuthority('permission:role:assign')")
     public ResultDTO<Void> assignView(@RequestBody AssignViewDTO assignViewDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.assignView(userId, assignViewDTO);

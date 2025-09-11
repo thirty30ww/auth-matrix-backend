@@ -45,11 +45,4 @@ public interface UserOperationDomain {
      * @param changePasswordDTO 修改密码请求参数
      */
     void changePassword(Integer userId, ChangePasswordDTO changePasswordDTO);
-
-    /**
-     * 退出登录
-     * @param accessToken 访问令牌
-     * @param refreshToken 刷新令牌
-     */
-    void logout(String accessToken, String refreshToken);
 }

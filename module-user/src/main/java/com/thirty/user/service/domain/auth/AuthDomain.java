@@ -18,4 +18,11 @@ public interface AuthDomain {
      * @return JwtVO
      */
     JwtVO refreshToken(String refreshToken);
+
+    /**
+     * 退出登录
+     * @param accessToken 访问令牌
+     * @param refreshToken 刷新令牌
+     */
+    void logout(String accessToken, String refreshToken);
 }

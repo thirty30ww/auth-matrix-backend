@@ -69,6 +69,25 @@ public class AuthDomainImpl implements AuthDomain {
     }
 
     /**
+     * 退出登录
+     * @param accessToken 访问令牌
+     * @param refreshToken 刷新令牌
+     */
+    @Override
+    public void logout(String accessToken, String refreshToken) {
+        // 处理访问令牌
+        jwtUtil.addAccessTokenToBlacklist(accessToken);
+
+        // 处理刷新令牌（如果提供）
+        if (refreshToken != null && !refreshToken.isEmpty()) {
+            if (jwtUtil.isRefreshToken(refreshToken)) {
+                // 将刷新令牌加入黑名单
+                jwtUtil.addRefreshTokenToBlacklist(refreshToken);
+            }
+        }
+    }
+
+    /**
      * 验证刷新令牌
      * @param refreshToken 刷新令牌
      */

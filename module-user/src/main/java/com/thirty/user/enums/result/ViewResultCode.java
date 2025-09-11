@@ -28,6 +28,7 @@ public enum ViewResultCode implements IResult {
     VIEW_CANNOT_BE_PARENT(5006, "视图不能作为自己的父节点"),
     VIEW_CANNOT_MOVE_UP(5007, "视图不能上移"),
     VIEW_CANNOT_MOVE_DOWN(5008, "视图不能下移"),
+    VIEW_CANNOT_MODIFY_VALID(5009, "视图状态不能修改"),
     ;
 
     private final Integer code;

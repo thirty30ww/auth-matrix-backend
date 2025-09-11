@@ -209,6 +209,7 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
     public List<String> getPermissionCodes(List<Integer> viewIds) {
         QueryWrapper<View> wrapper = new QueryWrapper<>();
         wrapper.in("id", viewIds)
+                .eq("is_valid", true)
                 .eq("type", ViewType.BUTTON);
         List<View> views = list(wrapper);
         return View.extractPermissionCodes(views);
@@ -225,6 +226,13 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
             tailInsert(view);
             connectNeighborViews(oldView);
             return;
+        }
+
+        // 如果视图状态从有效变为无效，需要更新所有后代视图
+        if (!view.getIsValid() && oldView.getIsValid()) {
+            List<Integer> descendantIds = getDescendantIds(view.getId());
+            List<View> descendantViews = View.toNotValidView(descendantIds);
+            updateBatchById(descendantViews);
         }
         updateById(view);
     }

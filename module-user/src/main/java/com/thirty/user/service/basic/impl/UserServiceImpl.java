@@ -6,9 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
-import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.mapper.UserMapper;
 import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.User;
@@ -76,11 +74,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getUser(String username) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
-        User user = getOne(queryWrapper);
-        if (user == null) {
-            throw new BusinessException(UserResultCode.USER_NOT_EXISTS);
-        }
-        return user;
+        return getOne(queryWrapper);
     }
 
     /**

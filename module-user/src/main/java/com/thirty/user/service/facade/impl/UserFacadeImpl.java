@@ -1,20 +1,19 @@
 package com.thirty.user.service.facade.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.thirty.system.api.SettingApi;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
+import com.thirty.system.api.SettingApi;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.*;
 import com.thirty.user.model.vo.UserVO;
-import com.thirty.user.service.domain.role.builder.RolesBuilderFactory;
 import com.thirty.user.service.domain.role.builder.RoleValidationBuilderFactory;
+import com.thirty.user.service.domain.role.builder.RolesBuilderFactory;
 import com.thirty.user.service.domain.user.UserOperationDomain;
 import com.thirty.user.service.domain.user.UserQueryDomain;
 import com.thirty.user.service.domain.user.UserValidationDomain;
 import com.thirty.user.service.facade.UserFacade;
 import jakarta.annotation.Resource;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -156,18 +155,5 @@ public class UserFacadeImpl implements UserFacade {
 
         // 获取用户列表
         return userQueryDomain.getUsers(pageQueryDTO, permittedRoleIds, settingApi.hasPermissionDisplay());
-    }
-
-    /**
-     * 退出登录
-     * @param accessToken 访问令牌
-     * @param refreshToken 刷新令牌
-     */
-    @Override
-    public void logout(String accessToken, String refreshToken) {
-        // 将令牌加入黑名单
-        userOperationDomain.logout(accessToken, refreshToken);
-        // 清除SecurityContext
-        SecurityContextHolder.clearContext();
     }
 }

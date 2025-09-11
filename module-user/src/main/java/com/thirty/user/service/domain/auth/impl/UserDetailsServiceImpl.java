@@ -1,36 +1,54 @@
-package com.thirty.user.service.basic.impl;
+package com.thirty.user.service.domain.auth.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.model.entity.User;
-import com.thirty.user.mapper.UserMapper;
+import com.thirty.user.service.basic.UserRoleService;
+import com.thirty.user.service.basic.UserService;
+import com.thirty.user.service.domain.view.ViewQueryDomain;
+import jakarta.annotation.Resource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserMapper userMapper;
+    @Resource
+    private UserService userService;
+    @Resource
+    private UserRoleService userRoleService;
+    @Resource
+    private ViewQueryDomain viewQueryDomain;
 
-    public UserDetailsServiceImpl(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
+    /**
+     * 根据用户名加载用户详情
+     * @param username 用户名
+     * @return 用户详情
+     * @throws UsernameNotFoundException 用户名不存在异常
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 查询用户
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUsername, username);
-        User user = userMapper.selectOne(queryWrapper);
-        
+        User user = userService.getUser(username);
+
         if (user == null) {
             throw new UsernameNotFoundException(AuthResultCode.USERNAME_NOT_EXISTS.getMessage());
         }
+
+        // 获取当前角色的权限
+        List<Integer> roleIds = userRoleService.getRoleIds(user.getId());
+
+        // 获取用户权限码列表
+        List<String> permissionCodes = viewQueryDomain.getPermissionCode(roleIds);
+
+        // 转换为Spring Security的Authority
+        List<SimpleGrantedAuthority> authorities = permissionCodes.stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
 
         // 返回UserDetails对象
         return new org.springframework.security.core.userdetails.User(
@@ -40,7 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 true,   // accountNonExpired - 账户是否未过期
                 true,   // credentialsNonExpired - 凭证是否未过期
                 true,   // accountNonLocked - 账户是否未被锁定
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                authorities
         );
     }
 }

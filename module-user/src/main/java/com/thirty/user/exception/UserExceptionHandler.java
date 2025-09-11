@@ -1,11 +1,13 @@
 package com.thirty.user.exception;
 
+import com.thirty.common.enums.result.GlobalResultCode;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.AuthResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +21,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @ResponseStatus(HttpStatus.OK)
 public class UserExceptionHandler {
+    /**
+     * 处理Spring Security方法级权限验证异常
+     * 当@PreAuthorize注解校验失败时触发
+     */
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResultDTO<?> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        log.warn("权限验证失败: {}", e.getMessage());
+        return ResultDTO.of(GlobalResultCode.FORBIDDEN);
+    }
+
     /**
      * 处理用户不存在异常
      */

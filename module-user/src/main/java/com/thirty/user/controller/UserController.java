@@ -3,7 +3,6 @@ package com.thirty.user.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.dto.ResultDTO;
-import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.*;
 import com.thirty.user.model.vo.UserVO;
@@ -11,6 +10,7 @@ import com.thirty.user.service.facade.UserFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +30,7 @@ public class UserController {
      * 添加用户
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('user:add')")
     public ResultDTO<Void> addUser(@RequestBody @Valid AddUserDTO addUserDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.addUser(userId, addUserDTO);
@@ -60,6 +61,7 @@ public class UserController {
      * 修改用户(指修改别的用户)
      */
     @PostMapping("/modify")
+    @PreAuthorize("hasAuthority('user:modify')")
     public ResultDTO<Void> modifyUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ModifyUserDTO modifyUserDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.modifyUser(userId, modifyUserDTO);
@@ -80,6 +82,7 @@ public class UserController {
      * 封禁用户
      */
     @PostMapping("/ban")
+    @PreAuthorize("hasAuthority('user:ban')")
     public ResultDTO<Void> banUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.banUsers(userId, userIds);
@@ -90,6 +93,7 @@ public class UserController {
      * 解封用户
      */
     @PostMapping("/unban")
+    @PreAuthorize("hasAuthority('user:unban')")
     public ResultDTO<Void> unbanUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.unbanUsers(userId, userIds);
@@ -105,17 +109,5 @@ public class UserController {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.changePassword(userId, changePasswordDTO);
         return ResultDTO.of(UserResultCode.CHANGE_PASSWORD_SUCCESS);
-    }
-
-    /**
-     * 退出登录
-     * 将当前访问令牌和对应的刷新令牌都加入Redis黑名单，使其立即失效
-     * 同时清除SecurityContext
-     */
-    @GetMapping("/logout")
-    public ResultDTO<Void> logout(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(required = false) String refreshToken) {
-        String accessToken = jwtUtil.extractToken(authHeader);
-        userFacade.logout(accessToken, refreshToken);
-        return ResultDTO.of(AuthResultCode.LOGOUT_SUCCESS);
     }
 }

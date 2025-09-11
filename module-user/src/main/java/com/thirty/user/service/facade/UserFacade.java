@@ -64,11 +64,4 @@ public interface UserFacade {
      * @return 用户VO分页
      */
     IPage<UserVO> getUsers(Integer currentUserId, PageQueryDTO<GetUsersDTO> pageQueryDTO);
-
-    /**
-     * 退出登录
-     * @param accessToken 访问令牌
-     * @param refreshToken 刷新令牌
-     */
-    void logout(String accessToken, String refreshToken);
 }

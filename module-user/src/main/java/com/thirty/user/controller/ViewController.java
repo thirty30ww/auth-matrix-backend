@@ -8,6 +8,7 @@ import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.facade.ViewFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -100,6 +101,7 @@ public class ViewController {
      * @return 结果
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('permission:menu:add')")
     public ResultDTO<Void> addView(@RequestHeader("Authorization") String authHeader, @RequestBody ViewDTO viewDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         viewFacade.addView(userId, viewDTO);
@@ -113,6 +115,7 @@ public class ViewController {
      * @return 结果
      */
     @PostMapping("/modify")
+    @PreAuthorize("hasAuthority('permission:menu:modify')")
     public ResultDTO<Void> modifyView(@RequestHeader("Authorization") String authHeader, @RequestBody ViewDTO viewDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         viewFacade.modifyView(userId, viewDTO);
@@ -126,6 +129,7 @@ public class ViewController {
      * @return 结果
      */
     @GetMapping("/delete")
+    @PreAuthorize("hasAuthority('permission:menu:delete')")
     public ResultDTO<Void> deleteView(@RequestHeader("Authorization") String authHeader, @RequestParam Integer viewId) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         viewFacade.deleteView(userId, viewId);
@@ -139,6 +143,7 @@ public class ViewController {
      * @return 结果
      */
     @GetMapping("/move")
+    @PreAuthorize("hasAuthority('permission:menu:move')")
     public ResultDTO<Void> moveView(@RequestParam Integer viewId, @RequestParam Boolean isUp) {
         viewFacade.moveView(viewId, isUp);
         return ResultDTO.of(ViewResultCode.MOVE_SUCCESS);

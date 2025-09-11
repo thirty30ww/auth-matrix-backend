@@ -148,6 +148,9 @@ public class ViewFacadeImpl implements ViewFacade {
         if (!viewValidationDomain.validateTypeComply(viewDTO.getParentNodeId(), viewDTO.getType())) {
             throw new BusinessException(ViewResultCode.VIEW_TYPE_NOT_COMPLY);
         }
+        if (!viewValidationDomain.validateModifyValid(userId, viewDTO.getId(), viewDTO.getIsValid())) {
+            throw new BusinessException(ViewResultCode.VIEW_CANNOT_MODIFY_VALID);
+        }
         if (!viewValidationDomain.validateViewContainUserViews(userId, viewDTO.getId())) {
             throw new BusinessException(ViewResultCode.VIEW_NOT_AUTHORIZED_MODIFY);
         }

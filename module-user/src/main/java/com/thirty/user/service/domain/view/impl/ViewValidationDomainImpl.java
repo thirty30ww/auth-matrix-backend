@@ -58,9 +58,11 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
      */
     @Override
     public boolean validateTypeComply(Integer parentId, ViewType type) {
-        ViewType parentType = viewService.getById(parentId).getType();
+        View parentView = viewService.getById(parentId);
+        ViewType parentType = parentView == null ? ViewType.DIRECTORY : parentView.getType();
+
         if (type == ViewType.DIRECTORY || type == ViewType.MENU) {
-            return parentType == ViewType.DIRECTORY || Objects.equals(parentId, ViewConstant.ROOT_VIEW_PARENT_ID);
+            return parentType == ViewType.DIRECTORY;
         } else {
             return parentType == ViewType.MENU;
         }
@@ -101,5 +103,22 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
     public boolean validateMoveDown(Integer viewId) {
         View view = viewService.getById(viewId);
         return !Objects.equals(view.getBehindNodeId(), ViewConstant.TAIL_VIEW_BEHIND_ID);
+    }
+
+    /**
+     * 校验视图是否可以修改状态
+     * @param userId 用户ID
+     * @param viewId 视图ID
+     * @param isValid 视图状态
+     * @return 是否可以修改状态
+     */
+    @Override
+    public boolean validateModifyValid(Integer userId, Integer viewId, Boolean isValid) {
+        View view = viewService.getById(viewId);
+        if (view.getIsValid() == isValid) {
+            return true;
+        }
+        List<Integer> descendantIds = viewService.getDescendantIds(viewId);
+        return validateViewContainUserViews(userId, descendantIds);
     }
 }
