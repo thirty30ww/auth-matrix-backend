@@ -75,10 +75,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173");    // 允许的来源
+        configuration.addAllowedOriginPattern("*");    // 允许所有来源
         configuration.addAllowedMethod("*");    // 允许所有请求方法
         configuration.addAllowedHeader("*");    // 允许所有请求头
-        configuration.setAllowCredentials(true); // 不允许发送凭证
+        configuration.setAllowCredentials(true); // 允许发送凭证
         configuration.setMaxAge(3600L); // 预检请求的缓存时间（秒）
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
