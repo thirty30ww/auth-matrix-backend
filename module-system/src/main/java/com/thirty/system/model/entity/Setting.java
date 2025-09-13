@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 全局设置表
@@ -25,6 +25,11 @@ public class Setting implements Serializable {
     private String field;
 
     /**
+     * 设置的标题
+     */
+    private String title;
+
+    /**
      * 设置的描述
      */
     private String description;
@@ -32,17 +37,17 @@ public class Setting implements Serializable {
     /**
      * 设置的值
      */
-    private Integer value;
+    private String value;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否被删除(1:是 0:否)

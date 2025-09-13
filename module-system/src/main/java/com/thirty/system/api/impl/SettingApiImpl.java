@@ -17,6 +17,6 @@ public class SettingApiImpl implements SettingApi {
      */
     @Override
     public boolean hasPermissionDisplay() {
-        return settingService.getBooleanSetting(SettingField.PERMISSION_DISPLAY);
+        return settingService.getSettingValue(SettingField.PERMISSION_DISPLAY);
     }
 }

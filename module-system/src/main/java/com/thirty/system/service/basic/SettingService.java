@@ -1,8 +1,11 @@
 package com.thirty.system.service.basic;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.thirty.system.enums.model.SettingField;
 import com.thirty.system.model.entity.Setting;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.thirty.system.model.vo.SettingVO;
+
+import java.util.List;
 
 /**
 * @author Lenovo
@@ -10,12 +13,26 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2025-08-22 09:04:37
 */
 public interface SettingService extends IService<Setting> {
+
     /**
-     * 获取布尔类型的设置
+     * 获取设置值
      * @param settingField 设置字段
      * @return 设置值
      */
-    boolean getBooleanSetting(SettingField settingField);
+    <T> T getSettingValue(SettingField settingField);
+
+    /**
+     * 获取公共设置值
+     * @param settingField 设置字段
+     * @return 设置值
+     */
+    <T> T getPublicSettingValue(SettingField settingField);
+
+    /**
+     * 获取所有设置值
+     * @return 设置值
+     */
+    List<SettingVO> getSettingVOS();
 
     /**
      * 根据字段名获取设置
@@ -23,4 +40,11 @@ public interface SettingService extends IService<Setting> {
      * @return 设置
      */
     Setting getSettingByField(String field);
+
+    /**
+     * 根据字段名获取公共设置
+     * @param field 字段名
+     * @return 设置
+     */
+    Setting getPublicSettingByField(String field);
 }

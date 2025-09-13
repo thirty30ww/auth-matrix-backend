@@ -2,11 +2,17 @@ package com.thirty.system.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.thirty.common.utils.TypeUtil;
+import com.thirty.system.converter.SettingConverter;
 import com.thirty.system.enums.model.SettingField;
-import com.thirty.system.model.entity.Setting;
-import com.thirty.system.service.basic.SettingService;
 import com.thirty.system.mapper.SettingMapper;
+import com.thirty.system.model.entity.Setting;
+import com.thirty.system.model.vo.SettingVO;
+import com.thirty.system.service.basic.SettingService;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author Lenovo
@@ -17,10 +23,49 @@ import org.springframework.stereotype.Service;
 public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     implements SettingService{
 
+    @Resource
+    private TypeUtil typeUtil;
+
+    /**
+     * 获取设置值
+     * @param settingField 设置字段
+     * @return 设置值
+     */
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean getBooleanSetting(SettingField settingField) {
+    public <T> T getSettingValue(SettingField settingField) {
         Setting setting = getSettingByField(settingField.getCode());
-        return setting.getValue() == 1;
+        return (T) typeUtil.convertValue(setting.getValue(), settingField.getValueType());
+    }
+
+    /**
+     * 获取公共设置值
+     * @param settingField 设置字段
+     * @return 设置值
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getPublicSettingValue(SettingField settingField) {
+        Setting setting = getPublicSettingByField(settingField.getCode());
+        return (T) typeUtil.convertValue(setting.getValue(), settingField.getValueType());
+    }
+
+    /**
+     * 获取所有设置值
+     * @return 设置值
+     */
+    @Override
+    public List<SettingVO> getSettingVOS() {
+        List<Setting> settings = list();
+        List<SettingVO> settingVOS = SettingConverter.INSTANCE.toSettingVOS(settings);
+
+        // 转换值类型
+        settingVOS.forEach(settingVO ->{
+            Class<?> type = SettingField.getValueType(settingVO.getField());
+            settingVO.setValue(typeUtil.convertValue(settingVO.getValue(), type));
+        });
+        
+        return settingVOS;
     }
 
     /**
@@ -34,6 +79,21 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
         queryWrapper.eq("field", field);
         return getOne(queryWrapper);
     }
+
+    /**
+     * 根据字段名获取公共设置
+     * @param field 字段名
+     * @return 设置
+     */
+    @Override
+    public Setting getPublicSettingByField(String field) {
+        QueryWrapper<Setting> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("field", field);
+        Setting setting = getOne(queryWrapper);
+        return SettingField.isPublic(setting.getField()) ? setting : null;
+    }
+
+
 }
 
 

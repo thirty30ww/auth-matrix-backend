@@ -46,11 +46,8 @@ public class AuthDomainImpl implements AuthDomain {
         // 验证刷新令牌
         validateRefreshToken(refreshToken);
 
-        // 从令牌中提取用户名
-        String username = jwtUtil.extractUsername(refreshToken);
-
-        // 加载用户详情
-        User user = userService.getUser(username);
+        String username = jwtUtil.extractUsername(refreshToken);    // 从令牌中提取用户名
+        User user = userService.getUser(username);                  // 加载用户详情
 
         // 检查用户是否被禁用
         if (!user.getIsValid()) {

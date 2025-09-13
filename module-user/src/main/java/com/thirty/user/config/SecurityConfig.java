@@ -47,6 +47,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 启用CORS
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll() // 允许访问认证相关接口
+                .requestMatchers("/setting/public/**").permitAll() // 允许访问公共设置相关接口
                 .anyRequest().authenticated() // 其他请求需要认证
             )
             .sessionManagement(session -> session

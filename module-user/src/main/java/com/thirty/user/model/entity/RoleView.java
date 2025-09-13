@@ -54,6 +54,11 @@ public class RoleView implements Serializable {
         return roleViews.stream().map(RoleView::getViewId).distinct().collect(Collectors.toList());
     }
 
+    /**
+     * 拼接角色视图id列表（返回格式roleId_viewId）
+     * @param roleViews 角色视图列表
+     * @return 拼接后的角色视图id列表
+     */
     public static List<String> spliceRoleViewIds(List<RoleView> roleViews) {
         return roleViews.stream().map(rv -> rv.getRoleId() + "_" + rv.getViewId()).distinct().collect(Collectors.toList());
     }
