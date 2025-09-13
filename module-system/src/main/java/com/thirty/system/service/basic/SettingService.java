@@ -2,6 +2,7 @@ package com.thirty.system.service.basic;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.thirty.system.enums.model.SettingField;
+import com.thirty.system.model.dto.SettingDTO;
 import com.thirty.system.model.entity.Setting;
 import com.thirty.system.model.vo.SettingVO;
 
@@ -47,4 +48,10 @@ public interface SettingService extends IService<Setting> {
      * @return 设置
      */
     Setting getPublicSettingByField(String field);
+
+    /**
+     * 修改设置
+     * @param settingDTOS 设置DTO列表
+     */
+    void modifySettings(List<SettingDTO> settingDTOS);
 }

@@ -6,12 +6,14 @@ import com.thirty.common.utils.TypeUtil;
 import com.thirty.system.converter.SettingConverter;
 import com.thirty.system.enums.model.SettingField;
 import com.thirty.system.mapper.SettingMapper;
+import com.thirty.system.model.dto.SettingDTO;
 import com.thirty.system.model.entity.Setting;
 import com.thirty.system.model.vo.SettingVO;
 import com.thirty.system.service.basic.SettingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,6 +95,21 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
         return SettingField.isPublic(setting.getField()) ? setting : null;
     }
 
+
+    /**
+     * 修改设置
+     * @param settingDTOS 设置DTO列表
+     */
+    @Override
+    public void modifySettings(List<SettingDTO> settingDTOS) {
+        ArrayList<Setting> settings = new ArrayList<>();
+        settingDTOS.forEach(settingDTO -> {
+            Setting setting = getById(settingDTO.getId());
+            setting.setValue(typeUtil.convertToString(settingDTO.getValue()));
+            settings.add(setting);
+        });
+        updateBatchById(settings);
+    }
 
 }
 

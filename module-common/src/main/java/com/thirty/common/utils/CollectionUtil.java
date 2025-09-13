@@ -33,4 +33,17 @@ public class CollectionUtil {
                 .filter(item -> !newSet.contains(item))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 比较两个集合的公共元素
+     * @param oldCollection 旧集合
+     * @param newCollection 新集合
+     * @return 公共元素列表
+     */
+    public static <T> List<T> CommonCompare(Collection<T> oldCollection, Collection<T> newCollection) {
+        Set<T> oldSet = new HashSet<>(oldCollection);
+        return newCollection.stream()
+                .filter(oldSet::contains)
+                .collect(Collectors.toList());
+    }
 }

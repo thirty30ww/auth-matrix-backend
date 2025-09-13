@@ -3,12 +3,11 @@ package com.thirty.system.controller;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.system.enums.model.SettingField;
 import com.thirty.system.enums.result.SettingResultCode;
+import com.thirty.system.model.dto.SettingDTO;
 import com.thirty.system.model.vo.SettingVO;
 import com.thirty.system.service.basic.SettingService;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class SettingController {
      * @return 设置值
      */
     @GetMapping("/get")
-    public ResultDTO<Object> getSetting(SettingField settingField) {
+    public ResultDTO<Object> getSetting(@RequestParam SettingField settingField) {
         return ResultDTO.of(SettingResultCode.GET_SETTING_SUCCESS, settingService.getSettingValue(settingField));
     }
 
@@ -34,7 +33,7 @@ public class SettingController {
      * @return 设置值
      */
     @GetMapping("/public/get")
-    public ResultDTO<Object> getPublicSetting(SettingField settingField) {
+    public ResultDTO<Object> getPublicSetting(@RequestParam SettingField settingField) {
         return ResultDTO.of(SettingResultCode.GET_SETTING_SUCCESS, settingService.getPublicSettingValue(settingField));
     }
 
@@ -45,5 +44,16 @@ public class SettingController {
     @GetMapping("/values")
     public ResultDTO<List<SettingVO>> getSettingVOS() {
         return ResultDTO.of(SettingResultCode.GET_SETTING_VALUES_SUCCESS, settingService.getSettingVOS());
+    }
+
+    /**
+     * 修改所有设置
+     * @param settingDTOS 设置DTO列表
+     * @return 结果
+     */
+    @PostMapping("/modify")
+    public ResultDTO<Void> modifySettings(@RequestBody List<SettingDTO> settingDTOS) {
+        settingService.modifySettings(settingDTOS);
+        return ResultDTO.of(SettingResultCode.MODIFY_SETTINGS_SUCCESS);
     }
 }

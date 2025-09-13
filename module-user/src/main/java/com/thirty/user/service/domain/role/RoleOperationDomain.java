@@ -30,4 +30,11 @@ public interface RoleOperationDomain {
      * @param newViewIds 新视图ID列表
      */
     void assignView(Integer roleId, List<Integer> oldViewIds, List<Integer> newViewIds);
+
+    /**
+     * 获取角色视图ID列表
+     * @param parentRoleId 父角色ID
+     * @return 视图ID列表
+     */
+    List<Integer> getViewIdsByParentRoleId(Integer parentRoleId);
 }

@@ -207,11 +207,17 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
      */
     @Override
     public List<String> getPermissionCodes(List<Integer> viewIds) {
+        if (CollectionUtils.isEmpty(viewIds)) {
+            return List.of();
+        }
         QueryWrapper<View> wrapper = new QueryWrapper<>();
         wrapper.in("id", viewIds)
                 .eq("is_valid", true)
                 .eq("type", ViewType.BUTTON);
         List<View> views = list(wrapper);
+        if (CollectionUtils.isEmpty(views)) {
+            return List.of();
+        }
         return View.extractPermissionCodes(views);
     }
 

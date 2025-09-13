@@ -1,6 +1,7 @@
 package com.thirty.user.service.domain.role.impl;
 
 import com.thirty.common.utils.CollectionUtil;
+import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.converter.RoleConverter;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
@@ -40,6 +41,15 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
     public void addRole(RoleDTO roleDTO) {
         Role role = RoleConverter.INSTANCE.toRole(roleDTO);
         roleService.addRole(role);
+        // 获取全局角色有权限的页面
+        List<Integer> globalViewIds = getViewIdsByParentRoleId(RoleConstant.GLOBAL_ROLE_PARENT_ID);
+        List<Integer> parentViewIds = roleViewService.getViewIds(roleDTO.getParentNodeId());
+
+        // 取公共部分
+        List<Integer> commonViewIds = CollectionUtil.CommonCompare(globalViewIds, parentViewIds);
+
+        // 分配视图权限
+        roleViewService.addRoleViews(role.getId(), commonViewIds);
     }
 
     /**
@@ -84,6 +94,17 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
         List<Integer> ancestorRoleIds = roleService.getAncestorRoleIds(roleId);
         roleViewService.addRoleViews(ancestorRoleIds, addedAndAncestorViewIds);
         roleViewService.deleteRoleViews(childRoleIds, removedAndDescendantViewIds);
+    }
+
+    /**
+     * 获取角色视图ID列表
+     * @param parentRoleId 父角色ID
+     * @return 视图ID列表
+     */
+    @Override
+    public List<Integer> getViewIdsByParentRoleId(Integer parentRoleId) {
+        List<Integer> childRoleIds = roleService.getChildRoleIds(parentRoleId);
+        return roleViewService.getViewIds(childRoleIds);
     }
 
     /**

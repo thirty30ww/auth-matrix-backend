@@ -25,7 +25,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .ge("level", 0)
                 .orderByAsc("level")
                 .last("limit 1");
-        return getOne(queryWrapper).getLevel();
+        Role role = getOne(queryWrapper);
+        if (role == null) {
+            return RoleConstant.GLOBAL_ROLE_LEVEL;
+        }
+        return role.getLevel();
     }
 
     /**
