@@ -8,6 +8,7 @@ import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.facade.ViewFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,7 +103,7 @@ public class ViewController {
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('permission:menu:add')")
-    public ResultDTO<Void> addView(@RequestHeader("Authorization") String authHeader, @RequestBody ViewDTO viewDTO) {
+    public ResultDTO<Void> addView(@RequestHeader("Authorization") String authHeader, @RequestBody @Valid ViewDTO viewDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         viewFacade.addView(userId, viewDTO);
         return ResultDTO.of(ViewResultCode.ADD_SUCCESS);
@@ -116,7 +117,7 @@ public class ViewController {
      */
     @PostMapping("/modify")
     @PreAuthorize("hasAuthority('permission:menu:modify')")
-    public ResultDTO<Void> modifyView(@RequestHeader("Authorization") String authHeader, @RequestBody ViewDTO viewDTO) {
+    public ResultDTO<Void> modifyView(@RequestHeader("Authorization") String authHeader, @RequestBody @Valid ViewDTO viewDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         viewFacade.modifyView(userId, viewDTO);
         return ResultDTO.of(ViewResultCode.MODIFY_SUCCESS);

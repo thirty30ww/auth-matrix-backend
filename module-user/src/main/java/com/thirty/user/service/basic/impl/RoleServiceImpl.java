@@ -89,6 +89,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     /**
+     * 删除角色
+     * @param roleId 角色ID
+     */
+    @Override
+    public void deleteRole(Integer roleId) {
+        List<Integer> descendantRoleIds = getDescendantRoleIds(roleId);
+        descendantRoleIds.add(roleId);
+        removeByIds(descendantRoleIds);
+    }
+
+    /**
      * 获取子角色列表
      * @param roleIds 角色id列表
      * @return 子角色列表

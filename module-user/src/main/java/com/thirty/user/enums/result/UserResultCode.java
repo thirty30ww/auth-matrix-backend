@@ -31,6 +31,8 @@ public enum UserResultCode implements IResult {
     USER_BAN_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "封禁成功"),
     USER_UNBAN_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "解封成功"),
     USER_LIST_GET_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "列表获取成功"),
+    PREFERENCE_GET_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取成功"),
+    PREFERENCE_SAVE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "保存成功"),
     ;
 
     /**

@@ -122,7 +122,7 @@ echo ========================================
 echo.
 echo 默认管理员账号信息：
 echo 用户名: 100001
-echo 密码: 123456
+echo 密码: Am20250914
 echo 角色: 超级管理员
 echo.
 echo 数据库连接信息：
@@ -130,6 +130,6 @@ echo 用户数据库: pp_user
 echo 系统数据库: pp_system
 echo.
 echo 请确保在项目中配置正确的数据库连接参数。
-echo 参考文档: document/database-setup.md
+echo 参考文档: document/3.数据库部署指南.md
 echo.
 pause

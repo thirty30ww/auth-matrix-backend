@@ -3,6 +3,7 @@ package com.thirty.user.service.facade;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.model.dto.*;
+import com.thirty.user.model.entity.Preference;
 import com.thirty.user.model.vo.UserVO;
 
 import java.util.List;
@@ -64,4 +65,19 @@ public interface UserFacade {
      * @return 用户VO分页
      */
     IPage<UserVO> getUsers(Integer currentUserId, PageQueryDTO<GetUsersDTO> pageQueryDTO);
+
+    /**
+     * 获取用户偏好设置
+     * @param userId 用户ID
+     * @return 用户偏好设置列表
+     */
+    List<Preference> getPreferences(Integer userId);
+
+    /**
+     * 保存用户偏好设置
+     * @param userId 用户ID
+     * @param field 偏好字段名
+     * @param value 偏好值
+     */
+    void savePreference(Integer userId, String field, String value);
 }

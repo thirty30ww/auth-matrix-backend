@@ -68,7 +68,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
      */
     @Override
     public void deleteRole(Integer roleId) {
-        roleService.removeById(roleId);
+        roleService.deleteRole(roleId);
         userRoleService.deleteByRoleId(roleId);
         roleViewService.deleteByRoleId(roleId);
     }

@@ -6,7 +6,9 @@ import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.system.api.SettingApi;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.*;
+import com.thirty.user.model.entity.Preference;
 import com.thirty.user.model.vo.UserVO;
+import com.thirty.user.service.basic.PreferenceService;
 import com.thirty.user.service.domain.role.builder.RoleValidationBuilderFactory;
 import com.thirty.user.service.domain.role.builder.RolesBuilderFactory;
 import com.thirty.user.service.domain.user.UserOperationDomain;
@@ -31,6 +33,9 @@ public class UserFacadeImpl implements UserFacade {
     private RolesBuilderFactory rolesBuilderFactory;
     @Resource
     private RoleValidationBuilderFactory roleValidationBuilderFactory;
+
+    @Resource
+    private PreferenceService preferenceService;
 
     @Resource
     private SettingApi settingApi;
@@ -155,5 +160,26 @@ public class UserFacadeImpl implements UserFacade {
 
         // 获取用户列表
         return userQueryDomain.getUsers(pageQueryDTO, permittedRoleIds, settingApi.hasPermissionDisplay());
+    }
+
+     /**
+     * 获取用户偏好设置
+     * @param userId 用户ID
+     * @return 用户偏好设置列表
+     */
+     @Override
+     public List<Preference> getPreferences(Integer userId) {
+        return preferenceService.getPreferences(userId);
+    }
+
+    /**
+     * 保存用户偏好设置
+     * @param userId 用户ID
+     * @param field 偏好字段名
+     * @param value 偏好值
+     */
+    @Override
+    public void savePreference(Integer userId, String field, String value) {
+        preferenceService.savePreference(userId, field, value);
     }
 }

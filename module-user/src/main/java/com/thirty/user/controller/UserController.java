@@ -5,6 +5,7 @@ import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.*;
+import com.thirty.user.model.entity.Preference;
 import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.facade.UserFacade;
 import com.thirty.user.utils.JwtUtil;
@@ -109,5 +110,27 @@ public class UserController {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.changePassword(userId, changePasswordDTO);
         return ResultDTO.of(UserResultCode.CHANGE_PASSWORD_SUCCESS);
+    }
+
+    /**
+     * 获取用户偏好设置
+     * @return 用户偏好设置列表
+     */
+    @GetMapping("/preferences/get")
+    public ResultDTO<List<Preference>> getPreferences(@RequestHeader(value = "Authorization") String authHeader) {
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        return ResultDTO.of(UserResultCode.PREFERENCE_GET_SUCCESS, userFacade.getPreferences(userId));
+    }
+
+    /**
+     * 保存用户偏好设置
+     * @param field 偏好字段名
+     * @param value 偏好值
+     */
+    @GetMapping("/preferences/save")
+    public ResultDTO<Void> savePreference(@RequestHeader(value = "Authorization") String authHeader, @RequestParam String field, @RequestParam String value) {
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        userFacade.savePreference(userId, field, value);
+        return ResultDTO.of(UserResultCode.PREFERENCE_SAVE_SUCCESS);
     }
 }
