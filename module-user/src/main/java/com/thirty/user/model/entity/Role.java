@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -105,5 +102,16 @@ public class Role implements Serializable {
         return roles.stream()
                 .filter(role -> role.getParentNodeId() != 0)
                 .collect(Collectors.groupingBy(Role::getParentNodeId));
+    }
+
+    /**
+     * 按创建时间从早到晚排序
+     * @param roles 角色列表
+     * @return 排序后的角色列表
+     */
+    public static List<Role> sortByCreateTime(Collection<Role> roles) {
+        return roles.stream()
+                .sorted(Comparator.comparing(Role::getCreateTime))
+                .collect(Collectors.toList());
     }
 }

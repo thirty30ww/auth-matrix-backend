@@ -1,5 +1,6 @@
 package com.thirty.user.model.vo;
 
+import com.thirty.user.enums.model.ViewType;
 import com.thirty.user.model.entity.View;
 import lombok.Data;
 
@@ -84,6 +85,6 @@ public class ViewVO {
      * @param menus 菜单列表
      */
     public static void filterHasPermission(List<Integer> permittedViewIds, List<ViewVO> menus) {
-        menus.removeIf(view -> !permittedViewIds.contains(view.getNode().getId()));
+        menus.removeIf(view -> view.getNode().getType() != ViewType.PAGE && !permittedViewIds.contains(view.getNode().getId()));
     }
 }

@@ -27,6 +27,10 @@ public enum ViewsType {
      * 目录
      */
     DIRECTORY(4),
+    /**
+     * 非目录
+     */
+    NOT_DIRECTORY_AND_BUTTON(5)
     ;
 
     private final Integer code;

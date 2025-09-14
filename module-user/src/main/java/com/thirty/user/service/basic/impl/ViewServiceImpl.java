@@ -30,11 +30,23 @@ public class ViewServiceImpl extends ServiceImpl<ViewMapper, View>
      * @return 视图列表
      */
     @Override
-    public List<View> getNotDirectoryViews(String keyword) {
+    public List<View> getNotDirectoryAndButtonViews(String keyword) {
         QueryWrapper<View> wrapper = new QueryWrapper<>();
         wrapper.like("name", keyword)
-                .ne("type", ViewType.DIRECTORY); // 筛选不为目录的节点
+                .ne("type", ViewType.DIRECTORY) // 筛选不为目录的节点
+                .ne("type", ViewType.BUTTON); // 筛选不为按钮的节点
         return list(wrapper);
+    }
+
+    /**
+     * 获取非目录视图VO列表
+     * @param keyword 视图名称
+     * @return 非目录视图VO列表
+     */
+    @Override
+    public List<ViewVO> getNotDirectoryAndButtonViewVOS(String keyword) {
+        List<View> notDirectoryViews = getNotDirectoryAndButtonViews(keyword);
+        return ViewConverter.INSTANCE.toViewVOS(notDirectoryViews);
     }
 
     /**

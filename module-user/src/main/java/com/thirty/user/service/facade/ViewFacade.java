@@ -1,7 +1,6 @@
 package com.thirty.user.service.facade;
 
 import com.thirty.user.model.dto.ViewDTO;
-import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 
 import java.util.List;
@@ -40,7 +39,7 @@ public interface ViewFacade {
      * @param keyword 视图名称关键词
      * @return 视图列表
      */
-    List<View> getViews(String keyword);
+    List<ViewVO> getViewVOS(Integer userId, String keyword);
 
     /**
      * 获取权限码列表

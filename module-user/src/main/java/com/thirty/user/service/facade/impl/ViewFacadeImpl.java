@@ -5,7 +5,6 @@ import com.thirty.user.constant.ViewConstant;
 import com.thirty.user.enums.model.ViewsType;
 import com.thirty.user.enums.result.ViewResultCode;
 import com.thirty.user.model.dto.ViewDTO;
-import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.basic.ViewService;
 import com.thirty.user.service.domain.role.RoleQueryDomain;
@@ -103,8 +102,13 @@ public class ViewFacadeImpl implements ViewFacade {
      * @return 视图列表
      */
     @Override
-    public List<View> getViews(String keyword) {
-        return viewService.getNotDirectoryViews(keyword);
+    public List<ViewVO> getViewVOS(Integer userId, String keyword) {
+        List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
+        return viewsBuilderFactory.create(currentRoleIds)
+                .ofType(ViewsType.NOT_DIRECTORY_AND_BUTTON)
+                .withKeyword(keyword)
+                .filterByPermission()
+                .build();
     }
 
     /**

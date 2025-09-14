@@ -17,7 +17,14 @@ public interface ViewService extends IService<View> {
      * @param keyword 视图名称
      * @return 视图列表
      */
-    List<View> getNotDirectoryViews(String keyword);
+    List<View> getNotDirectoryAndButtonViews(String keyword);
+
+    /**
+     * 获取非目录视图VO列表
+     * @param keyword 视图名称
+     * @return 非目录视图VO列表
+     */
+    List<ViewVO> getNotDirectoryAndButtonViewVOS(String keyword);
 
     /**
      * 获取目录VO列表

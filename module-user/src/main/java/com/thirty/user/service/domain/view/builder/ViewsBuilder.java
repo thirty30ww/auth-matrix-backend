@@ -25,11 +25,20 @@ public class ViewsBuilder {
 
     List<Integer> currentRoleIds;
     Integer targetRoleId;
+    String keyword;
 
     ViewsType viewsType;
     boolean filterPermission = false;
     boolean setChangeFlag = false;
     boolean setPermissionFlag = false;
+
+    /**
+     * 设置搜索关键词
+     */
+    public ViewsBuilder withKeyword(String keyword) {
+        this.keyword = keyword;
+        return this;
+    }
 
     /**
      * 设置当前角色ID列表
@@ -115,6 +124,7 @@ public class ViewsBuilder {
                 yield views;
             }
             case DIRECTORY -> viewService.getDirectoryViewVOS();
+            case NOT_DIRECTORY_AND_BUTTON -> viewService.getNotDirectoryAndButtonViewVOS(keyword);
         };
     }
 

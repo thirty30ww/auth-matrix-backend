@@ -3,7 +3,6 @@ package com.thirty.user.controller;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.ViewResultCode;
 import com.thirty.user.model.dto.ViewDTO;
-import com.thirty.user.model.entity.View;
 import com.thirty.user.model.vo.ViewVO;
 import com.thirty.user.service.facade.ViewFacade;
 import com.thirty.user.utils.JwtUtil;
@@ -79,8 +78,9 @@ public class ViewController {
      * @return 视图列表
      */
     @GetMapping("/list")
-    public ResultDTO<List<View>> getViewList(@RequestParam(required = false) String keyword) {
-        List<View> viewList = viewFacade.getViews(keyword);
+    public ResultDTO<List<ViewVO>> getViewList(@RequestParam(required = false) String keyword, @RequestHeader("Authorization") String authHeader) {
+        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
+        List<ViewVO> viewList = viewFacade.getViewVOS(userId, keyword);
         return ResultDTO.of(ViewResultCode.GET_LIST_SUCCESS, viewList);
     }
 

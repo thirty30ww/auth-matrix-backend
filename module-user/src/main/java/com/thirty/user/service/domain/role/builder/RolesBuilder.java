@@ -107,7 +107,7 @@ public class RolesBuilder {
             resultRoles.addAll(roleService.getChildRoles(RoleConstant.GLOBAL_ROLE_PARENT_ID));
         }
 
-        return new ArrayList<>(resultRoles);
+        return Role.sortByCreateTime(resultRoles);
     }
 
     /**
