@@ -1,10 +1,17 @@
 server:
   port: 8080
 
+project:
+  info:  # 项目信息
+    title: Auth Matrix  # 项目标题
+    version: 1.0.0  # 项目版本
+    author: thirty30ww  # 项目作者
+    email: 2834379272@qq.com  # 项目作者邮箱
+
 spring:
   web:
     resources:
-      add-mappings: false  # 禁用默认的静态资源映射，确保NoHandlerFoundException可以被触发
+      add-mappings: true  # 启用静态资源映射，SpringDoc需要这个
   servlet:
     multipart:
       max-file-size: 10MB      # 单个文件最大大小
@@ -58,3 +65,19 @@ aliyun:
     accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:your_access_key_secret}  # 阿里云OSS服务的AccessKeySecret
     bucketName: ${ALIYUN_OSS_BUCKET_NAME:your_bucket_name}  # 阿里云OSS服务的BucketName
     domain: ${ALIYUN_OSS_DOMAIN:your_oss_domain}  # 阿里云OSS服务的域名
+
+# SpringDoc配置 - 只保留基本配置
+springdoc:
+  api-docs:
+    enabled: true  # 启用API文档生成
+    # path: /v3/api-docs # 自定义API文档路径
+  swagger-ui:
+    enabled: true  # 启用Swagger UI
+    path: /docs # 自定义Swagger UI路径
+    # url: ${springdoc.api-docs.path:/v3/api-docs} # 指定API文档的路径
+    # 完全隐藏底部的Schemas部分
+    default-models-expand-depth: -1  # 设置为-1完全隐藏模型
+    show-common-extensions: false    # 不显示扩展信息
+    doc-expansion: none              # 不展开任何文档
+  group-configs:
+    enabled: true  # 启用分组配置

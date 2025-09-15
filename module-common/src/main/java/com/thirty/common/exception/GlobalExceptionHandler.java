@@ -115,7 +115,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResultDTO<?> handleNoHandlerFoundException(NoHandlerFoundException e) {
-        log.warn("请求的接口不存在: {}", e.getRequestURL());
         return ResultDTO.of(GlobalResultCode.INTERFACE_NOT_EXIST);
     }
     

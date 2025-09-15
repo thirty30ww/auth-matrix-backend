@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * 用户基础服务实现 - 职责单一，无复杂依赖
+ * 提供用户基础操作，如创建、查询、更新、删除用户
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {

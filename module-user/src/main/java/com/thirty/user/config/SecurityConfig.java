@@ -7,6 +7,7 @@ import com.thirty.user.filter.JwtAuthenticationFilter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,12 @@ public class SecurityConfig {
     @Resource
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Value("${springdoc.api-docs.path:/v3/api-docs}")
+    private String apiDocsPath;
+
+    @Value("${springdoc.swagger-ui.path:/docs}")
+    private String swaggerUiPath;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -48,6 +55,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll() // 允许访问认证相关接口
                 .requestMatchers("/setting/public/**").permitAll() // 允许访问公共设置相关接口
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", apiDocsPath, swaggerUiPath).permitAll()
                 .anyRequest().authenticated() // 其他请求需要认证
             )
             .sessionManagement(session -> session
