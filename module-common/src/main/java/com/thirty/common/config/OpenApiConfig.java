@@ -56,7 +56,7 @@ public class OpenApiConfig {
                                 .url("http://localhost:" + serverPort)
                                 .description("本地开发环境"),
                         new Server()
-                                .url("https://api.prosepulse.com")
+                                .url("http://106.53.19.163:" + serverPort)
                                 .description("生产环境")))
                 // 配置全局安全认证 - 必要（因为项目使用JWT）
                 .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))

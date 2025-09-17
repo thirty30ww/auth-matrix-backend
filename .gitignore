@@ -80,3 +80,13 @@ logs/
 # 临时文件
 temp/
 tmp/
+
+# SQL文件
+sql/export/
+sql/import/
+
+# Spring Boot 环境配置文件 - 包含敏感信息，不提交git
+application-dev.yml
+application-prod.yml
+**/application-dev.yml
+**/application-prod.yml
