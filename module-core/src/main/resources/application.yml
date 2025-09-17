@@ -9,6 +9,8 @@ project:
     email: 2834379272@qq.com  # 项目作者邮箱
 
 spring:
+  profiles:
+    active: dev  # 激活开发环境配置
   web:
     resources:
       add-mappings: true  # 启用静态资源映射，SpringDoc需要这个
@@ -30,24 +32,24 @@ spring:
       datasource:
         user:
           url: jdbc:mysql://localhost:3306/pp_user?allowPublicKeyRetrieval=true&useSSL=false
-          username: ${DB_USERNAME:your_db_username}
-          password: ${DB_PASSWORD:your_db_password}
+          username: your_db_username  # 替换成你的数据库用户名
+          password: your_db_password  # 替换成你的数据库密码
           driver-class-name: com.mysql.cj.jdbc.Driver
         system:
           url: jdbc:mysql://localhost:3306/pp_system?allowPublicKeyRetrieval=true&useSSL=false
-          username: ${DB_USERNAME:your_db_username}
-          password: ${DB_PASSWORD:your_db_password}
+          username: your_db_username  # 替换成你的数据库用户名
+          password: your_db_password  # 替换成你的数据库密码
           driver-class-name: com.mysql.cj.jdbc.Driver
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
+      host: localhost
+      port: 6379
+      password: your_redis_password  # 替换成你的Redis密码
 
 jwt:
-  secret: ${JWT_SECRET:your_jwt_secret_key_here}  # JWT密钥，请使用安全的256位随机字符串
-  expiration: ${JWT_EXPIRATION:86400000}  # 24小时, 单位: 毫秒
-  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}  # 7天, 单位: 毫秒
+  secret: your_jwt_secret_key_here  # JWT密钥，请替换成安全的256位随机字符串
+  expiration: 86400000  # 24小时, 单位: 毫秒
+  refresh-expiration: 604800000  # 7天, 单位: 毫秒
 
 logging:
   level:
@@ -60,11 +62,11 @@ mybatis-plus:
 
 aliyun:
   oss:
-    endpoint: ${ALIYUN_OSS_ENDPOINT:your_oss_endpoint}  # 阿里云OSS服务的Endpoint
-    accessKeyId: ${ALIYUN_OSS_ACCESS_KEY_ID:your_access_key_id}  # 阿里云OSS服务的AccessKeyId
-    accessKeySecret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:your_access_key_secret}  # 阿里云OSS服务的AccessKeySecret
-    bucketName: ${ALIYUN_OSS_BUCKET_NAME:your_bucket_name}  # 阿里云OSS服务的BucketName
-    domain: ${ALIYUN_OSS_DOMAIN:your_oss_domain}  # 阿里云OSS服务的域名
+    endpoint: your_oss_endpoint  # 替换成你的阿里云OSS服务的Endpoint
+    accessKeyId: your_access_key_id  # 替换成你的阿里云OSS服务的AccessKeyId
+    accessKeySecret: your_access_key_secret  # 替换成你的阿里云OSS服务的AccessKeySecret
+    bucketName: your_bucket_name  # 替换成你的阿里云OSS服务的BucketName
+    domain: your_oss_domain  # 替换成你的阿里云OSS服务的域名
 
 # SpringDoc配置 - 只保留基本配置
 springdoc:

@@ -1,6 +1,5 @@
 package com.thirty.core;
 
-import com.thirty.common.utils.EnvUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,9 +21,6 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfigur
 @MapperScan("com.thirty.**.mapper") // 使用通配符扫描所有模块的 mapper
 public class Application {
     public static void main(String[] args) {
-        // 加载.env文件
-        EnvUtil.loadEnvFile();
-        
         SpringApplication.run(Application.class, args);
     }
 }
