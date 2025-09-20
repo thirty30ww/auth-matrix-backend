@@ -130,13 +130,13 @@ CREATE TABLE `user_role` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `view`
+-- Table structure for table `permission`
 --
 
-DROP TABLE IF EXISTS `view`;
+DROP TABLE IF EXISTS `permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `view` (
+CREATE TABLE `permission` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
   `name` varchar(1024) NOT NULL COMMENT '菜单名',
   `path` varchar(1024) DEFAULT NULL COMMENT '路由路径',

@@ -1,11 +1,12 @@
-package com.thirty.user.service.domain.view.impl;
+package com.thirty.user.service.domain.permission.impl;
 
 import com.thirty.user.constant.RoleConstant;
-import com.thirty.user.model.entity.View;
+import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.model.entity.Permission;
+import com.thirty.user.service.basic.PermissionService;
 import com.thirty.user.service.basic.RoleService;
 import com.thirty.user.service.basic.RoleViewService;
-import com.thirty.user.service.basic.ViewService;
-import com.thirty.user.service.domain.view.ViewQueryDomain;
+import com.thirty.user.service.domain.permission.PermissionQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class ViewQueryDomainImpl implements ViewQueryDomain {
+public class PermissionQueryDomainImpl implements PermissionQueryDomain {
 
     @Resource
-    private ViewService viewService;
+    private PermissionService permissionService;
     @Resource
     private RoleViewService roleViewService;
     @Resource
@@ -43,7 +44,11 @@ public class ViewQueryDomainImpl implements ViewQueryDomain {
         Integer highestLevel = roleService.getHighestLevel(roleIds);
         if (Objects.equals(highestLevel, RoleConstant.ROLE_HIGHEST_LEVEL)) {
             // 返回所有菜单
-            return View.extractViewIds(viewService.getMenuAndButtonViews());
+            return Permission.extractViewIds(permissionService.getPermissionByTypes(List.of(
+                    PermissionType.DIRECTORY,
+                    PermissionType.MENU,
+                    PermissionType.BUTTON
+            )));
         }
         // 否则返回角色菜单列表
         return roleViewService.getViewIds(roleIds);
@@ -57,8 +62,8 @@ public class ViewQueryDomainImpl implements ViewQueryDomain {
      */
     @Override
     public List<String> getPermissionCode(List<Integer> roleIds) {
-        List<Integer> viewIds = getPermissionId(roleIds);
-        return viewService.getPermissionCodes(viewIds);
+        List<Integer> permissionId = getPermissionId(roleIds);
+        return permissionService.getPermissionCodes(permissionId);
     }
 
 

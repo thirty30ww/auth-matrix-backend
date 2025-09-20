@@ -29,22 +29,4 @@ public class RoleValidationBuilderFactory {
         return create()
                 .forUser(userId);
     }
-
-    /**
-     * 创建新的角色验证构建器实例（包括子角色和全局角色）
-     */
-    public RoleValidationBuilder createWithChildAndGlobal(Integer userId) {
-        return create(userId)
-                .includeChildRoles()
-                .includeGlobalRoles();
-    }
-
-    /**
-     * 创建新的角色验证构建器实例（包括子角色和用户角色）
-     */
-    public RoleValidationBuilder createWithChildAndUser(Integer userId) {
-        return create(userId)
-                .includeChildRoles()
-                .includeUserRoles();
-    }
 }

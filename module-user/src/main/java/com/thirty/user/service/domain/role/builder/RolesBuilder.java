@@ -2,6 +2,7 @@ package com.thirty.user.service.domain.role.builder;
 
 import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.converter.RoleConverter;
+import com.thirty.user.enums.model.RoleType;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
 import com.thirty.user.service.basic.RoleService;
@@ -26,15 +27,7 @@ public class RolesBuilder {
      * 查询信息
      */
     Integer userId;
-
-    /**
-     * 查询状态
-     */
-    boolean includeAllRoles = false;
-    boolean includeUserRoles = false;
-    boolean includeChildRoles = false;
-    boolean includeGlobalRoles = false;
-    boolean excludeGlobalRoles = false;
+    List<RoleType> roleTypes;
 
     /**
      * 为用户查询
@@ -45,42 +38,18 @@ public class RolesBuilder {
     }
 
     /**
-     * 包含所有角色
+     * 角色类型列表查询
      */
-    public RolesBuilder includeAllRoles() {
-        this.includeAllRoles = true;
+    public RolesBuilder forRoleTypes(List<RoleType> roleTypes) {
+        this.roleTypes = roleTypes;
         return this;
     }
 
     /**
-     * 所有角色但不包括全局角色
+     * 角色类型查询
      */
-    public RolesBuilder excludeGlobalRoles() {
-        this.excludeGlobalRoles = true;
-        return this;
-    }
-
-    /**
-     * 包含用户当前角色
-     */
-    public RolesBuilder includeUserRoles() {
-        this.includeUserRoles = true;
-        return this;
-    }
-
-    /**
-     * 包含子角色
-     */
-    public RolesBuilder includeChildRoles() {
-        this.includeChildRoles = true;
-        return this;
-    }
-
-    /**
-     * 包含全局角色
-     */
-    public RolesBuilder includeGlobalRoles() {
-        this.includeGlobalRoles = true;
+    public RolesBuilder forRoleType(RoleType roleType) {
+        this.roleTypes = List.of(roleType);
         return this;
     }
 
@@ -90,22 +59,26 @@ public class RolesBuilder {
     public List<Role> build() {
         Set<Role> resultRoles = new HashSet<>();
 
-        if (includeAllRoles) {
-            resultRoles.addAll(roleService.list());
-        }
-        if (includeUserRoles) {
-            resultRoles.addAll(userRoleService.getRolesByUserId(userId));
-        }
-        if (includeChildRoles) {
-            List<Integer> roleIds = userRoleService.getRoleIds(userId);
-            resultRoles.addAll(roleService.getDescendantRoles(roleIds));
-        }
-        if (excludeGlobalRoles) {
-            resultRoles.addAll(roleService.getNotGlobalRoles());
-        }
-        if (includeGlobalRoles) {
-            resultRoles.addAll(roleService.getChildRoles(RoleConstant.GLOBAL_ROLE_PARENT_ID));
-        }
+        roleTypes.forEach(rolesType -> {
+            switch (rolesType) {
+                case ALL:
+                    resultRoles.addAll(roleService.list());
+                    break;
+                case CHILD:
+                    List<Integer> roleIds = userRoleService.getRoleIds(userId);
+                    resultRoles.addAll(roleService.getDescendantRoles(roleIds));
+                    break;
+                case GLOBAL:
+                    resultRoles.addAll(roleService.getChildRoles(RoleConstant.GLOBAL_ROLE_PARENT_ID));
+                    break;
+                case SELF:
+                    resultRoles.addAll(userRoleService.getRolesByUserId(userId));
+                    break;
+                case NOT_GLOBAL:
+                    resultRoles.addAll(roleService.getNotGlobalRoles());
+                    break;
+            }
+        });
 
         return Role.sortByCreateTime(resultRoles);
     }

@@ -1,8 +1,8 @@
-package com.thirty.user.service.domain.view;
+package com.thirty.user.service.domain.permission;
 
 import java.util.List;
 
-public interface ViewQueryDomain {
+public interface PermissionQueryDomain {
 
     /**
      * 获取菜单id列表

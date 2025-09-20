@@ -1,10 +1,10 @@
-package com.thirty.user.service.domain.view;
+package com.thirty.user.service.domain.permission;
 
-import com.thirty.user.enums.model.ViewType;
+import com.thirty.user.enums.model.PermissionType;
 
 import java.util.List;
 
-public interface ViewValidationDomain {
+public interface PermissionValidationDomain {
     /**
      * 校验用户是否有视图权限
      * @param userId 用户ID
@@ -27,7 +27,7 @@ public interface ViewValidationDomain {
      * @param type 视图类型
      * @return 是否符合
      */
-    boolean validateTypeComply(Integer parentId, ViewType type);
+    boolean validateTypeComply(Integer parentId, PermissionType type);
 
     /**
      * 校验父节点ID是否不等于视图ID及其后代节点ID

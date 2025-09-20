@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ViewResultCode implements IResult {
+public enum PermissionResultCode implements IResult {
 
     GET_VIEW_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取视图树成功"),
     GET_MENU_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取菜单树成功"),

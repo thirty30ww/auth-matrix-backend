@@ -1,12 +1,12 @@
-package com.thirty.user.service.domain.view.impl;
+package com.thirty.user.service.domain.permission.impl;
 
 import com.thirty.user.constant.ViewConstant;
-import com.thirty.user.enums.model.ViewType;
-import com.thirty.user.model.entity.View;
+import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.model.entity.Permission;
 import com.thirty.user.service.basic.UserRoleService;
-import com.thirty.user.service.basic.ViewService;
-import com.thirty.user.service.domain.view.ViewQueryDomain;
-import com.thirty.user.service.domain.view.ViewValidationDomain;
+import com.thirty.user.service.basic.PermissionService;
+import com.thirty.user.service.domain.permission.PermissionQueryDomain;
+import com.thirty.user.service.domain.permission.PermissionValidationDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class ViewValidationDomainImpl implements ViewValidationDomain {
+public class PermissionValidationDomainImpl implements PermissionValidationDomain {
 
     @Resource
-    private ViewQueryDomain viewQueryDomain;
+    private PermissionQueryDomain permissionQueryDomain;
 
     @Resource
     private UserRoleService userRoleService;
     @Resource
-    private ViewService viewService;
+    private PermissionService permissionService;
 
     /**
      * 校验用户是否有视图权限
@@ -35,7 +35,7 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
     @Override
     public boolean validateViewContainUserViews(Integer userId, List<Integer> viewIds) {
         List<Integer> currentUserRoleIds = userRoleService.getRoleIds(userId);
-        List<Integer> currentViewIds = viewQueryDomain.getPermissionId(currentUserRoleIds);
+        List<Integer> currentViewIds = permissionQueryDomain.getPermissionId(currentUserRoleIds);
         return new HashSet<>(currentViewIds).containsAll(viewIds);
     }
 
@@ -57,14 +57,14 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
      * @return 是否符合
      */
     @Override
-    public boolean validateTypeComply(Integer parentId, ViewType type) {
-        View parentView = viewService.getById(parentId);
-        ViewType parentType = parentView == null ? ViewType.DIRECTORY : parentView.getType();
+    public boolean validateTypeComply(Integer parentId, PermissionType type) {
+        Permission parentPermission = permissionService.getById(parentId);
+        PermissionType parentType = parentPermission == null ? PermissionType.DIRECTORY : parentPermission.getType();
 
-        if (type == ViewType.DIRECTORY || type == ViewType.MENU) {
-            return parentType == ViewType.DIRECTORY;
+        if (type == PermissionType.DIRECTORY || type == PermissionType.MENU) {
+            return parentType == PermissionType.DIRECTORY;
         } else {
-            return parentType == ViewType.MENU;
+            return parentType == PermissionType.MENU;
         }
     }
 
@@ -79,7 +79,7 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
         if (Objects.equals(parentId, viewId)) {
             return true;
         }
-        List<Integer> descendantIds = viewService.getDescendantIds(parentId);
+        List<Integer> descendantIds = permissionService.getDescendantIds(parentId);
         return !CollectionUtils.isEmpty(descendantIds) && descendantIds.contains(viewId);
     }
 
@@ -90,8 +90,8 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
      */
     @Override
     public boolean validateMoveUp(Integer viewId) {
-        View view = viewService.getById(viewId);
-        return !Objects.equals(view.getFrontNodeId(), ViewConstant.HEAD_VIEW_FRONT_ID);
+        Permission permission = permissionService.getById(viewId);
+        return !Objects.equals(permission.getFrontNodeId(), ViewConstant.HEAD_VIEW_FRONT_ID);
     }
 
     /**
@@ -101,8 +101,8 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
      */
     @Override
     public boolean validateMoveDown(Integer viewId) {
-        View view = viewService.getById(viewId);
-        return !Objects.equals(view.getBehindNodeId(), ViewConstant.TAIL_VIEW_BEHIND_ID);
+        Permission permission = permissionService.getById(viewId);
+        return !Objects.equals(permission.getBehindNodeId(), ViewConstant.TAIL_VIEW_BEHIND_ID);
     }
 
     /**
@@ -114,11 +114,11 @@ public class ViewValidationDomainImpl implements ViewValidationDomain {
      */
     @Override
     public boolean validateModifyValid(Integer userId, Integer viewId, Boolean isValid) {
-        View view = viewService.getById(viewId);
-        if (view.getIsValid() == isValid) {
+        Permission permission = permissionService.getById(viewId);
+        if (permission.getIsValid() == isValid) {
             return true;
         }
-        List<Integer> descendantIds = viewService.getDescendantIds(viewId);
+        List<Integer> descendantIds = permissionService.getDescendantIds(viewId);
         return validateViewContainUserViews(userId, descendantIds);
     }
 }

@@ -1,5 +1,6 @@
 package com.thirty.user.service.domain.role.builder;
 
+import com.thirty.user.enums.model.RoleType;
 import com.thirty.user.service.basic.UserRoleService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -20,13 +21,7 @@ public class RoleValidationBuilder {
      * 验证信息
      */
     Integer userId;
-
-    /**
-     * 验证状态
-     */
-    boolean includeUserRoles = false;    // 是否包含当前用户角色
-    boolean includeChildRoles = false;    // 默认包含子角色
-    boolean includeGlobalRoles = false;   // 默认包含全局角色
+    List<RoleType> roleTypes;// 默认包含全局角色
     
     /**
      * 构造函数 - 通过工厂创建
@@ -43,28 +38,20 @@ public class RoleValidationBuilder {
         this.userId = currentUserId;
         return this;
     }
-    
+
     /**
-     * 包含当前用户的角色
+     * 设置角色类型列表
      */
-    public RoleValidationBuilder includeUserRoles() {
-        this.includeUserRoles = true;
+    public RoleValidationBuilder forRoleTypes(List<RoleType> roleTypes) {
+        this.roleTypes = roleTypes;
         return this;
     }
-    
+
     /**
-     * 包含子角色（默认已包含）
+     * 角色类型查询
      */
-    public RoleValidationBuilder includeChildRoles() {
-        this.includeChildRoles = true;
-        return this;
-    }
-    
-    /**
-     * 包含全局角色（默认已包含）
-     */
-    public RoleValidationBuilder includeGlobalRoles() {
-        this.includeGlobalRoles = true;
+    public RoleValidationBuilder forRoleType(RoleType roleType) {
+        this.roleTypes = List.of(roleType);
         return this;
     }
     
@@ -79,14 +66,9 @@ public class RoleValidationBuilder {
         }
         
         // 构建当前用户的权限范围
-        var builder = rolesBuilderFactory.create()
-                .forUser(userId);
-        
-        if (includeUserRoles) builder.includeUserRoles();
-        if (includeChildRoles) builder.includeChildRoles();
-        if (includeGlobalRoles) builder.includeGlobalRoles();
-        
-        List<Integer> permittedRoleIds = builder.buildIds();
+        List<Integer> permittedRoleIds = rolesBuilderFactory.create(userId)
+                .forRoleTypes(roleTypes)
+                .buildIds();
         
         // 检查所有目标角色是否都在权限范围内
         return new HashSet<>(permittedRoleIds).containsAll(targetRoleIds);

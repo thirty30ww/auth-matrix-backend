@@ -8,7 +8,7 @@ import com.thirty.user.model.entity.Role;
 import com.thirty.user.service.basic.RoleService;
 import com.thirty.user.service.basic.RoleViewService;
 import com.thirty.user.service.basic.UserRoleService;
-import com.thirty.user.service.basic.ViewService;
+import com.thirty.user.service.basic.PermissionService;
 import com.thirty.user.service.domain.role.RoleOperationDomain;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
     @Resource
     private RoleViewService roleViewService;
     @Resource
-    private ViewService viewService;
+    private PermissionService permissionService;
 
     /**
      * 添加角色
@@ -115,7 +115,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
      */
     private List<Integer> getAddedAndAncestorViewIds(List<Integer> oldViewIds, List<Integer> newViewIds) {
         List<Integer> addedViewIds = CollectionUtil.AddedCompare(oldViewIds, newViewIds);
-        List<Integer> ancestorIds = viewService.getAncestorIds(addedViewIds);
+        List<Integer> ancestorIds = permissionService.getAncestorIds(addedViewIds);
 
         // 流式去重
         return Stream.concat(addedViewIds.stream(), ancestorIds.stream()).distinct().collect(Collectors.toList());
@@ -129,7 +129,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
      */
     private List<Integer> getRemovedAndDescendantViewIds(List<Integer> oldViewIds, List<Integer> newViewIds) {
         List<Integer> removedViewIds = CollectionUtil.RemovedCompare(oldViewIds, newViewIds);
-        List<Integer> descendantIds = viewService.getDescendantIds(removedViewIds);
+        List<Integer> descendantIds = permissionService.getDescendantIds(removedViewIds);
 
         // 流式去重
         return Stream.concat(removedViewIds.stream(), descendantIds.stream()).distinct().collect(Collectors.toList());

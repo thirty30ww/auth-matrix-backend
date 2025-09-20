@@ -1,7 +1,7 @@
 package com.thirty.user.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.thirty.user.enums.model.ViewType;
+import com.thirty.user.enums.model.PermissionType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
  * 页面表
  * @TableName view
  */
-@TableName(value ="view")
+@TableName(value ="permission")
 @Data
-public class View implements Serializable {
+public class Permission implements Serializable {
     /**
      * 菜单ID
      */
@@ -62,7 +62,7 @@ public class View implements Serializable {
     /**
      * 页面类型(1:目录, 2:菜单, 3:页面)
      */
-    private ViewType type;
+    private PermissionType type;
 
     /**
      * 权限码
@@ -95,60 +95,60 @@ public class View implements Serializable {
 
     /**
      * 构建无效视图列表
-     * @param viewIds 视图ID列表
-     * @return 无效视图列表
+     * @param permissionIds 权限ID列表
+     * @return 无效权限列表
      */
-    public static List<View> toNotValidView(List<Integer> viewIds) {
-        return viewIds.stream().map(viewId -> {
-            View view = new View();
-            view.setId(viewId);
-            view.setIsValid(false);
-            return view;
+    public static List<Permission> toNotValidPermission(List<Integer> permissionIds) {
+        return permissionIds.stream().map(permissionId -> {
+            Permission permission = new Permission();
+            permission.setId(permissionId);
+            permission.setIsValid(false);
+            return permission;
         }).collect(Collectors.toList());
     }
 
     /**
      * 构建视图Map，key为视图ID，value为View
-     * @param views 视图列表
+     * @param permissions 视图列表
      * @return 视图Map
      */
-    public static Map<Integer, View> buildMap(List<View> views) {
-        return views.stream().collect(Collectors.toMap(View::getId, view -> view));
+    public static Map<Integer, Permission> buildMap(List<Permission> permissions) {
+        return permissions.stream().collect(Collectors.toMap(Permission::getId, view -> view));
     }
 
     /**
      * 构建父节点ID和子节点列表的Map，key为父节点ID，value为子节点列表
-     * @param views 视图列表
+     * @param permissions 视图列表
      * @return 父节点ID和子节点列表的Map
      */
-    public static Map<Integer, List<View>> buildParentChildMap(List<View> views) {
-        return views.stream().collect(Collectors.groupingBy(View::getParentNodeId));
+    public static Map<Integer, List<Permission>> buildParentChildMap(List<Permission> permissions) {
+        return permissions.stream().collect(Collectors.groupingBy(Permission::getParentNodeId));
     }
 
     /**
      * 从视图列表中提取视图ID列表
-     * @param views 视图列表
+     * @param permissions 视图列表
      * @return 视图ID列表
      */
-    public static List<Integer> extractViewIds(List<View> views) {
-        return views.stream().map(View::getId).distinct().collect(Collectors.toList());
+    public static List<Integer> extractViewIds(List<Permission> permissions) {
+        return permissions.stream().map(Permission::getId).distinct().collect(Collectors.toList());
     }
 
     /**
      * 从视图列表中提取权限码列表
-     * @param views 视图列表
+     * @param permissions 视图列表
      * @return 权限码列表
      */
-    public static List<String> extractPermissionCodes(List<View> views) {
-        return views.stream().map(View::getPermissionCode).distinct().collect(Collectors.toList());
+    public static List<String> extractPermissionCodes(List<Permission> permissions) {
+        return permissions.stream().map(Permission::getPermissionCode).distinct().collect(Collectors.toList());
     }
 
     /**
      * 从视图列表中提取最大的前一个节点ID的视图
-     * @param views 视图列表
+     * @param permissions 视图列表
      * @return 最大的前一个节点ID的视图
      */
-    public static View extractMaxFrontIdView(List<View> views) {
-        return views.stream().max(Comparator.comparingInt(View::getFrontNodeId)).orElse(null);
+    public static Permission extractMaxFrontIdView(List<Permission> permissions) {
+        return permissions.stream().max(Comparator.comparingInt(Permission::getFrontNodeId)).orElse(null);
     }
 }

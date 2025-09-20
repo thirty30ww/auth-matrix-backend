@@ -4,6 +4,8 @@ import com.thirty.common.enums.CodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public enum RolesType implements CodeEnum<Integer> {
@@ -37,5 +39,20 @@ public enum RolesType implements CodeEnum<Integer> {
 
     public static RolesType getByCode(Integer code) {
         return CodeEnum.getByCode(RolesType.class, code);
+    }
+
+    /**
+     * 将RolesType映射为对应的RoleType列表
+     * @return 对应的RoleType列表
+     */
+    public List<RoleType> toRoleTypes() {
+        return switch (this) {
+            case ALL -> List.of(RoleType.ALL);
+            case CHILD -> List.of(RoleType.CHILD);
+            case CHILD_AND_GLOBAL -> List.of(RoleType.CHILD, RoleType.GLOBAL);
+            case GLOBAL -> List.of(RoleType.GLOBAL);
+            case CHILD_AND_SELF -> List.of(RoleType.CHILD, RoleType.SELF);
+            case NOT_GLOBAL -> List.of(RoleType.NOT_GLOBAL);
+        };
     }
 }

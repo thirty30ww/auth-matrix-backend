@@ -1,6 +1,6 @@
 package com.thirty.user.mapper;
 
-import com.thirty.user.model.entity.View;
+import com.thirty.user.model.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2025-08-03 10:06:39
 * @Entity com.thirty.user.domain.View
 */
-public interface ViewMapper extends BaseMapper<View> {
+public interface ViewMapper extends BaseMapper<Permission> {
 
 }
 
