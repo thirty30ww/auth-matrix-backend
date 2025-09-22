@@ -1,7 +1,7 @@
 package com.thirty.user.service.facade.impl;
 
 import com.thirty.common.exception.BusinessException;
-import com.thirty.user.constant.ViewConstant;
+import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.enums.model.RoleType;
 import com.thirty.user.enums.result.PermissionResultCode;
@@ -37,9 +37,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
     private PermissionsBuilderFactory permissionsBuilderFactory;
 
     /**
-     * 获取视图树
+     * 获取权限树
      * @param userId 用户ID
-     * @return 视图树
+     * @return 权限树
      */
     @Override
     public List<PermissionVO> getViewTree(Integer userId) {
@@ -94,9 +94,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
     }
 
     /**
-     * 获取视图列表
-     * @param keyword 视图名称关键词
-     * @return 视图列表
+     * 获取权限列表
+     * @param keyword 权限名称关键词
+     * @return 权限列表
      */
     @Override
     public List<PermissionVO> getViewVOS(Integer userId, String keyword) {
@@ -122,16 +122,16 @@ public class PermissionFacadeImpl implements PermissionFacade {
     }
 
     /**
-     * 添加视图
+     * 添加权限
      * @param userId 用户ID
-     * @param permissionDTO 视图DTO
+     * @param permissionDTO 权限DTO
      */
     @Override
     public void addPermission(Integer userId, PermissionDTO permissionDTO) {
         if (!permissionValidationDomain.validateTypeComply(permissionDTO.getParentNodeId(), permissionDTO.getType())) {
             throw new BusinessException(PermissionResultCode.VIEW_TYPE_NOT_COMPLY);
         }
-        if (!Objects.equals(permissionDTO.getParentNodeId(), ViewConstant.ROOT_VIEW_PARENT_ID)
+        if (!Objects.equals(permissionDTO.getParentNodeId(), PermissionConstant.ROOT_VIEW_PARENT_ID)
                 && !permissionValidationDomain.validateViewContainUserViews(userId, permissionDTO.getParentNodeId())) {
             throw new BusinessException(PermissionResultCode.VIEW_NOT_AUTHORIZED_ADD);
         }
@@ -139,9 +139,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
     }
 
     /**
-     * 修改视图
+     * 修改权限
      * @param userId 用户ID
-     * @param permissionDTO 视图DTO
+     * @param permissionDTO 权限DTO
      */
     @Override
     public void modifyPermission(Integer userId, PermissionDTO permissionDTO) {
@@ -161,9 +161,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
     }
 
     /**
-     * 删除视图
+     * 删除权限
      * @param userId 用户ID
-     * @param viewId 视图ID
+     * @param viewId 权限ID
      */
     @Override
     public void deletePermission(Integer userId, Integer viewId) {
@@ -173,8 +173,8 @@ public class PermissionFacadeImpl implements PermissionFacade {
         permissionOperationDomain.deletePermission(viewId);
     }
     /**
-     * 移动视图
-     * @param viewId 视图ID
+     * 移动权限
+     * @param viewId 权限ID
      * @param isUp 是否上移
      */
     @Override

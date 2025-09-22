@@ -12,10 +12,22 @@ public interface RoleOperationDomain {
     void addRole(RoleDTO roleDTO);
 
     /**
+     * 添加全局角色
+     * @param roleDTO 角色dto
+     */
+    void addGlobalRole(RoleDTO roleDTO);
+
+    /**
      * 更新角色
      * @param roleDTO 角色dto
      */
     void updateRole(RoleDTO roleDTO);
+
+    /**
+     * 更新全局角色
+     * @param roleDTO 角色dto
+     */
+    void updateGlobalRole(RoleDTO roleDTO);
 
     /**
      * 删除角色
@@ -24,17 +36,25 @@ public interface RoleOperationDomain {
     void deleteRole(Integer roleId);
 
     /**
-     * 分配视图权限
+     * 分配权限权限
      * @param roleId 角色ID
-     * @param oldViewIds 旧视图ID列表
-     * @param newViewIds 新视图ID列表
+     * @param oldPermissionIds 旧权限ID列表
+     * @param newPermissionIds 新权限ID列表
      */
-    void assignView(Integer roleId, List<Integer> oldViewIds, List<Integer> newViewIds);
+    void assignNormalPermission(Integer roleId, List<Integer> oldPermissionIds, List<Integer> newPermissionIds);
 
     /**
-     * 获取角色视图ID列表
-     * @param parentRoleId 父角色ID
-     * @return 视图ID列表
+     * 分配全局权限权限
+     * @param roleId 角色ID
+     * @param oldPermissionIds 旧权限ID列表
+     * @param newPermissionIds 新权限ID列表
      */
-    List<Integer> getViewIdsByParentRoleId(Integer parentRoleId);
+    void assignGlobalPermission(Integer roleId, List<Integer> oldPermissionIds, List<Integer> newPermissionIds);
+
+    /**
+     * 获取角色权限ID列表
+     * @param parentRoleId 父角色ID
+     * @return 权限ID列表
+     */
+    List<Integer> getPermissionIdsByParentRoleId(Integer parentRoleId);
 }

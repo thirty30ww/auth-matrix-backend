@@ -5,7 +5,7 @@ import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.Permission;
 import com.thirty.user.service.basic.PermissionService;
 import com.thirty.user.service.basic.RoleService;
-import com.thirty.user.service.basic.RoleViewService;
+import com.thirty.user.service.basic.RolePermissionService;
 import com.thirty.user.service.domain.permission.PermissionQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class PermissionQueryDomainImpl implements PermissionQueryDomain {
     @Resource
     private PermissionService permissionService;
     @Resource
-    private RoleViewService roleViewService;
+    private RolePermissionService rolePermissionService;
     @Resource
     private RoleService roleService;
 
@@ -51,7 +51,7 @@ public class PermissionQueryDomainImpl implements PermissionQueryDomain {
             )));
         }
         // 否则返回角色菜单列表
-        return roleViewService.getViewIds(roleIds);
+        return rolePermissionService.getPermissionIds(roleIds);
     }
 
 

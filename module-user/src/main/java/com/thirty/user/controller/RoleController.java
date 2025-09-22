@@ -3,7 +3,7 @@ package com.thirty.user.controller;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.model.RolesType;
 import com.thirty.user.enums.result.RoleResultCode;
-import com.thirty.user.model.dto.AssignViewDTO;
+import com.thirty.user.model.dto.AssignPermissionDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
@@ -32,7 +32,7 @@ public class RoleController {
      * @return 角色树
      */
     @GetMapping("/tree")
-    public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "NOT_GLOBAL") RolesType type) {
+    public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "ALL") RolesType type) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(userId, type));
     }
@@ -50,7 +50,6 @@ public class RoleController {
     /**
      * 添加角色
      * @param roleDTO 角色dto
-     * @return 角色dto
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('permission:role:add')")
@@ -61,22 +60,42 @@ public class RoleController {
     }
 
     /**
+     * 添加全局角色
+     * @param roleDTO 角色dto
+     */
+    @PostMapping("/add/global")
+    @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:add')")
+    public ResultDTO<Void> addGlobalRole(@Validated(RoleDTO.GlobalAdd.class) @RequestBody RoleDTO roleDTO) {
+        roleFacade.addGlobalRole(roleDTO);
+        return ResultDTO.of(RoleResultCode.ROLE_ADD_SUCCESS);
+    }
+
+    /**
      * 更新角色
      * @param roleDTO 角色dto
-     * @return 角色dto
      */
     @PostMapping("/modify")
     @PreAuthorize("hasAuthority('permission:role:modify')")
-    public ResultDTO<Void> updateRole(@Validated(RoleDTO.Update.class) @RequestBody RoleDTO roleDTO, @RequestHeader(value = "Authorization") String authHeader) {
+    public ResultDTO<Void> updateRole(@Validated(RoleDTO.Modify.class) @RequestBody RoleDTO roleDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.updateRole(roleDTO, userId);
         return ResultDTO.of(RoleResultCode.ROLE_UPDATE_SUCCESS);
     }
 
     /**
+     * 更新全局角色
+     * @param roleDTO 角色dto
+     */ 
+    @PostMapping("/modify/global")
+    @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:modify')")
+    public ResultDTO<Void> updateGlobalRole(@Validated(RoleDTO.GlobalModify.class) @RequestBody RoleDTO roleDTO) {
+        roleFacade.updateGlobalRole(roleDTO);
+        return ResultDTO.of(RoleResultCode.ROLE_UPDATE_SUCCESS);
+    }
+
+    /**
      * 删除角色
      * @param roleId 角色ID
-     * @return 角色dto
      */
     @GetMapping("/delete")
     @PreAuthorize("hasAuthority('permission:role:delete')")
@@ -87,14 +106,34 @@ public class RoleController {
     }
 
     /**
-     * 分配视图权限
-     * @return 角色dto
+     * 删除全局角色
+     * @param roleId 角色ID
      */
-    @PostMapping("/assign/view")
+    @GetMapping("/delete/global")
+    @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:delete')")
+    public ResultDTO<Void> deleteGlobalRole(@RequestParam(value = "roleId") Integer roleId) {
+        roleFacade.deleteGlobalRole(roleId);
+        return ResultDTO.of(RoleResultCode.ROLE_DELETE_SUCCESS);
+    }
+
+    /**
+     * 分配权限权限
+     */
+    @PostMapping("/assign/permission")
     @PreAuthorize("hasAuthority('permission:role:assign')")
-    public ResultDTO<Void> assignView(@RequestBody AssignViewDTO assignViewDTO, @RequestHeader(value = "Authorization") String authHeader) {
+    public ResultDTO<Void> assignPermission(@RequestBody AssignPermissionDTO assignPermissionDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
-        roleFacade.assignView(userId, assignViewDTO);
+        roleFacade.assignPermission(userId, assignPermissionDTO);
+        return ResultDTO.of(RoleResultCode.ROLE_ASSIGN_VIEW_SUCCESS);
+    }
+
+    /**
+     * 分配全局权限权限
+     */
+    @PostMapping("/assign/permission/global")
+    @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:assign')")
+    public ResultDTO<Void> assignGlobalPermission(@RequestBody AssignPermissionDTO assignPermissionDTO) {
+        roleFacade.assignGlobalPermission(assignPermissionDTO);
         return ResultDTO.of(RoleResultCode.ROLE_ASSIGN_VIEW_SUCCESS);
     }
 }

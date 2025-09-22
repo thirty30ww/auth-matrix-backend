@@ -41,10 +41,22 @@ public interface RoleService extends IService<Role> {
     List<Role> getNotGlobalRoles();
 
     /**
+     * 获取非全局角色id列表
+     * @return 非全局角色id列表
+     */
+    List<Integer> getNotGlobalRoleIds();
+
+    /**
      * 添加角色
      * @param role 角色
      */
     void addRole(Role role);
+
+    /**
+     * 添加全局角色
+     * @param role 角色
+     */
+    void addGlobalRole(Role role);
 
     /**
      * 删除角色

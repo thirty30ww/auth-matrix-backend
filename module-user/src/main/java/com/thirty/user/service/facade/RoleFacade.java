@@ -1,7 +1,7 @@
 package com.thirty.user.service.facade;
 
 import com.thirty.user.enums.model.RolesType;
-import com.thirty.user.model.dto.AssignViewDTO;
+import com.thirty.user.model.dto.AssignPermissionDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
@@ -34,11 +34,23 @@ public interface RoleFacade {
     void addRole(RoleDTO roleDTO, Integer userId);
 
     /**
+     * 添加全局角色
+     * @param roleDTO 角色dto
+     */
+    void addGlobalRole(RoleDTO roleDTO);
+
+    /**
      * 更新角色
      * @param roleDTO 角色dto
      * @param userId 用户ID
      */
     void updateRole(RoleDTO roleDTO, Integer userId);
+
+    /**
+     * 更新全局角色
+     * @param roleDTO 角色dto
+     */
+    void updateGlobalRole(RoleDTO roleDTO);
 
     /**
      * 删除角色
@@ -48,9 +60,21 @@ public interface RoleFacade {
     void deleteRole(Integer roleId, Integer userId);
 
     /**
-     * 分配视图权限
-     * @param userId 当前操作用户ID
-     * @param assignViewDTO 分配视图dto
+     * 删除全局角色
+     * @param roleId 角色ID
      */
-    void assignView(Integer userId, AssignViewDTO assignViewDTO);
+    void deleteGlobalRole(Integer roleId);
+
+    /**
+     * 分配权限权限
+     * @param userId 当前操作用户ID
+     * @param assignPermissionDTO 分配权限dto
+     */
+    void assignPermission(Integer userId, AssignPermissionDTO assignPermissionDTO);
+
+    /**
+     * 分配全局权限权限
+     * @param assignPermissionDTO 分配权限dto
+     */
+    void assignGlobalPermission(AssignPermissionDTO assignPermissionDTO);
 }

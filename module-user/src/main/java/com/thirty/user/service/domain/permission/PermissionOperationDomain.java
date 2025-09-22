@@ -4,26 +4,26 @@ import com.thirty.user.model.dto.PermissionDTO;
 
 public interface PermissionOperationDomain {
     /**
-     * 添加视图
-     * @param permissionDTO 视图DTO
+     * 添加权限
+     * @param permissionDTO 权限DTO
      */
     void addPermission(PermissionDTO permissionDTO);
 
     /**
-     * 修改视图
-     * @param permissionDTO 视图DTO
+     * 修改权限
+     * @param permissionDTO 权限DTO
      */
     void modifyPermission(PermissionDTO permissionDTO);
 
     /**
-     * 删除视图
-     * @param viewId 视图ID
+     * 删除权限
+     * @param viewId 权限ID
      */
     void deletePermission(Integer viewId);
 
     /**
-     * 移动视图
-     * @param viewId 视图ID
+     * 移动权限
+     * @param viewId 权限ID
      * @param isUp 是否上移
      */
     void movePermission(Integer viewId, Boolean isUp);

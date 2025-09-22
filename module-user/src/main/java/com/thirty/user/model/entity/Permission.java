@@ -94,7 +94,7 @@ public class Permission implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 构建无效视图列表
+     * 构建无效权限列表
      * @param permissionIds 权限ID列表
      * @return 无效权限列表
      */
@@ -108,9 +108,9 @@ public class Permission implements Serializable {
     }
 
     /**
-     * 构建视图Map，key为视图ID，value为View
-     * @param permissions 视图列表
-     * @return 视图Map
+     * 构建权限Map，key为权限ID，value为View
+     * @param permissions 权限列表
+     * @return 权限Map
      */
     public static Map<Integer, Permission> buildMap(List<Permission> permissions) {
         return permissions.stream().collect(Collectors.toMap(Permission::getId, view -> view));
@@ -118,7 +118,7 @@ public class Permission implements Serializable {
 
     /**
      * 构建父节点ID和子节点列表的Map，key为父节点ID，value为子节点列表
-     * @param permissions 视图列表
+     * @param permissions 权限列表
      * @return 父节点ID和子节点列表的Map
      */
     public static Map<Integer, List<Permission>> buildParentChildMap(List<Permission> permissions) {
@@ -126,17 +126,17 @@ public class Permission implements Serializable {
     }
 
     /**
-     * 从视图列表中提取视图ID列表
-     * @param permissions 视图列表
-     * @return 视图ID列表
+     * 从权限列表中提取权限ID列表
+     * @param permissions 权限列表
+     * @return 权限ID列表
      */
     public static List<Integer> extractViewIds(List<Permission> permissions) {
         return permissions.stream().map(Permission::getId).distinct().collect(Collectors.toList());
     }
 
     /**
-     * 从视图列表中提取权限码列表
-     * @param permissions 视图列表
+     * 从权限列表中提取权限码列表
+     * @param permissions 权限列表
      * @return 权限码列表
      */
     public static List<String> extractPermissionCodes(List<Permission> permissions) {
@@ -144,9 +144,9 @@ public class Permission implements Serializable {
     }
 
     /**
-     * 从视图列表中提取最大的前一个节点ID的视图
-     * @param permissions 视图列表
-     * @return 最大的前一个节点ID的视图
+     * 从权限列表中提取最大的前一个节点ID的权限
+     * @param permissions 权限列表
+     * @return 最大的前一个节点ID的权限
      */
     public static Permission extractMaxFrontIdView(List<Permission> permissions) {
         return permissions.stream().max(Comparator.comparingInt(Permission::getFrontNodeId)).orElse(null);

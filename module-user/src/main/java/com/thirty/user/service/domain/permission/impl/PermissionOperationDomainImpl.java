@@ -3,7 +3,7 @@ package com.thirty.user.service.domain.permission.impl;
 import com.thirty.user.converter.PermissionConverter;
 import com.thirty.user.model.dto.PermissionDTO;
 import com.thirty.user.model.entity.Permission;
-import com.thirty.user.service.basic.RoleViewService;
+import com.thirty.user.service.basic.RolePermissionService;
 import com.thirty.user.service.basic.PermissionService;
 import com.thirty.user.service.domain.permission.PermissionOperationDomain;
 import jakarta.annotation.Resource;
@@ -17,11 +17,11 @@ public class PermissionOperationDomainImpl implements PermissionOperationDomain 
     @Resource
     private PermissionService permissionService;
     @Resource
-    private RoleViewService roleViewService;
+    private RolePermissionService rolePermissionService;
 
     /**
-     * 添加视图
-     * @param permissionDTO 视图DTO
+     * 添加权限
+     * @param permissionDTO 权限DTO
      */
     @Override
     public void addPermission(PermissionDTO permissionDTO) {
@@ -30,8 +30,8 @@ public class PermissionOperationDomainImpl implements PermissionOperationDomain 
     }
 
     /**
-     * 修改视图
-     * @param permissionDTO 视图DTO
+     * 修改权限
+     * @param permissionDTO 权限DTO
      */
     @Override
     public void modifyPermission(PermissionDTO permissionDTO) {
@@ -40,18 +40,18 @@ public class PermissionOperationDomainImpl implements PermissionOperationDomain 
     }
 
     /**
-     * 删除视图
-     * @param viewId 视图ID
+     * 删除权限
+     * @param viewId 权限ID
      */
     @Override
     public void deletePermission(Integer viewId) {
         permissionService.deletePermission(viewId);
-        roleViewService.deleteByViewId(viewId);
+        rolePermissionService.deleteByPermissionId(viewId);
     }
 
     /**
-     * 移动视图
-     * @param viewId 视图ID
+     * 移动权限
+     * @param viewId 权限ID
      * @param isUp 是否上移
      */
     @Override

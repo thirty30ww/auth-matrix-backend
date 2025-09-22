@@ -74,6 +74,7 @@ RBAC1的关键特色，角色可以继承其下级角色的权限，从而实现
 ## 🔗 生态项目
 
 - **前端项目**：[Auth Matrix Frontend](https://github.com/thirty30ww/auth-matrix-frontend) - Vue3 + Element Plus权限管理前端
+- **元仓库**：[Auth Matrix](https://github.com/thirty30ww/auth-matrix) - 包含前端、后端项目及发布的版本的元仓库
 - **Docker部署**：支持容器化部署
 
 ## 📄 开源协议

@@ -2,7 +2,7 @@ package com.thirty.user.converter;
 
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
-import com.thirty.user.model.entity.RoleView;
+import com.thirty.user.model.entity.RolePermission;
 import com.thirty.user.model.vo.RoleVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,30 +34,30 @@ public interface RoleConverter {
     }
 
     /**
-     * 将角色id和视图id转换为角色视图对象
+     * 将角色id和权限id转换为角色权限对象
      * @param roleId 角色id
-     * @param viewId 视图id
-     * @return 角色视图对象
+     * @param viewId 权限id
+     * @return 角色权限对象
      */
-    RoleView toRoleView(Integer roleId, Integer viewId);
+    RolePermission toRoleView(Integer roleId, Integer viewId);
 
     /**
-     * 将角色id和视图id列表转换为角色视图对象列表
+     * 将角色id和权限id列表转换为角色权限对象列表
      * @param roleId 角色id
-     * @param viewIds 视图id列表
-     * @return 角色视图对象列表
+     * @param viewIds 权限id列表
+     * @return 角色权限对象列表
      */
-    default List<RoleView> toRoleViews(Integer roleId, List<Integer> viewIds) {
+    default List<RolePermission> toRoleViews(Integer roleId, List<Integer> viewIds) {
         return viewIds.stream().map(viewId -> toRoleView(roleId, viewId)).collect(Collectors.toList());
     }
 
     /**
-     * 将角色id列表和视图id列表转换为角色视图对象列表
+     * 将角色id列表和权限id列表转换为角色权限对象列表
      * @param roleIds 角色id列表
-     * @param viewIds 视图id列表
-     * @return 角色视图对象列表
+     * @param viewIds 权限id列表
+     * @return 角色权限对象列表
      */
-    default List<RoleView> toRoleViews(List<Integer> roleIds, List<Integer> viewIds) {
+    default List<RolePermission> toRoleViews(List<Integer> roleIds, List<Integer> viewIds) {
         return roleIds.stream().flatMap(roleId -> toRoleViews(roleId, viewIds).stream()).collect(Collectors.toList());
     }
 }

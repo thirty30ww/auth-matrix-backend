@@ -39,97 +39,6 @@ CREATE TABLE `detail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `preference`
---
-
-DROP TABLE IF EXISTS `preference`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `preference` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户偏好设置ID',
-  `user_id` int NOT NULL COMMENT '用户ID（关联user表）',
-  `field` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '偏好字段名',
-  `value` text COLLATE utf8mb4_unicode_ci COMMENT '偏好值',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `preference_pk` (`field`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户偏好设置';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `role`
---
-
-DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色ID',
-  `name` varchar(1024) NOT NULL COMMENT '角色名',
-  `description` varchar(1024) NOT NULL COMMENT '角色描述',
-  `parent_node_id` int NOT NULL COMMENT '父角色的ID(如果没有则为0)',
-  `level` int NOT NULL DEFAULT '0' COMMENT '所在层级, 根为0',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `role_view`
---
-
-DROP TABLE IF EXISTS `role_view`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role_view` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色页面ID',
-  `role_id` int NOT NULL COMMENT '角色ID（关联role表）',
-  `view_id` int NOT NULL COMMENT '页面ID（关联view表）',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=240 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色页面表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(255) NOT NULL COMMENT '用户名',
-  `password` varchar(255) NOT NULL COMMENT '用户密码',
-  `is_valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效(1:有效 0:无效)',
-  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户主表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user_role`
---
-
-DROP TABLE IF EXISTS `user_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_role` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
-  `user_id` int NOT NULL COMMENT '用户的ID(关联user表)',
-  `role_id` int NOT NULL COMMENT '角色的ID(关联role表)',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色表';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `permission`
 --
 
@@ -152,7 +61,98 @@ CREATE TABLE `permission` (
   `is_valid` tinyint NOT NULL DEFAULT '1' COMMENT '是否启用(1:是 0:否)',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='页面表';
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='页面表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `preference`
+--
+
+DROP TABLE IF EXISTS `preference`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `preference` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户偏好设置ID',
+  `user_id` int NOT NULL COMMENT '用户ID（关联user表）',
+  `field` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '偏好字段名',
+  `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '偏好值',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `preference_pk` (`field`,`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户偏好设置';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `role`
+--
+
+DROP TABLE IF EXISTS `role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+  `name` varchar(1024) NOT NULL COMMENT '角色名',
+  `description` varchar(1024) NOT NULL COMMENT '角色描述',
+  `parent_node_id` int NOT NULL COMMENT '父角色的ID(如果没有则为0)',
+  `level` int NOT NULL DEFAULT '0' COMMENT '所在层级, 根为0',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `role_permission`
+--
+
+DROP TABLE IF EXISTS `role_permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_permission` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色页面ID',
+  `role_id` int NOT NULL COMMENT '角色ID（关联role表）',
+  `permission_id` int NOT NULL COMMENT '页面ID（关联view表）',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色页面表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `username` varchar(255) NOT NULL COMMENT '用户名',
+  `password` varchar(255) NOT NULL COMMENT '用户密码',
+  `is_valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效(1:有效 0:无效)',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户主表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_role`
+--
+
+DROP TABLE IF EXISTS `user_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_role` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '用户角色ID',
+  `user_id` int NOT NULL COMMENT '用户的ID(关联user表)',
+  `role_id` int NOT NULL COMMENT '角色的ID(关联role表)',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -164,4 +164,4 @@ CREATE TABLE `permission` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-14 18:02:38
+-- Dump completed on 2025-09-22 20:37:36

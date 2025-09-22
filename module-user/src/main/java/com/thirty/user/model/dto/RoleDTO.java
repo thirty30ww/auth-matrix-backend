@@ -9,17 +9,19 @@ public class RoleDTO {
     
     // 验证组接口
     public interface Add {}
-    public interface Update {}
+    public interface Modify {}
+    public interface GlobalAdd {}
+    public interface GlobalModify {}
     
-    @NotNull(groups = Update.class, message = "角色ID不能为空")
+    @NotNull(groups = {Modify.class, GlobalModify.class}, message = "角色ID不能为空")
     private Integer id;
     
-    @NotBlank(groups = {Add.class, Update.class}, message = "角色名不能为空")
+    @NotBlank(groups = {Add.class, Modify.class, GlobalAdd.class, GlobalModify.class}, message = "角色名不能为空")
     private String name;
     
-    @NotBlank(groups = {Add.class, Update.class}, message = "角色描述不能为空")
+    @NotBlank(groups = {Add.class, Modify.class, GlobalAdd.class, GlobalModify.class}, message = "角色描述不能为空")
     private String description;
     
-    @NotNull(groups = {Add.class, Update.class}, message = "父ID不能为空")
+    @NotNull(groups = {Add.class, Modify.class}, message = "父ID不能为空")
     private Integer parentNodeId;
 }

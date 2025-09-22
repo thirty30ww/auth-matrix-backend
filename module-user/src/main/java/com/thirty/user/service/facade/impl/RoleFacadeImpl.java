@@ -6,7 +6,7 @@ import com.thirty.user.enums.model.RoleType;
 import com.thirty.user.enums.model.RolesType;
 import com.thirty.user.enums.result.PermissionResultCode;
 import com.thirty.user.enums.result.RoleResultCode;
-import com.thirty.user.model.dto.AssignViewDTO;
+import com.thirty.user.model.dto.AssignPermissionDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
@@ -49,14 +49,14 @@ public class RoleFacadeImpl implements RoleFacade {
     public List<RoleVO> getRoleTree(Integer currentUserId, RolesType type) {
         List<RoleType> roleTypes = type.toRoleTypes();
         List<RoleVO> roleVOS;
-        if (type == RolesType.NOT_GLOBAL) {
+        if (type == RolesType.ALL) {
             // 当前用户的子角色和全局角色是有权限的角色
             List<Integer> permittedRoleIds = rolesBuilderFactory
                     .create(currentUserId)
                     .forRoleTypes(List.of(RoleType.CHILD, RoleType.GLOBAL))
                     .buildIds();
             // 获取非全局的所有角色，并标注好hasPermission（是否有权限）
-            roleVOS = rolesBuilderFactory.create().forRoleType(RoleType.NOT_GLOBAL)
+            roleVOS = rolesBuilderFactory.create().forRoleType(RoleType.ALL)
                     .buildTree(settingApi.hasPermissionDisplay(), permittedRoleIds);
         } else {
             roleVOS = rolesBuilderFactory.create(currentUserId).forRoleTypes(roleTypes).buildTree();
@@ -93,6 +93,15 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     /**
+     * 添加全局角色
+     * @param roleDTO 角色dto
+     */
+    @Override
+    public void addGlobalRole(RoleDTO roleDTO) {
+        roleOperationDomain.addGlobalRole(roleDTO);
+    }
+
+    /**
      * 修改角色
      * @param roleDTO 角色dto
      * @param userId 用户ID
@@ -117,6 +126,22 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     /**
+     * 更新全局角色
+     * @param roleDTO 角色dto
+     */
+    @Override
+    public void updateGlobalRole(RoleDTO roleDTO) {
+        // 如果当前要修改的角色不是全局角色，则不能修改
+        if (!roleValidationBuilderFactory.create()
+                .forRoleType(RoleType.GLOBAL)
+                .validateRole(roleDTO.getId())
+        ) {
+            throw new BusinessException(RoleResultCode.ROLE_NOT_GLOBAL);
+        }
+        roleOperationDomain.updateGlobalRole(roleDTO);
+    }
+
+    /**
      * 删除角色
      * @param roleId 角色ID
      * @param userId 用户ID
@@ -134,14 +159,30 @@ public class RoleFacadeImpl implements RoleFacade {
     }
 
     /**
-     * 分配视图权限
-     * @param userId 当前操作用户ID
-     * @param assignViewDTO 分配视图dto
+     * 删除全局角色
+     * @param roleId 角色ID
      */
     @Override
-    public void assignView(Integer userId, AssignViewDTO assignViewDTO) {
-        Integer targetRoleId = assignViewDTO.getRoleId();
-        List<Integer> newViewIds = assignViewDTO.getViewIds();
+    public void deleteGlobalRole(Integer roleId) {
+        // 如果当前要删除的角色不是全局角色，则不能删除
+        if (!roleValidationBuilderFactory.create()
+                .forRoleType(RoleType.GLOBAL)
+                .validateRole(roleId)
+        ) {
+            throw new BusinessException(RoleResultCode.ROLE_NOT_GLOBAL);
+        }
+        roleOperationDomain.deleteRole(roleId);
+    }
+
+    /**
+     * 分配权限权限
+     * @param userId 当前操作用户ID
+     * @param assignPermissionDTO 分配权限dto
+     */
+    @Override
+    public void assignPermission(Integer userId, AssignPermissionDTO assignPermissionDTO) {
+        Integer targetRoleId = assignPermissionDTO.getRoleId();
+        List<Integer> newViewIds = assignPermissionDTO.getViewIds();
 
         // 如果要分配权限的角色不是当前角色的子角色，则不能分配
         if (!roleValidationBuilderFactory.create(userId)
@@ -156,6 +197,18 @@ public class RoleFacadeImpl implements RoleFacade {
         }
 
         List<Integer> oldViewIds = permissionQueryDomain.getPermissionId(targetRoleId);
-        roleOperationDomain.assignView(targetRoleId, oldViewIds, newViewIds);
+        roleOperationDomain.assignNormalPermission(targetRoleId, oldViewIds, newViewIds);
+    }
+
+    /**
+     * 分配全局权限权限
+     * @param assignPermissionDTO 分配权限dto
+     */
+    @Override
+    public void assignGlobalPermission(AssignPermissionDTO assignPermissionDTO) {
+        Integer targetRoleId = assignPermissionDTO.getRoleId();
+        List<Integer> newPermissionIds = assignPermissionDTO.getViewIds();
+        List<Integer> oldPermissionIds = permissionQueryDomain.getPermissionId(targetRoleId);
+        roleOperationDomain.assignGlobalPermission(targetRoleId, oldPermissionIds, newPermissionIds);
     }
 }

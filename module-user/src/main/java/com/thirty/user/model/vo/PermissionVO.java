@@ -27,10 +27,10 @@ public class PermissionVO {
     }
 
     /**
-     * 获取相同父节点的视图VO列表
+     * 获取相同父节点的权限VO列表
      * @param permissionVOS 节点列表
      * @param parentId 父节点id
-     * @return 相同父节点的视图VO列表
+     * @return 相同父节点的权限VO列表
      */
     public static List<PermissionVO> getSameParentViewVO(Collection<PermissionVO> permissionVOS, Integer parentId) {
         return permissionVOS.stream().filter(viewVO -> viewVO.getNode().getParentNodeId().equals(parentId)).toList();
@@ -58,8 +58,8 @@ public class PermissionVO {
     }
 
     /**
-     * 设置视图是否有权限
-     * @param permittedViewIds 权限视图ID列表
+     * 设置权限是否有权限
+     * @param permittedViewIds 权限权限ID列表
      * @param menus 菜单列表
      */
     public static void setHasPermission(List<Integer> permittedViewIds, List<PermissionVO> menus) {
@@ -71,8 +71,8 @@ public class PermissionVO {
     }
 
     /**
-     * 设置视图是否有变更
-     * @param permittedViewIds 权限视图ID列表
+     * 设置权限是否有变更
+     * @param permittedViewIds 权限权限ID列表
      * @param menus 菜单列表
      */
     public static void setHasChange(List<Integer> permittedViewIds, List<PermissionVO> menus) {
@@ -80,8 +80,8 @@ public class PermissionVO {
     }
 
     /**
-     * 过滤出菜单树中有权限的视图
-     * @param permittedViewIds 权限视图ID列表
+     * 过滤出菜单树中有权限的权限
+     * @param permittedViewIds 权限权限ID列表
      * @param menus 菜单列表
      */
     public static void filterHasPermission(List<Integer> permittedViewIds, List<PermissionVO> menus) {

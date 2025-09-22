@@ -78,6 +78,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     /**
+     * 获取非全局角色id列表
+     * @return 非全局角色id列表
+     */
+    @Override
+    public List<Integer> getNotGlobalRoleIds() {
+        return Role.extractIds(getNotGlobalRoles());
+    }
+
+    /**
      * 添加角色
      * @param role 角色
      */
@@ -85,6 +94,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void addRole(Role role) {
         Integer level = getLevel(role.getParentNodeId());
         role.setLevel(level);
+        save(role);
+    }
+
+    /**
+     * 添加全局角色
+     * @param role 角色
+     */
+    @Override
+    public void addGlobalRole(Role role) {
+        role.setParentNodeId(RoleConstant.GLOBAL_ROLE_PARENT_ID);
+        role.setLevel(RoleConstant.GLOBAL_ROLE_LEVEL);
         save(role);
     }
 

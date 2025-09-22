@@ -65,7 +65,7 @@ public class PermissionsBuilder {
     }
 
     /**
-     * 过滤权限（只返回有权限的视图）
+     * 过滤权限（只返回有权限的权限）
      */
     public PermissionsBuilder filterByPermission() {
         this.filterPermission = true;
@@ -73,7 +73,7 @@ public class PermissionsBuilder {
     }
 
     /**
-     * 设置变更标志（为每个视图设置hasChange属性）
+     * 设置变更标志（为每个权限设置hasChange属性）
      */
     public PermissionsBuilder withChangeFlag() {
         this.setChangeFlag = true;
@@ -81,7 +81,7 @@ public class PermissionsBuilder {
     }
 
     /**
-     * 设置权限标志（为每个视图设置hasPermission属性）
+     * 设置权限标志（为每个权限设置hasPermission属性）
      */
     public PermissionsBuilder withPermissionFlag() {
         this.setPermissionFlag = true;
@@ -112,7 +112,7 @@ public class PermissionsBuilder {
             return permissionVOS;
         }
 
-        // 获取当前角色的权限视图ID
+        // 获取当前角色的权限权限ID
         List<Integer> currentViewIds = permissionQueryDomain.getPermissionId(currentRoleIds);
 
         // 过滤权限
@@ -125,7 +125,7 @@ public class PermissionsBuilder {
         // 设置权限标志
         if (setPermissionFlag) {
             if (targetRoleId != null) {
-                // 目标角色的权限视图ID
+                // 目标角色的权限权限ID
                 List<Integer> targetViewIds = permissionQueryDomain.getPermissionId(targetRoleId);
                 PermissionVO.setHasPermission(targetViewIds, permissionVOS);
             } else {

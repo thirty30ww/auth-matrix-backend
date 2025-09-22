@@ -3,7 +3,7 @@ package com.thirty.user.service.basic.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.constant.RoleConstant;
-import com.thirty.user.constant.ViewConstant;
+import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.converter.PermissionConverter;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.mapper.ViewMapper;
@@ -25,10 +25,10 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     implements PermissionService {
 
     /**
-     * 根据类型和名称获取视图列表
-     * @param type 视图类型
-     * @param keyword 视图名称
-     * @return 视图列表
+     * 根据类型和名称获取权限列表
+     * @param type 权限类型
+     * @param keyword 权限名称
+     * @return 权限列表
      */
     @Override
     public List<Permission> getPermissionByTypeAndKeyword(PermissionType type, String keyword) {
@@ -43,10 +43,10 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型列表和名称获取视图列表
-     * @param types 视图类型列表
-     * @param keyword 视图名称
-     * @return 视图列表
+     * 根据类型列表和名称获取权限列表
+     * @param types 权限类型列表
+     * @param keyword 权限名称
+     * @return 权限列表
      */
     @Override
     public List<Permission> getPermissionByTypesAndKeyword(List<PermissionType> types, String keyword) {
@@ -62,9 +62,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据查询条件获取视图列表
+     * 根据查询条件获取权限列表
      * @param wrapper 查询条件
-     * @return 视图列表
+     * @return 权限列表
      */
     @Override
     public List<Permission> getPermissionByWrapper(QueryWrapper<Permission> wrapper) {
@@ -72,9 +72,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型获取视图列表
-     * @param type 视图类型
-     * @return 视图列表
+     * 根据类型获取权限列表
+     * @param type 权限类型
+     * @return 权限列表
      */
     @Override
     public List<Permission> getPermissionByType(PermissionType type) {
@@ -82,9 +82,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型列表获取视图列表
-     * @param types 视图类型列表
-     * @return 视图列表
+     * 根据类型列表获取权限列表
+     * @param types 权限类型列表
+     * @return 权限列表
      */
     @Override
     public List<Permission> getPermissionByTypes(List<PermissionType> types) {
@@ -92,10 +92,10 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型和名称获取视图VO列表
-     * @param type 视图类型
-     * @param keyword 视图名称
-     * @return 视图VO列表
+     * 根据类型和名称获取权限VO列表
+     * @param type 权限类型
+     * @param keyword 权限名称
+     * @return 权限VO列表
      */
     @Override
     public List<PermissionVO> getPermissionVOByTypeAndKeyword(PermissionType type, String keyword) {
@@ -104,10 +104,10 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型列表和名称获取视图VO列表
-     * @param types 视图类型列表
-     * @param keyword 视图名称
-     * @return 视图VO列表
+     * 根据类型列表和名称获取权限VO列表
+     * @param types 权限类型列表
+     * @param keyword 权限名称
+     * @return 权限VO列表
      */
     @Override
     public List<PermissionVO> getPermissionVOByTypesAndKeyword(List<PermissionType> types, String keyword) {
@@ -116,9 +116,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据查询条件获取视图VO列表
+     * 根据查询条件获取权限VO列表
      * @param wrapper 查询条件
-     * @return 视图VO列表
+     * @return 权限VO列表
      */
     @Override
     public List<PermissionVO> getPermissionVOByWrapper(QueryWrapper<Permission> wrapper) {
@@ -127,9 +127,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型获取视图VO列表
-     * @param type 视图类型
-     * @return 视图VO列表
+     * 根据类型获取权限VO列表
+     * @param type 权限类型
+     * @return 权限VO列表
      */
     @Override
     public List<PermissionVO> getPermissionVOByType(PermissionType type) {
@@ -138,9 +138,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据类型列表获取视图VO列表
-     * @param types 视图类型列表
-     * @return 视图VO列表
+     * 根据类型列表获取权限VO列表
+     * @param types 权限类型列表
+     * @return 权限VO列表
      */
     @Override
     public List<PermissionVO> getPermissionVOByTypes(List<PermissionType> types) {
@@ -149,8 +149,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 获取视图的所有祖先ID
-     * @param viewId 视图ID
+     * 获取权限的所有祖先ID
+     * @param viewId 权限ID
      * @return 祖先ID列表
      */
     @Override
@@ -170,8 +170,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 获取视图列表的所有祖先ID
-     * @param viewIds 视图ID列表
+     * 获取权限列表的所有祖先ID
+     * @param viewIds 权限ID列表
      * @return 祖先ID列表
      */
     @Override
@@ -184,8 +184,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 获取视图的所有后代ID
-     * @param viewId 视图ID
+     * 获取权限的所有后代ID
+     * @param viewId 权限ID
      * @return 后代ID列表
      */
     @Override
@@ -209,8 +209,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 获取视图列表的所有后代ID
-     * @param viewIds 视图ID列表
+     * 获取权限列表的所有后代ID
+     * @param viewIds 权限ID列表
      * @return 后代ID列表
      */
     @Override
@@ -223,8 +223,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 获取视图列表的所有权限码
-     * @param viewIds 视图ID列表
+     * 获取权限列表的所有权限码
+     * @param viewIds 权限ID列表
      * @return 权限码列表
      */
     @Override
@@ -244,8 +244,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 修改视图
-     * @param permission 视图
+     * 修改权限
+     * @param permission 权限
      */
     @Override
     public void modifyPermission(Permission permission) {
@@ -256,7 +256,7 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
             return;
         }
 
-        // 如果视图状态从有效变为无效，需要更新所有后代视图
+        // 如果权限状态从有效变为无效，需要更新所有后代权限
         if (!permission.getIsValid() && oldPermission.getIsValid()) {
             List<Integer> descendantIds = getDescendantIds(permission.getId());
             List<Permission> descendantPermissions = Permission.toNotValidPermission(descendantIds);
@@ -266,14 +266,14 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 尾插法添加视图
-     * @param permission 视图
+     * 尾插法添加权限
+     * @param permission 权限
      */
     @Override
     public void tailInsert(Permission permission) {
         Permission tailPermission = getTailNode(permission.getParentNodeId());
         if (tailPermission == null) {
-            permission.setFrontNodeId(ViewConstant.HEAD_VIEW_FRONT_ID);
+            permission.setFrontNodeId(PermissionConstant.HEAD_VIEW_FRONT_ID);
         } else {
             permission.setFrontNodeId(tailPermission.getId());
         }
@@ -284,7 +284,7 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
             updateById(permission);
         }
 
-        // 处理新视图前一个视图的的behindNodeId
+        // 处理新权限前一个权限的的behindNodeId
         if (tailPermission != null) {
             tailPermission.setBehindNodeId(permission.getId());
             updateById(tailPermission);
@@ -292,19 +292,19 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 连接视图的邻居节点
-     * @param permission 视图
+     * 连接权限的邻居节点
+     * @param permission 权限
      */
     @Override
     public void connectNeighborPermissions(Permission permission) {
         List<Permission> neighborPermissions = new ArrayList<>();
         Map<Integer, Permission> viewMap = Permission.buildMap(getByParentId(permission.getParentNodeId()));
-        if (!Objects.equals(permission.getFrontNodeId(), ViewConstant.HEAD_VIEW_FRONT_ID)) {
+        if (!Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_VIEW_FRONT_ID)) {
             Permission frontPermission = viewMap.get(permission.getFrontNodeId());
             frontPermission.setBehindNodeId(permission.getBehindNodeId());
             neighborPermissions.add(frontPermission);
         }
-        if (!Objects.equals(permission.getBehindNodeId(), ViewConstant.TAIL_VIEW_BEHIND_ID)) {
+        if (!Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_VIEW_BEHIND_ID)) {
             Permission behindPermission = viewMap.get(permission.getBehindNodeId());
             behindPermission.setFrontNodeId(permission.getFrontNodeId());
             neighborPermissions.add(behindPermission);
@@ -313,8 +313,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 删除视图
-     * @param permissionId 视图ID
+     * 删除权限
+     * @param permissionId 权限ID
      */
     @Override
     public void deletePermission(Integer permissionId) {
@@ -328,8 +328,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 视图上移
-     * @param permissionId 视图ID
+     * 权限上移
+     * @param permissionId 权限ID
      */
     @Override
     public void moveUp(Integer permissionId) {
@@ -352,8 +352,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 视图下移
-     * @param permissionId 视图ID
+     * 权限下移
+     * @param permissionId 权限ID
      */
     @Override
     public void moveDown(Integer permissionId) {
@@ -376,7 +376,7 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 获取视图的尾节点
+     * 获取权限的尾节点
      * @param parentId 父节点ID
      * @return 尾节点
      */
@@ -387,9 +387,9 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     }
 
     /**
-     * 根据父节点ID获取视图列表
+     * 根据父节点ID获取权限列表
      * @param parentId 父节点ID
-     * @return 视图列表
+     * @return 权限列表
      */
     @Override
     public List<Permission> getByParentId(Integer parentId) {
