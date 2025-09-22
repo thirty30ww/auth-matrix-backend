@@ -86,7 +86,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public void addRolePermissions(Integer roleId, List<Integer> permissionIds) {
-        List<RolePermission> rolePermissions = RoleConverter.INSTANCE.toRoleViews(roleId, permissionIds);
+        List<RolePermission> rolePermissions = RoleConverter.INSTANCE.toRolePermissions(roleId, permissionIds);
         saveBatch(rolePermissions);
     }
 
@@ -101,7 +101,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             return;
         }
 
-        List<RolePermission> rolePermissions = RoleConverter.INSTANCE.toRoleViews(roleIds, permissionIds);
+        List<RolePermission> rolePermissions = RoleConverter.INSTANCE.toRolePermissions(roleIds, permissionIds);
         List<String> exists = getExists(roleIds, permissionIds);
         rolePermissions.removeIf(rv -> exists.contains(rv.getRoleId() + "_" + rv.getPermissionId()));
 
