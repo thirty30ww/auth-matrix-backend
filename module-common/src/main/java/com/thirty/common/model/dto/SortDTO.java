@@ -20,5 +20,5 @@ public class SortDTO {
     /**
      * 排序方向
      */
-    private SortDirection direction = SortDirection.ASC;
+    private SortDirection direction;
 }

@@ -1,6 +1,6 @@
 package com.thirty.user.utils;
 
-import com.thirty.user.constant.AuthConstant;
+import com.thirty.user.constant.JwtConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,24 +22,11 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-
-    // JWT密钥，从配置文件中读取
     @Value("${jwt.secret}")
-    private String secret;
+    protected String secret;
 
-    private Key key;
+    protected Key key;
 
-    /**
-     * 1. 在构造方法执行完后
-     * 2. 在依赖注入完成后
-     * 3. 在对象被实际使用前
-     * 自动调用这个方法
-     */
-    @PostConstruct
-    public void init() {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-    }
-    
     // 访问令牌有效期（毫秒）
     @Value("${jwt.expiration}")
     private long expiration;
@@ -47,9 +34,14 @@ public class JwtUtil {
     // 刷新令牌有效期（毫秒）
     @Value("${jwt.refresh-expiration}")
     private long refreshExpiration;
-    
+
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    }
 
     /**
      * 从token中提取用户名
@@ -62,14 +54,14 @@ public class JwtUtil {
      * 从token中提取用户ID
      */
     public Integer extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get(AuthConstant.USER_ID_CLAIM, Integer.class));
+        return extractClaim(token, claims -> claims.get(JwtConstant.USER_ID_CLAIM, Integer.class));
     }
 
     /**
      * 从Authorization头中提取token
      */
     public String extractToken(String authHeader) {
-        return authHeader.substring(AuthConstant.BEARER_PREFIX_LENGTH);
+        return authHeader.substring(JwtConstant.BEARER_PREFIX_LENGTH);
     }
 
     /**
@@ -98,7 +90,7 @@ public class JwtUtil {
     /**
      * 从token中提取指定的claim
      */
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    protected <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -106,7 +98,7 @@ public class JwtUtil {
     /**
      * 从token中提取所有的claims
      */
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -129,16 +121,16 @@ public class JwtUtil {
      */
     public String generateAccessToken(String username, Integer userId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(AuthConstant.TOKEN_TYPE_CLAIM, AuthConstant.ACCESS_TOKEN_TYPE);
-        claims.put(AuthConstant.USER_ID_CLAIM, userId);
+        claims.put(JwtConstant.TOKEN_TYPE_CLAIM, JwtConstant.ACCESS_TOKEN_TYPE);
+        claims.put(JwtConstant.USER_ID_CLAIM, userId);
         return createToken(claims, username, expiration);
     }
 
 
     public String generateRefreshToken(String username, Integer userId) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(AuthConstant.TOKEN_TYPE_CLAIM, AuthConstant.REFRESH_TOKEN_TYPE);
-        claims.put(AuthConstant.USER_ID_CLAIM, userId);
+        claims.put(JwtConstant.TOKEN_TYPE_CLAIM, JwtConstant.REFRESH_TOKEN_TYPE);
+        claims.put(JwtConstant.USER_ID_CLAIM, userId);
         return createToken(claims, username, refreshExpiration);
     }
 
@@ -176,7 +168,7 @@ public class JwtUtil {
     public boolean isRefreshToken(String token) {
         try {
             final Claims claims = extractAllClaims(token);
-            return AuthConstant.REFRESH_TOKEN_TYPE.equals(claims.get(AuthConstant.TOKEN_TYPE_CLAIM));
+            return JwtConstant.REFRESH_TOKEN_TYPE.equals(claims.get(JwtConstant.TOKEN_TYPE_CLAIM));
         } catch (Exception e) {
             return false;
         }
@@ -188,7 +180,7 @@ public class JwtUtil {
     public boolean isAccessToken(String token) {
         try {
             final Claims claims = extractAllClaims(token);
-            return AuthConstant.ACCESS_TOKEN_TYPE.equals(claims.get(AuthConstant.TOKEN_TYPE_CLAIM)) || claims.get(AuthConstant.TOKEN_TYPE_CLAIM) == null; // 兼容旧令牌
+            return JwtConstant.ACCESS_TOKEN_TYPE.equals(claims.get(JwtConstant.TOKEN_TYPE_CLAIM)) || claims.get(JwtConstant.TOKEN_TYPE_CLAIM) == null; // 兼容旧令牌
         } catch (Exception e) {
             return false;
         }
@@ -199,10 +191,10 @@ public class JwtUtil {
      * @param token JWT访问令牌
      */
     public void addAccessTokenToBlacklist(String token) {
-        String key = AuthConstant.TOKEN_BLACKLIST_PREFIX + AuthConstant.ACCESS_TOKEN_BLACKLIST_SUFFIX + token;
+        String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.ACCESS_TOKEN_BLACKLIST_SUFFIX + token;
         long remainingTime = extractExpiration(token).getTime() - System.currentTimeMillis();
         if (remainingTime > 0) {
-            redisTemplate.opsForValue().set(key, AuthConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(key, JwtConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
         }
     }
     
@@ -211,10 +203,10 @@ public class JwtUtil {
      * @param token JWT刷新令牌
      */
     public void addRefreshTokenToBlacklist(String token) {
-        String key = AuthConstant.TOKEN_BLACKLIST_PREFIX + AuthConstant.REFRESH_TOKEN_BLACKLIST_SUFFIX + token;
+        String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.REFRESH_TOKEN_BLACKLIST_SUFFIX + token;
         long remainingTime = extractExpiration(token).getTime() - System.currentTimeMillis();
         if (remainingTime > 0) {
-            redisTemplate.opsForValue().set(key, AuthConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(key, JwtConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
         }
     }
     
@@ -224,7 +216,7 @@ public class JwtUtil {
      * @return 是否在黑名单中
      */
     public boolean isAccessTokenInBlacklist(String token) {
-        String key = AuthConstant.TOKEN_BLACKLIST_PREFIX + AuthConstant.ACCESS_TOKEN_BLACKLIST_SUFFIX + token;
+        String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.ACCESS_TOKEN_BLACKLIST_SUFFIX + token;
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
     
@@ -234,7 +226,7 @@ public class JwtUtil {
      * @return 是否在黑名单中
      */
     public boolean isRefreshTokenInBlacklist(String token) {
-        String key = AuthConstant.TOKEN_BLACKLIST_PREFIX + AuthConstant.REFRESH_TOKEN_BLACKLIST_SUFFIX + token;
+        String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.REFRESH_TOKEN_BLACKLIST_SUFFIX + token;
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 }

@@ -4,6 +4,7 @@ import com.thirty.common.exception.BusinessException;
 import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.JwtVO;
+import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.auth.AuthDomain;
 import com.thirty.user.utils.JwtUtil;
@@ -21,19 +22,18 @@ public class AuthDomainImpl implements AuthDomain {
 
     /**
      * 用户登录
-     * @param username 用户名
+     * @param user 用户信息
      * @param authentication 认证信息
      * @return JwtVO
      */
     @Override
-    public JwtVO login(String username, Authentication authentication) {
+    public JwtVO login(UserVO user, Authentication authentication) {
         // 生成访问令牌和刷新令牌
-        User user = userService.getUser(username);
         String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), user.getId());
 
         // 生成JwtVO
-        return new JwtVO(accessToken, refreshToken, username);
+        return new JwtVO(accessToken, refreshToken, user.getUsername());
     }
 
     /**

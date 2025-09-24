@@ -1,6 +1,6 @@
 package com.thirty.user.filter;
 
-import com.thirty.user.constant.AuthConstant;
+import com.thirty.user.constant.JwtConstant;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
@@ -37,8 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = null;
 
         // 检查Authorization头是否存在且以"Bearer "开头
-        if (authorizationHeader != null && authorizationHeader.startsWith(AuthConstant.BEARER_PREFIX)) {
-            jwt = authorizationHeader.substring(AuthConstant.BEARER_PREFIX_LENGTH);
+        if (authorizationHeader != null && authorizationHeader.startsWith(JwtConstant.BEARER_PREFIX)) {
+            jwt = authorizationHeader.substring(JwtConstant.BEARER_PREFIX_LENGTH);
             try {
                 username = jwtUtils.extractUsername(jwt);
                 

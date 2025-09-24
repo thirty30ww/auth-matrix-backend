@@ -2,7 +2,9 @@ package com.thirty.user.service.facade.impl;
 
 import com.thirty.user.model.dto.LoginDTO;
 import com.thirty.user.model.vo.JwtVO;
+import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.domain.auth.AuthDomain;
+import com.thirty.user.service.domain.user.UserQueryDomain;
 import com.thirty.user.service.facade.AuthFacade;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class AuthFacadeImpl implements AuthFacade {
     @Resource
     private AuthDomain authDomain;
+    @Resource
+    private UserQueryDomain userQueryDomain;
 
     @Resource
     private AuthenticationManager authenticationManager;
@@ -37,11 +41,14 @@ public class AuthFacadeImpl implements AuthFacade {
                 )
         );
 
+        // 获取用户信息（包含角色信息，同时会验证角色是否存在）
+        UserVO user = userQueryDomain.getUser(username);
+
         // 更新SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 生成JwtVO
-        return authDomain.login(username, authentication);
+        return authDomain.login(user, authentication);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.thirty.common.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -31,6 +32,9 @@ public class JacksonConfig {
             
             // 配置枚举处理：只允许空字符串当作null，未知枚举值仍然抛出异常
             builder.featuresToEnable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+
+            // 启用JSON格式化输出 - 让所有JSON都会换行
+            builder.featuresToEnable(SerializationFeature.INDENT_OUTPUT);
         };
     }
 }

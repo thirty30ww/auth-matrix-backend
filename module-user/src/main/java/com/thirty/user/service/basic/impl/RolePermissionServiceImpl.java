@@ -9,6 +9,7 @@ import com.thirty.user.service.basic.RolePermissionService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +40,9 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public List<Integer> getPermissionIds(List<Integer> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return Collections.emptyList();
+        }
         QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("role_id", roleIds);
 

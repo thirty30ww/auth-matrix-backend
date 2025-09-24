@@ -7,6 +7,7 @@ import com.thirty.user.mapper.RoleMapper;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.service.basic.RoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      */
     @Override
     public Integer getHighestLevel(List<Integer> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return null;
+        }
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("id", roleIds)
                 .ge("level", 0)

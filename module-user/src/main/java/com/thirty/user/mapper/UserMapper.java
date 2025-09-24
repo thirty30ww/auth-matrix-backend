@@ -5,6 +5,7 @@ import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.thirty.user.model.vo.UserVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author Lenovo
@@ -18,7 +19,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param params 获取用户列表请求参数
      * @return 用户列表
      */
-    IPage<UserVO> getUsers(IPage<UserVO> page, GetUsersDTO params);
+    IPage<UserVO> getUsers(IPage<UserVO> page, @Param("params") GetUsersDTO params);
 }
 
 

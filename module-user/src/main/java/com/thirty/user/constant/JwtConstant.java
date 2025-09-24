@@ -1,6 +1,8 @@
 package com.thirty.user.constant;
 
-public class AuthConstant {
+public class JwtConstant {
+    // JWT 相关常量
+    public static final String JWT_HEADER_NAME = "Authorization";
     // 角色相关常量
     public static final String ROLE_PREFIX = "role:";
 

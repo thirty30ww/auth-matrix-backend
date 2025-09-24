@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thirty.user.mapper.LogOperationMapper">
+
+    <select id="getLogOperations" resultType="com.thirty.user.model.vo.LogOperationVO">
+        SELECT
+            lo.id,
+            d.name,
+            lo.module,
+            lo.description,
+            lo.type,
+            lo.method,
+            lo.code,
+            lo.url,
+            lo.ip,
+            lo.operate_time,
+            lo.create_time
+        FROM log_operation lo
+        LEFT JOIN `detail` d on lo.user_id = d.id
+        <where>
+            <if test="(params.name != null and params.name != '') or (params.description != null and params.description != '')">
+                AND (
+                <trim suffixOverrides="OR">
+                    <if test="params.name != null and params.name != ''">
+                        d.name LIKE CONCAT('%', #{params.name}, '%') OR
+                    </if>
+                    <if test="params.description != null and params.description != ''">
+                        lo.description LIKE CONCAT('%', #{params.description}, '%') OR
+                    </if>
+                </trim>
+                )
+            </if>
+            <if test="params.code != null">
+                AND lo.code LIKE CONCAT('%', #{params.code}, '%')
+            </if>
+            <if test="params.module != null">
+                AND lo.module LIKE CONCAT('%', #{params.module}, '%')
+            </if>
+            <if test="params.type != null">
+                AND lo.type = #{params.type}
+            </if>
+            <if test="params.method != null">
+                AND lo.method LIKE CONCAT('%', #{params.method}, '%')
+            </if>
+            <if test="params.filterTime != null">
+                <choose>
+                    <when test="params.filterTime.field == 'createTime'">
+                        <include refid="com.thirty.common.mapper.TimeFilterMapper.timeFilter">
+                            <property name="column" value="lo.create_time"/>
+                        </include>
+                    </when>
+                </choose>
+            </if>
+        </where>
+        <if test="params.sort != null">
+            ORDER BY
+            <choose>
+                <when test="params.sort.field == 'createTime'">lo.create_time</when>
+                <when test="params.sort.field == 'operateTime'">lo.operate_time</when>
+                <otherwise>lo.id</otherwise>
+            </choose>
+            <choose>
+                <when test="params.sort.direction.code == 'asc'">ASC</when>
+                <otherwise>DESC</otherwise>
+            </choose>
+        </if>
+        <if test="params.sort == null">
+            ORDER BY lo.id DESC
+        </if>
+    </select>
+</mapper>

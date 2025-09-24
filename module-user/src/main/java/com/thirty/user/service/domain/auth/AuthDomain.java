@@ -1,16 +1,17 @@
 package com.thirty.user.service.domain.auth;
 
 import com.thirty.user.model.vo.JwtVO;
+import com.thirty.user.model.vo.UserVO;
 import org.springframework.security.core.Authentication;
 
 public interface AuthDomain {
     /**
      * 用户登录
-     * @param username 用户名
+     * @param user 用户信息
      * @param authentication 认证信息
      * @return JwtVO
      */
-    JwtVO login(String username, Authentication authentication);
+    JwtVO login(UserVO user, Authentication authentication);
 
     /**
      * 刷新访问令牌

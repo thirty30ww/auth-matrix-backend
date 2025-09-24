@@ -106,7 +106,6 @@ public class GlobalExceptionHandler {
             // 记录详细的异常信息
             log.warn("JSON参数转换失败：字段[{}]，值[{}]，目标类型[{}]", fieldName, invalidValue, targetType);
         }
-
         return ResultDTO.of(GlobalResultCode.PARAM_ERROR);
     }
     

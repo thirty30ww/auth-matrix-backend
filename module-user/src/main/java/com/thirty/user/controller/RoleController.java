@@ -1,5 +1,8 @@
 package com.thirty.user.controller;
 
+import com.thirty.common.annotation.OperateLog;
+import com.thirty.common.annotation.OperateModule;
+import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.model.RolesType;
 import com.thirty.user.enums.result.RoleResultCode;
@@ -21,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/role")
+@OperateModule("角色管理")
 public class RoleController {
     @Resource
     private RoleFacade roleFacade;
@@ -32,6 +36,7 @@ public class RoleController {
      * @return 角色树
      */
     @GetMapping("/tree")
+    @OperateLog(type = OperationType.SELECT, description = "获取角色树")
     public ResultDTO<List<RoleVO>> getRoleTree(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "ALL") RolesType type) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(RoleResultCode.ROLE_TREE_GET_SUCCESS, roleFacade.getRoleTree(userId, type));
@@ -42,6 +47,7 @@ public class RoleController {
      * @return 角色列表
      */
     @GetMapping("/list")
+    @OperateLog(type = OperationType.SELECT, description = "获取角色列表")
     public ResultDTO<List<Role>> getRoleList(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(value = "type", defaultValue = "ALL") RolesType type) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(RoleResultCode.ROLE_LIST_GET_SUCCESS, roleFacade.getRoles(userId, type));
@@ -53,6 +59,7 @@ public class RoleController {
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('permission:role:add')")
+    @OperateLog(type = OperationType.INSERT, description = "添加角色")
     public ResultDTO<Void> addRole(@Validated(RoleDTO.Add.class) @RequestBody RoleDTO roleDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.addRole(roleDTO, userId);
@@ -65,6 +72,7 @@ public class RoleController {
      */
     @PostMapping("/add/global")
     @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:add')")
+    @OperateLog(type = OperationType.INSERT, description = "添加全局角色")
     public ResultDTO<Void> addGlobalRole(@Validated(RoleDTO.GlobalAdd.class) @RequestBody RoleDTO roleDTO) {
         roleFacade.addGlobalRole(roleDTO);
         return ResultDTO.of(RoleResultCode.ROLE_ADD_SUCCESS);
@@ -76,6 +84,7 @@ public class RoleController {
      */
     @PostMapping("/modify")
     @PreAuthorize("hasAuthority('permission:role:modify')")
+    @OperateLog(type = OperationType.UPDATE, description = "修改角色")
     public ResultDTO<Void> updateRole(@Validated(RoleDTO.Modify.class) @RequestBody RoleDTO roleDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.updateRole(roleDTO, userId);
@@ -88,6 +97,7 @@ public class RoleController {
      */ 
     @PostMapping("/modify/global")
     @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:modify')")
+    @OperateLog(type = OperationType.UPDATE, description = "修改全局角色")
     public ResultDTO<Void> updateGlobalRole(@Validated(RoleDTO.GlobalModify.class) @RequestBody RoleDTO roleDTO) {
         roleFacade.updateGlobalRole(roleDTO);
         return ResultDTO.of(RoleResultCode.ROLE_UPDATE_SUCCESS);
@@ -99,6 +109,7 @@ public class RoleController {
      */
     @GetMapping("/delete")
     @PreAuthorize("hasAuthority('permission:role:delete')")
+    @OperateLog(type = OperationType.DELETE, description = "删除角色")
     public ResultDTO<Void> deleteRole(@RequestParam(value = "roleId") Integer roleId, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.deleteRole(roleId, userId);
@@ -111,6 +122,7 @@ public class RoleController {
      */
     @GetMapping("/delete/global")
     @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:delete')")
+    @OperateLog(type = OperationType.DELETE, description = "删除全局角色")
     public ResultDTO<Void> deleteGlobalRole(@RequestParam(value = "roleId") Integer roleId) {
         roleFacade.deleteGlobalRole(roleId);
         return ResultDTO.of(RoleResultCode.ROLE_DELETE_SUCCESS);
@@ -121,6 +133,7 @@ public class RoleController {
      */
     @PostMapping("/assign/permission")
     @PreAuthorize("hasAuthority('permission:role:assign')")
+    @OperateLog(type = OperationType.UPDATE, description = "分配角色权限")
     public ResultDTO<Void> assignPermission(@RequestBody AssignPermissionDTO assignPermissionDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         roleFacade.assignPermission(userId, assignPermissionDTO);
@@ -132,6 +145,7 @@ public class RoleController {
      */
     @PostMapping("/assign/permission/global")
     @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:assign')")
+    @OperateLog(type = OperationType.UPDATE, description = "分配全局角色权限")
     public ResultDTO<Void> assignGlobalPermission(@RequestBody AssignPermissionDTO assignPermissionDTO) {
         roleFacade.assignGlobalPermission(assignPermissionDTO);
         return ResultDTO.of(RoleResultCode.ROLE_ASSIGN_VIEW_SUCCESS);

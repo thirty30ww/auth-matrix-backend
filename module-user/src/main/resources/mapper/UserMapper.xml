@@ -69,12 +69,12 @@
             <if test="params.filterTime != null">
                 <choose>
                     <when test="params.filterTime.field == 'createTime'">
-                        <include refid="timeFilter">
+                        <include refid="com.thirty.common.mapper.TimeFilterMapper.timeFilter">
                             <property name="column" value="d.create_time"/>
                         </include>
                     </when>
                     <when test="params.filterTime.field == 'updateTime'">
-                        <include refid="timeFilter">
+                        <include refid="com.thirty.common.mapper.TimeFilterMapper.timeFilter">
                             <property name="column" value="d.update_time"/>
                         </include>
                     </when>
@@ -97,14 +97,4 @@
             ORDER BY u.id ASC
         </if>
     </select>
-
-    <!-- 时间筛选SQL片段 -->
-    <sql id="timeFilter">
-        <if test="params.filterTime.startTime != null">
-            AND ${column} &gt;= #{params.filterTime.startTime}
-        </if>
-        <if test="params.filterTime.endTime != null">
-            AND ${column} &lt;= #{params.filterTime.endTime}
-        </if>
-    </sql>
 </mapper>

@@ -1,6 +1,9 @@
 package com.thirty.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.thirty.common.annotation.OperateLog;
+import com.thirty.common.annotation.OperateModule;
+import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.UserResultCode;
@@ -20,6 +23,7 @@ import java.util.List;
  * 用户管理
  */
 @RestController
+@OperateModule("用户管理")
 @RequestMapping("/user")
 public class UserController {
     @Resource
@@ -32,6 +36,7 @@ public class UserController {
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('user:add')")
+    @OperateLog(type = OperationType.INSERT, description = "添加用户")
     public ResultDTO<Void> addUser(@RequestBody @Valid AddUserDTO addUserDTO, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.addUser(userId, addUserDTO);
@@ -42,6 +47,7 @@ public class UserController {
      * 获取用户信息
      */
     @GetMapping("/get")
+    @OperateLog(type = OperationType.SELECT, description = "获取用户信息")
     public ResultDTO<UserVO> getUser(@RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(UserResultCode.USER_INFO_GET_SUCCESS, userFacade.getUser(userId));
@@ -53,6 +59,7 @@ public class UserController {
      * @return 用户列表
      */
     @PostMapping("/list")
+    @OperateLog(type = OperationType.SELECT, description = "获取用户列表")
     public ResultDTO<IPage<UserVO>> getUserList(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid PageQueryDTO<GetUsersDTO> request) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(UserResultCode.USER_LIST_GET_SUCCESS, userFacade.getUsers(userId, request));
@@ -63,6 +70,7 @@ public class UserController {
      */
     @PostMapping("/modify")
     @PreAuthorize("hasAuthority('user:modify')")
+    @OperateLog(type = OperationType.UPDATE, description = "修改用户")
     public ResultDTO<Void> modifyUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ModifyUserDTO modifyUserDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.modifyUser(userId, modifyUserDTO);
@@ -73,6 +81,7 @@ public class UserController {
      * 更新用户信息(修改自己的个人信息)
      */
     @PostMapping("/update")
+    @OperateLog(type = OperationType.UPDATE, description = "更新用户信息")
     public ResultDTO<Void> updateUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid UpdateUserDTO request) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.updateUser(userId, request);
@@ -84,6 +93,7 @@ public class UserController {
      */
     @PostMapping("/ban")
     @PreAuthorize("hasAuthority('user:ban')")
+    @OperateLog(type = OperationType.UPDATE, description = "封禁用户")
     public ResultDTO<Void> banUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.banUsers(userId, userIds);
@@ -95,6 +105,7 @@ public class UserController {
      */
     @PostMapping("/unban")
     @PreAuthorize("hasAuthority('user:unban')")
+    @OperateLog(type = OperationType.UPDATE, description = "解封用户")
     public ResultDTO<Void> unbanUser(@RequestHeader(value = "Authorization") String authHeader, @RequestBody List<Integer> userIds) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.unbanUsers(userId, userIds);
@@ -106,6 +117,7 @@ public class UserController {
      * 需要用户先登录，通过JWT令牌获取当前用户身份
      */
     @PostMapping("/change-password")
+    @OperateLog(type = OperationType.UPDATE, description = "修改密码")
     public ResultDTO<Void> changePassword(@RequestHeader(value = "Authorization") String authHeader, @RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.changePassword(userId, changePasswordDTO);
@@ -117,6 +129,7 @@ public class UserController {
      * @return 用户偏好设置列表
      */
     @GetMapping("/preferences/get")
+    @OperateLog(type = OperationType.SELECT, description = "获取用户偏好设置")
     public ResultDTO<List<Preference>> getPreferences(@RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         return ResultDTO.of(UserResultCode.PREFERENCE_GET_SUCCESS, userFacade.getPreferences(userId));
@@ -128,6 +141,7 @@ public class UserController {
      * @param value 偏好值
      */
     @GetMapping("/preferences/save")
+    @OperateLog(type = OperationType.UPDATE, description = "保存用户偏好设置")
     public ResultDTO<Void> savePreference(@RequestHeader(value = "Authorization") String authHeader, @RequestParam String field, @RequestParam String value) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         userFacade.savePreference(userId, field, value);
