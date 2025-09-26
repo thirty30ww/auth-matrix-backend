@@ -18,6 +18,7 @@ public class JwtConstant {
     public static final String USER_ID_CLAIM = "userId";
     public static final String ACCESS_TOKEN_TYPE = "access";
     public static final String REFRESH_TOKEN_TYPE = "refresh";
+    public static final String REFRESH_TOKEN = "refreshToken";
     
     // 黑名单键后缀常量
     public static final String ACCESS_TOKEN_BLACKLIST_SUFFIX = "access:";

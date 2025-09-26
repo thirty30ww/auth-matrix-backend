@@ -7,7 +7,13 @@ import com.thirty.common.annotation.OperateModule;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.constant.JwtConstant;
 import com.thirty.common.enums.model.MethodType;
+import com.thirty.user.enums.model.LoginType;
+import com.thirty.user.model.dto.LoginDTO;
+import com.thirty.user.model.entity.LogLogin;
 import com.thirty.user.model.entity.LogOperation;
+import com.thirty.user.model.entity.User;
+import com.thirty.user.service.basic.UserService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +33,36 @@ public class LogUtil {
     private ObjectMapper objectMapper;
     @Resource
     private JwtUtil jwtUtil;
+    @Resource
+    private UserAgentUtil userAgentUtil;
+    @Resource
+    private UserService userService;
+
+    /**
+     * 创建基础登录日志
+     * @param request HTTP请求对象
+     * @param loginType 登录类型
+     * @return 登录日志对象
+     */
+    public LogLogin createBaseLoginLog(HttpServletRequest request, LoginType loginType) {
+        if (request == null) {
+            log.warn("请求信息为空");
+            return null;
+        }
+
+        LogLogin loginLog = new LogLogin();
+
+        String userAgent = request.getHeader("User-Agent");
+        UserAgentUtil.UserAgentInfo userAgentInfo = userAgentUtil.parseUserAgent(userAgent);
+
+        loginLog.setType(loginType) // 设置登录类型
+                .setIp(getIpAddress(request))   // 设置登录IP地址
+                .setDeviceModel(userAgentInfo.getDeviceModel())   // 设置设备型号
+                .setOperatingSystem(userAgentInfo.getOperatingSystem())   // 设置操作系统
+                .setBrowser(userAgentInfo.getBrowser());   // 设置浏览器
+
+        return loginLog;
+    }
 
     /**
      * 处理返回结果和状态码，记录操作时间
@@ -74,22 +110,22 @@ public class LogUtil {
      * @throws JsonProcessingException JSON处理异常
      */
     public void handleRequest(HttpServletRequest request, LogOperation logOperation, ProceedingJoinPoint joinPoint) throws JsonProcessingException {
-        if (request != null) {
-            // 获取用户Ip，Url，请求方法
-            logOperation.setIp(getIpAddress(request))
-                    .setUrl(request.getRequestURI())
-                    .setMethod(MethodType.getByCode(request.getMethod().toUpperCase()));
-
-            // 获取请求参数
-            String requestParam = getRequestParams(request, joinPoint);
-            logOperation.setRequestParam(requestParam);
-        } else {
+        if (request == null ) {
             log.warn("请求信息为空");
+            return;
         }
+        // 获取用户Ip，Url，请求方法
+        logOperation.setIp(getIpAddress(request))
+                .setUrl(request.getRequestURI())
+                .setMethod(MethodType.getByCode(request.getMethod().toUpperCase()));
+
+        // 获取请求参数
+        String requestParam = getRequestParams(request, joinPoint);
+        logOperation.setRequestParam(requestParam);
     }
 
     /**
-     * 获取当前请求的用户ID
+     * 获取当前请求的用户ID（普通应用场景）
      * @param request HttpServletRequest对象
      * @return 用户ID
      */
@@ -104,6 +140,41 @@ public class LogUtil {
         }
         // 从Authorization头中提取用户ID
         return jwtUtil.getUserIdFromAuthHeader(authHeader);
+    }
+
+    /**
+     * 获取当前请求的用户ID（刷新令牌场景）
+     * @param refreshToken 刷新令牌
+     * @return 用户ID
+     */
+    public Integer getCurrentUserId(String refreshToken) {
+        if (refreshToken == null) {
+            return null;
+        }
+        // 从刷新令牌中提取用户ID
+        return jwtUtil.extractUserId(refreshToken);
+    }
+
+    /**
+     * 获取当前请求的用户ID（参数场景）
+     * @param args 方法参数
+     * @return 用户ID
+     */
+    public Integer getCurrentUserId(Object[] args) {
+        for (Object arg : args) {
+            if (arg instanceof LoginDTO loginDTO) {
+                String username = loginDTO.getUsername();
+
+                if (StringUtils.isNotBlank(username)) {
+                    User user = userService.getUser(username);
+                    if (user != null) {
+                        return user.getId();
+                    }
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 
     /**

@@ -29,6 +29,8 @@ public class OperateLogAspect {
 
     /**
      * 环绕通知，记录操作日志
+     * 拦截标注了@OperateLog注解的方法
+     *
      * @param joinPoint 连接点
      * @param operateLog 操作日志注解
      * @return 目标方法的返回结果

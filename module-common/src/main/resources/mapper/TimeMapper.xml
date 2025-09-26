@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thirty.common.mapper.TimeMapper">
+    <!-- 时间筛选SQL片段 -->
+    <sql id="timeFilter">
+        <if test="params.filterTime.startTime != null">
+            AND ${column} &gt;= #{params.filterTime.startTime}
+        </if>
+        <if test="params.filterTime.endTime != null">
+            AND ${column} &lt;= #{params.filterTime.endTime}
+        </if>
+    </sql>
+    
+    <!-- 通用时间筛选包装器 -->
+    <sql id="timeFilterWrapper">
+        <if test="params.filterTime != null">
+            <choose>
+                <when test="params.filterTime.field == 'createTime'">
+                    <include refid="com.thirty.common.mapper.TimeMapper.timeFilter">
+                        <property name="column" value="${createTimeColumn}"/>
+                    </include>
+                </when>
+                <when test="params.filterTime.field == 'updateTime'">
+                    <include refid="com.thirty.common.mapper.TimeMapper.timeFilter">
+                        <property name="column" value="${updateTimeColumn}"/>
+                    </include>
+                </when>
+                <when test="params.filterTime.field == 'operateTime'">
+                    <include refid="com.thirty.common.mapper.TimeMapper.timeFilter">
+                        <property name="column" value="${operateTimeColumn}"/>
+                    </include>
+                </when>
+            </choose>
+        </if>
+    </sql>
+    
+    <!-- 通用排序SQL片段 -->
+    <sql id="orderBy">
+        <if test="params.sort != null">
+            ORDER BY
+            <choose>
+                <when test="params.sort.field == 'createTime'">${createTimeColumn}</when>
+                <when test="params.sort.field == 'updateTime'">${updateTimeColumn}</when>
+                <when test="params.sort.field == 'operateTime'">${operateTimeColumn}</when>
+                <otherwise>${defaultColumn}</otherwise>
+            </choose>
+            <choose>
+                <when test="params.sort.direction.code == 'asc'">ASC</when>
+                <when test="params.sort.direction.code == 'desc'">DESC</when>
+                <otherwise>${defaultDirection}</otherwise>
+            </choose>
+        </if>
+        <if test="params.sort == null">
+            ORDER BY ${defaultColumn} ${defaultDirection}
+        </if>
+    </sql>
+</mapper>

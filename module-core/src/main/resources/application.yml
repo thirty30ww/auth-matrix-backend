@@ -62,6 +62,8 @@ logging:
 mybatis-plus:
   global-config:
     banner: false  # 关闭MyBatis-Plus的启动logo
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 
 aliyun:
   oss:

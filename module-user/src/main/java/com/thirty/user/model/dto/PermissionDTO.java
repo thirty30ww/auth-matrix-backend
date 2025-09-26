@@ -1,6 +1,7 @@
 package com.thirty.user.model.dto;
 
 import com.thirty.user.enums.model.PermissionType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ public class PermissionDTO {
 
     @NotNull(groups = Modify.class, message = "权限ID不能为空")
     private Integer id;
+    @NotBlank(groups = {Add.class, Modify.class}, message = "权限名称不能为空")
     private String name;
     private String path;
     private String component;

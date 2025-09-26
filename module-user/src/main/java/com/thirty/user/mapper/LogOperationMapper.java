@@ -17,7 +17,14 @@ import java.util.Map;
 * @Entity com.thirty.user.model.entity.LogOperation
 */
 public interface LogOperationMapper extends BaseMapper<LogOperation> {
-    IPage<LogOperationVO> getLogOperations(IPage<LogOperationVO> page, @Param("params") LogOperationDTO params);
+    /**
+     * 获取用户操作日志列表
+     * @param page 分页参数
+     * @param params 查询参数
+     * @param permittedRoleIds 权限角色ID列表
+     * @return 用户操作日志列表
+     */
+    IPage<LogOperationVO> getLogOperations(IPage<LogOperationVO> page, @Param("params") LogOperationDTO params, @Param("permittedRoleIds") List<Integer> permittedRoleIds);
 }
 
 

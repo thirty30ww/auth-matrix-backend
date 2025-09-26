@@ -66,35 +66,16 @@
             <if test="params.isValid != null">
                 AND u.is_valid = #{params.isValid}
             </if>
-            <if test="params.filterTime != null">
-                <choose>
-                    <when test="params.filterTime.field == 'createTime'">
-                        <include refid="com.thirty.common.mapper.TimeFilterMapper.timeFilter">
-                            <property name="column" value="d.create_time"/>
-                        </include>
-                    </when>
-                    <when test="params.filterTime.field == 'updateTime'">
-                        <include refid="com.thirty.common.mapper.TimeFilterMapper.timeFilter">
-                            <property name="column" value="d.update_time"/>
-                        </include>
-                    </when>
-                </choose>
-            </if>
+            <include refid="com.thirty.common.mapper.TimeMapper.timeFilterWrapper">
+                <property name="createTimeColumn" value="d.create_time"/>
+                <property name="updateTimeColumn" value="d.update_time"/>
+            </include>
         </where>
-        <if test="params.sort != null">
-            ORDER BY
-            <choose>
-                <when test="params.sort.field == 'createTime'">d.create_time</when>
-                <when test="params.sort.field == 'updateTime'">d.update_time</when>
-                <otherwise>u.id</otherwise>
-            </choose>
-            <choose>
-                <when test="params.sort.direction.code == 'desc'">DESC</when>
-                <otherwise>ASC</otherwise>
-            </choose>
-        </if>
-        <if test="params.sort == null">
-            ORDER BY u.id ASC
-        </if>
+        <include refid="com.thirty.common.mapper.TimeMapper.orderBy">
+            <property name="createTimeColumn" value="d.create_time"/>
+            <property name="updateTimeColumn" value="d.update_time"/>
+            <property name="defaultColumn" value="u.id"/>
+            <property name="defaultDirection" value="ASC"/>
+        </include>
     </select>
 </mapper>

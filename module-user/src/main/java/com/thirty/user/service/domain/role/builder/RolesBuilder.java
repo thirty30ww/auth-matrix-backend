@@ -110,9 +110,9 @@ public class RolesBuilder {
 
         if (hasPermissionDisplay) {
             RoleVO.filterHasPermission(permittedRoleIds, roleVOS);
-        } else {
-            RoleVO.setHasPermission(permittedRoleIds, roleVOS);
         }
+
+        RoleVO.setHasPermission(permittedRoleIds, roleVOS);
 
         // 构建角色树
         return buildRoleTree(roleVOS);
@@ -123,21 +123,35 @@ public class RolesBuilder {
      */
     private List<RoleVO> buildRoleTree(List<RoleVO> roleVOS) {
         List<RoleVO> roleTree = new ArrayList<>();
+        List<RoleVO> globalRoleVOS = new ArrayList<>();
         Map<Integer, RoleVO> roleMap = RoleVO.buildMap(roleVOS);
 
+        // 遍历角色列表
         roleMap.forEach((roleId, roleVO) -> {
+            // 当前遍历到的角色
             Role currentRole = roleVO.getNode();
+            // 根角色添加到角色树
             if (currentRole.getParentNodeId().equals(RoleConstant.ROOT_ROLE_PARENT_ID)) {
                 roleTree.add(roleVO);
+            } else if (currentRole.getParentNodeId().equals(RoleConstant.GLOBAL_ROLE_PARENT_ID)) {
+                // 全局角色添加到全局角色列表
+                globalRoleVOS.add(roleVO);
             } else {
+                // 非根角色添加到父角色的子角色列表
                 RoleVO parentVO = roleMap.get(currentRole.getParentNodeId());
+
+                // 父角色存在，添加到父角色的子角色列表
                 if (parentVO != null) {
                     parentVO.getChildren().add(roleVO);
                 } else {
+                    // 父角色不存在，添加到角色树
                     roleTree.add(roleVO);
                 }
             }
         });
+        // 全局角色添加到角色树
+        roleTree.addAll(globalRoleVOS);
+
         return roleTree;
     }
 }

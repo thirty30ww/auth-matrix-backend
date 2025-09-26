@@ -1,6 +1,8 @@
 package com.thirty.user.utils;
 
+import com.thirty.common.exception.BusinessException;
 import com.thirty.user.constant.JwtConstant;
+import com.thirty.user.enums.result.AuthResultCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -61,6 +63,9 @@ public class JwtUtil {
      * 从Authorization头中提取token
      */
     public String extractToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith(JwtConstant.BEARER_PREFIX)) {
+            throw new BusinessException(AuthResultCode.AUTHORIZATION_HEADER_INVALID);
+        }
         return authHeader.substring(JwtConstant.BEARER_PREFIX_LENGTH);
     }
 

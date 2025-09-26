@@ -20,6 +20,23 @@
         FROM log_operation lo
         LEFT JOIN `detail` d on lo.user_id = d.id
         <where>
+            <!-- 角色权限过滤：只显示用户的所有角色都在permittedRoleIds列表中的操作日志 -->
+            <if test="permittedRoleIds != null and permittedRoleIds.size() > 0">
+                AND lo.user_id IN (
+                    SELECT ur.user_id 
+                    FROM user_role ur 
+                    WHERE ur.is_delete = 0
+                    GROUP BY ur.user_id
+                    HAVING COUNT(DISTINCT ur.role_id) = SUM(
+                        CASE WHEN ur.role_id IN 
+                        <foreach collection="permittedRoleIds" item="roleId" open="(" close=")" separator=",">
+                            #{roleId}
+                        </foreach>
+                        THEN 1 ELSE 0 END
+                    )
+                    AND COUNT(DISTINCT ur.role_id) > 0
+                )
+            </if>
             <if test="(params.name != null and params.name != '') or (params.description != null and params.description != '')">
                 AND (
                 <trim suffixOverrides="OR">
@@ -44,30 +61,18 @@
             <if test="params.method != null">
                 AND lo.method LIKE CONCAT('%', #{params.method}, '%')
             </if>
-            <if test="params.filterTime != null">
-                <choose>
-                    <when test="params.filterTime.field == 'createTime'">
-                        <include refid="com.thirty.common.mapper.TimeFilterMapper.timeFilter">
-                            <property name="column" value="lo.create_time"/>
-                        </include>
-                    </when>
-                </choose>
-            </if>
+            <!-- 时间范围过滤 -->
+            <include refid="com.thirty.common.mapper.TimeMapper.timeFilterWrapper">
+                <property name="createTimeColumn" value="lo.create_time"/>
+                <property name="operateTimeColumn" value="lo.operate_time"/>
+            </include>
         </where>
-        <if test="params.sort != null">
-            ORDER BY
-            <choose>
-                <when test="params.sort.field == 'createTime'">lo.create_time</when>
-                <when test="params.sort.field == 'operateTime'">lo.operate_time</when>
-                <otherwise>lo.id</otherwise>
-            </choose>
-            <choose>
-                <when test="params.sort.direction.code == 'asc'">ASC</when>
-                <otherwise>DESC</otherwise>
-            </choose>
-        </if>
-        <if test="params.sort == null">
-            ORDER BY lo.id DESC
-        </if>
+        <!-- 排序 -->
+        <include refid="com.thirty.common.mapper.TimeMapper.orderBy">
+            <property name="createTimeColumn" value="lo.create_time"/>
+            <property name="operateTimeColumn" value="lo.operate_time"/>
+            <property name="defaultColumn" value="lo.id"/>
+            <property name="defaultDirection" value="DESC"/>
+        </include>
     </select>
 </mapper>

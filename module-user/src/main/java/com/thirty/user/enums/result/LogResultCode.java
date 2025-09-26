@@ -13,6 +13,9 @@ public enum LogResultCode implements IResult {
     GET_OPERATE_LOG_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取操作日志详情成功"),
     GET_OPERATE_LOG_CODE_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取操作日志代码列表成功"),
     GET_OPERATE_LOG_MODULE_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取操作日志模块列表成功"),
+    GET_LOGIN_LOG_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取登录日志列表成功"),
+    GET_LOGIN_LOG_BROWSER_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取登录日志浏览器信息列表成功"),
+    GET_LOGIN_LOG_OPERATING_SYSTEM_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取登录日志操作系统信息列表成功");
     ;
     private final Integer code;
     private final String message;

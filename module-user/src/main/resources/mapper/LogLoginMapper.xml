@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thirty.user.mapper.LogLoginMapper">
+
+    <select id="getLogLogins" resultType="com.thirty.user.model.vo.LogLoginVO">
+        SELECT
+            ll.id,
+            d.name,
+            ll.ip,
+            ll.device_model,
+            ll.browser,
+            ll.operating_system,
+            ll.type,
+            ll.status,
+            ll.error_message,
+            ll.operate_time,
+            ll.create_time
+        FROM log_login ll
+        LEFT JOIN `detail` d ON ll.user_id = d.id
+        <where>
+            <!-- 角色权限过滤：只显示用户的所有角色都在permittedRoleIds列表中的操作日志 -->
+            <if test="permittedRoleIds != null and permittedRoleIds.size() > 0">
+                AND ll.user_id IN (
+                SELECT ur.user_id
+                FROM user_role ur
+                WHERE ur.is_delete = 0
+                GROUP BY ur.user_id
+                HAVING COUNT(DISTINCT ur.role_id) = SUM(
+                CASE WHEN ur.role_id IN
+                <foreach collection="permittedRoleIds" item="roleId" open="(" close=")" separator=",">
+                    #{roleId}
+                </foreach>
+                THEN 1 ELSE 0 END
+                )
+                AND COUNT(DISTINCT ur.role_id) > 0
+                )
+            </if>
+            <!-- 名称模糊查询 -->
+            <if test="params.name != null and params.name != ''">
+                AND d.name LIKE CONCAT('%', #{params.name}, '%')
+            </if>
+            <if test="params.status != null">
+                AND ll.status = #{params.status}
+            </if>
+            <if test="params.type != null">
+                AND ll.type = #{params.type}
+            </if>
+            <if test="params.browser != null and params.browser != ''">
+                AND ll.browser LIKE CONCAT('%', #{params.browser}, '%')
+            </if>
+            <if test="params.operatingSystem != null and params.operatingSystem != ''">
+                AND ll.operating_system LIKE CONCAT('%', #{params.operatingSystem}, '%')
+            </if>
+            <!-- 时间范围过滤 -->
+            <include refid="com.thirty.common.mapper.TimeMapper.timeFilterWrapper">
+                <property name="createTimeColumn" value="ll.create_time"/>
+                <property name="operateTimeColumn" value="ll.operate_time"/>
+            </include>
+        </where>
+        <!-- 排序 -->
+        <include refid="com.thirty.common.mapper.TimeMapper.orderBy">
+            <property name="createTimeColumn" value="ll.create_time"/>
+            <property name="operateTimeColumn" value="ll.operate_time"/>
+            <property name="defaultColumn" value="ll.id"/>
+            <property name="defaultDirection" value="DESC"/>
+        </include>
+    </select>
+</mapper>

@@ -1,6 +1,8 @@
 package com.thirty.user.controller;
 
 import com.thirty.common.model.dto.ResultDTO;
+import com.thirty.user.annotation.LoginLog;
+import com.thirty.user.enums.model.LoginType;
 import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.model.dto.LoginDTO;
 import com.thirty.user.model.vo.JwtVO;
@@ -28,6 +30,7 @@ public class AuthController {
      * 用户登录
      */
     @PostMapping("/login")
+    @LoginLog(type = LoginType.LOGIN)
     public ResultDTO<JwtVO> login(@RequestBody @Valid LoginDTO loginDTO) {
         return ResultDTO.of(AuthResultCode.LOGIN_SUCCESS, authFacade.login(loginDTO));
     }
@@ -37,6 +40,7 @@ public class AuthController {
      * 当访问令牌过期, 服务器返回401, 客户端自动拦截并调用此接口
      */
     @GetMapping("/refresh")
+    @LoginLog(type = LoginType.REFRESH)
     public ResultDTO<JwtVO> refreshToken(@RequestParam String refreshToken) {
         return ResultDTO.of(AuthResultCode.LOGIN_SUCCESS, authFacade.refreshToken(refreshToken));
     }
@@ -47,6 +51,7 @@ public class AuthController {
      * 同时清除SecurityContext
      */
     @GetMapping("/logout")
+    @LoginLog(type = LoginType.LOGOUT)
     public ResultDTO<Void> logout(@RequestHeader(value = "Authorization") String authHeader, @RequestParam(required = false) String refreshToken) {
         String accessToken = jwtUtil.extractToken(authHeader);
         authFacade.logout(accessToken, refreshToken);

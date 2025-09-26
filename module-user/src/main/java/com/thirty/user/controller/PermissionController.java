@@ -12,6 +12,7 @@ import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -114,7 +115,7 @@ public class PermissionController {
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('permission:menu:add')")
     @OperateLog(type = OperationType.INSERT, description = "添加权限")
-    public ResultDTO<Void> addPermission(@RequestHeader("Authorization") String authHeader, @RequestBody @Valid PermissionDTO permissionDTO) {
+    public ResultDTO<Void> addPermission(@RequestHeader("Authorization") String authHeader, @RequestBody @Validated(PermissionDTO.Add.class) PermissionDTO permissionDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         permissionFacade.addPermission(userId, permissionDTO);
         return ResultDTO.of(PermissionResultCode.ADD_SUCCESS);
@@ -129,7 +130,7 @@ public class PermissionController {
     @PostMapping("/modify")
     @PreAuthorize("hasAuthority('permission:menu:modify')")
     @OperateLog(type = OperationType.UPDATE, description = "修改权限")
-    public ResultDTO<Void> modifyPermission(@RequestHeader("Authorization") String authHeader, @RequestBody @Valid PermissionDTO permissionDTO) {
+    public ResultDTO<Void> modifyPermission(@RequestHeader("Authorization") String authHeader, @RequestBody @Validated(PermissionDTO.Modify.class) PermissionDTO permissionDTO) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
         permissionFacade.modifyPermission(userId, permissionDTO);
         return ResultDTO.of(PermissionResultCode.MODIFY_SUCCESS);

@@ -33,6 +33,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <dotenv.version>3.0.0</dotenv.version>
         <springdoc.version>2.7.0</springdoc.version>
+        <uap-java.version>1.6.1</uap-java.version>
     </properties>
 
     <dependencyManagement>
@@ -137,6 +138,13 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc.version}</version>
+            </dependency>
+
+            <!-- uap-java -->
+            <dependency>
+                <groupId>com.github.ua-parser</groupId>
+                <artifactId>uap-java</artifactId>
+                <version>${uap-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
