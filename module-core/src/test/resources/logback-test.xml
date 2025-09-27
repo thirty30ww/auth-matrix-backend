@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 测试环境日志配置 - 只输出到控制台，不生成文件 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    
+    <!-- 项目包的日志级别设为DEBUG -->
+    <logger name="com.thirty" level="DEBUG"/>
+    
+    <!-- 隐藏过于详细的测试日志 -->
+    <logger name="org.apache.catalina" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="com.zaxxer.hikari.pool" level="WARN"/>
+    <logger name="org.springframework.boot.devtools" level="WARN"/>
+    
+    <!-- 保留重要的数据库日志 -->
+    <logger name="com.zaxxer.hikari.HikariDataSource" level="INFO"/>
+    <logger name="com.baomidou.dynamic.datasource" level="INFO"/>
+</configuration>

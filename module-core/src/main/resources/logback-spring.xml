@@ -64,6 +64,17 @@
         </encoder>
     </appender>
 
+    <!-- 公共日志配置 - 所有环境共享 -->
+    <!-- 隐藏过于详细的日志 -->
+    <logger name="org.apache.catalina" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="com.zaxxer.hikari.pool" level="WARN"/>
+    <logger name="org.springframework.boot.devtools" level="WARN"/>
+    
+    <!-- 保留重要的数据库日志 -->
+    <logger name="com.zaxxer.hikari.HikariDataSource" level="INFO"/>
+    <logger name="com.baomidou.dynamic.datasource" level="INFO"/>
+
     <!-- 开发环境：控制台 + 三个文件 -->
     <springProfile name="dev">
         <root level="INFO">
@@ -72,6 +83,7 @@
             <appender-ref ref="ERROR_FILE"/> <!-- 错误日志文件 -->
             <appender-ref ref="WARN_FILE"/>  <!-- 警告日志文件 -->
         </root>
+        
         <!-- 项目包的日志级别设为DEBUG -->
         <logger name="com.thirty" level="DEBUG"/>
     </springProfile>
