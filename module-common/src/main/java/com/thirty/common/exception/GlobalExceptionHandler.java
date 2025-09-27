@@ -129,6 +129,15 @@ public class GlobalExceptionHandler {
     }
     
     /**
+     * 处理参数类型校验异常
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResultDTO<?> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.warn("参数类型校验失败：{}", e.getMessage());
+        return ResultDTO.failure(GlobalResultCode.PARAM_ERROR.getCode(), e.getMessage());
+    }
+    
+    /**
      * 处理其他异常
      */
     @ExceptionHandler(Exception.class)

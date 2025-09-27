@@ -19,4 +19,13 @@ public class SettingApiImpl implements SettingApi {
     public boolean hasPermissionDisplay() {
         return settingService.getSettingValue(SettingField.PERMISSION_DISPLAY);
     }
+
+     /**
+     * 获取限制的用户角色数量
+     * @return 限制的用户角色数量
+     */
+     @Override
+     public Integer getUserRoleNumberLimit() {
+        return settingService.getSettingValue(SettingField.USER_ROLE_NUMBER_LIMIT);
+    }
 }

@@ -9,13 +9,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SettingField implements CodeEnum<String> {
     /**
-     * 是否仅显示有权限操作的数据（1：是，0：否）
+     * 是否仅显示有权限操作的数据
      */
     PERMISSION_DISPLAY("permission_display", Boolean.class),
     /**
      * 项目标题
      */
     PROJECT_TITLE("project_title", String.class, true),
+    /**
+     * 用户角色数量限制
+     */
+    USER_ROLE_NUMBER_LIMIT("user_role_number_limit", Integer.class),
     ;
 
     @EnumValue

@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 全局设置表
@@ -57,4 +60,13 @@ public class Setting implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 构建ID到设置实体的映射
+     * @param settings 设置实体列表
+     * @return ID到设置实体的映射
+     */
+    public static Map<Integer, Setting> buildMap(List<Setting> settings) {
+        return settings.stream().collect(Collectors.toMap(Setting::getId, setting -> setting));
+    }
 }

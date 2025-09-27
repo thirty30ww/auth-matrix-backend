@@ -13,8 +13,8 @@ import com.thirty.system.service.basic.SettingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author Lenovo
@@ -23,7 +23,7 @@ import java.util.List;
 */
 @Service
 public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
-    implements SettingService{
+    implements SettingService {
 
     @Resource
     private TypeUtil typeUtil;
@@ -102,11 +102,16 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
      */
     @Override
     public void modifySettings(List<SettingDTO> settingDTOS) {
-        ArrayList<Setting> settings = new ArrayList<>();
+        List<Integer> settingIds = SettingDTO.extractIds(settingDTOS);  // 提取ID列表
+        List<Setting> settings = listByIds(settingIds); // 根据ID列表查询设置实体
+        Map<Integer, Setting> settingMap = Setting.buildMap(settings);  // 构建ID到设置实体的映射
+
+        // 转换DTO值为字符串并更新实体值
         settingDTOS.forEach(settingDTO -> {
-            Setting setting = getById(settingDTO.getId());
-            setting.setValue(typeUtil.convertToString(settingDTO.getValue()));
-            settings.add(setting);
+            Setting setting = settingMap.get(settingDTO.getId());
+            SettingField settingField = SettingField.getByCode(setting.getField()); // 获取设置字段枚举
+            // 使用带类型校验的转换方法
+            setting.setValue(typeUtil.convertToStringWithValidation(settingDTO.getValue(), settingField.getValueType()));
         });
         updateBatchById(settings);
     }

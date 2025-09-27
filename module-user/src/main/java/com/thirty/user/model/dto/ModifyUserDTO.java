@@ -1,5 +1,6 @@
 package com.thirty.user.model.dto;
 
+import com.thirty.user.annotation.ValidRoleLimit;
 import com.thirty.user.enums.model.UserSex;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,5 +18,6 @@ public class ModifyUserDTO {
     @NotNull(message = "性别不能为空")
     private UserSex sex;
     @NotEmpty(message = "角色不能为空")
+    @ValidRoleLimit
     private List<Integer> roleIds;
 }
