@@ -11,6 +11,7 @@ import com.thirty.user.model.vo.LogOperationVO;
 import com.thirty.user.service.facade.LogFacade;
 import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class LogController {
      * 获取操作日志详情
      */
     @GetMapping("/operation/get")
+    @PreAuthorize("hasAuthority('log:detail')")
     public ResultDTO<LogOperationVO> getLogOperation(@RequestParam Integer id) {
         return ResultDTO.of(LogResultCode.GET_OPERATE_LOG_SUCCESS, logFacade.getLogOperation(id));
     }

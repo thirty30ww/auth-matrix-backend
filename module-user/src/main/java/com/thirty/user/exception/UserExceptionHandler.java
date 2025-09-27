@@ -27,7 +27,6 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResultDTO<?> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
-        log.warn("权限验证失败: {}", e.getMessage());
         return ResultDTO.of(GlobalResultCode.FORBIDDEN);
     }
 
@@ -36,7 +35,6 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResultDTO<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        log.warn("用户名不存在异常: {}", e.getMessage());
         return ResultDTO.of(AuthResultCode.USERNAME_NOT_EXISTS);
     }
 
@@ -45,7 +43,6 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(DisabledException.class)
     public ResultDTO<?> handleDisabledException(DisabledException e) {
-        log.warn("用户账户被禁用异常: {}", e.getMessage());
         return ResultDTO.of(AuthResultCode.USER_BANNED);
     }
 
@@ -54,7 +51,6 @@ public class UserExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResultDTO<?> handleBadCredentialsException(BadCredentialsException e) {
-        log.warn("密码错误异常: {}", e.getMessage());
         return ResultDTO.of(AuthResultCode.INVALID_CREDENTIALS);
     }
 

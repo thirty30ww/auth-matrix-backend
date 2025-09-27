@@ -9,6 +9,8 @@ project:
     email: 2834379272@qq.com  # 项目作者邮箱
 
 spring:
+  main:
+    banner-mode: log
   devtools:
     restart:
       enabled: false  # 开发环境下是否启用热部署
@@ -56,8 +58,18 @@ jwt:
 
 logging:
   level:
-    root: info
+    root: info  # 根日志级别，设置为info，避免打印太多详细日志
     com.thirty: debug  # 设置项目包路径的日志级别为debug
+
+    # 隐藏过于详细的日志
+    org.apache.catalina: WARN          # 隐藏Tomcat详细启动日志
+    org.springframework.web: WARN      # 隐藏Web相关详细日志
+    com.zaxxer.hikari.pool: WARN       # 隐藏连接池详细日志（只保留重要的）
+    org.springframework.boot.devtools: WARN  # 隐藏开发工具日志
+
+    # 保留重要的数据库日志
+    com.zaxxer.hikari.HikariDataSource: INFO
+    com.baomidou.dynamic.datasource: INFO
 
 mybatis-plus:
   global-config:

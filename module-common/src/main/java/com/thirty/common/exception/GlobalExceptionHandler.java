@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     public ResultDTO<?> handleBusinessException(BusinessException e) {
-        log.error("业务异常：{}", e.getMessage(), e);
+        log.warn("业务异常：{}", e.getMessage());
         return ResultDTO.failure(e.getCode(), e.getMessage());
     }
     
@@ -105,6 +105,9 @@ public class GlobalExceptionHandler {
 
             // 记录详细的异常信息
             log.warn("JSON参数转换失败：字段[{}]，值[{}]，目标类型[{}]", fieldName, invalidValue, targetType);
+        } else {
+            // 其他JSON反序列化异常
+            log.warn("JSON反序列化异常：{}", e.getMessage());
         }
         return ResultDTO.of(GlobalResultCode.PARAM_ERROR);
     }

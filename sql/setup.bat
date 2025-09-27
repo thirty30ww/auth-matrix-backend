@@ -1,7 +1,7 @@
 @echo off
 chcp 65001 >nul
 echo ========================================
-echo       ProsePulse 数据库部署脚本
+echo       Auth Matrix 数据库部署脚本
 echo ========================================
 echo.
 

@@ -80,7 +80,6 @@ public class UserAgentUtil {
     private String buildDeviceModel(Client client) {
         StringBuilder os = new StringBuilder();
 
-        log.debug("构建设备型号: {}", client);
         // 检查操作系统family是否有效
         if (client.os.family != null && !"Other".equals(client.os.family)) {
             // 使用映射方法获取友好的操作系统名称
