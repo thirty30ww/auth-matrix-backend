@@ -16,7 +16,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- 使用 pp_system 数据库
-USE pp_system;
+USE am_system;
 
 --
 -- Table structure for table `setting`

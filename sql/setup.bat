@@ -37,23 +37,23 @@ if not exist "init.sql" (
     pause
     exit /b 1
 )
-if not exist "schema\pp_user.sql" (
-    echo [错误] 找不到 schema\pp_user.sql 文件！
+if not exist "schema\am_user.sql" (
+    echo [错误] 找不到 schema\am_user.sql 文件！
     pause
     exit /b 1
 )
-if not exist "schema\pp_system.sql" (
-    echo [错误] 找不到 schema\pp_system.sql 文件！
+if not exist "schema\am_system.sql" (
+    echo [错误] 找不到 schema\am_system.sql 文件！
     pause
     exit /b 1
 )
-if not exist "data\pp_user.sql" (
-    echo [错误] 找不到 data\pp_user.sql 文件！
+if not exist "data\am_user.sql" (
+    echo [错误] 找不到 data\am_user.sql 文件！
     pause
     exit /b 1
 )
-if not exist "data\pp_system.sql" (
-    echo [错误] 找不到 data\pp_system.sql 文件！
+if not exist "data\am_system.sql" (
+    echo [错误] 找不到 data\am_system.sql 文件！
     pause
     exit /b 1
 )
@@ -79,7 +79,7 @@ echo [成功] 数据库创建完成
 
 echo.
 echo [步骤 2/4] 正在创建用户模块表结构...
-mysql -u root -p%MYSQL_PASSWORD% < schema\pp_user.sql
+mysql -u root -p%MYSQL_PASSWORD% < schema\am_user.sql
 if %errorlevel% neq 0 (
     echo [错误] 用户模块表结构创建失败！错误代码：%errorlevel%
     pause
@@ -89,7 +89,7 @@ echo [成功] 用户模块表结构创建完成
 
 echo.
 echo [步骤 3/4] 正在创建系统模块表结构...
-mysql -u root -p%MYSQL_PASSWORD% < schema\pp_system.sql
+mysql -u root -p%MYSQL_PASSWORD% < schema\am_system.sql
 if %errorlevel% neq 0 (
     echo [错误] 系统模块表结构创建失败！错误代码：%errorlevel%
     pause
@@ -100,7 +100,7 @@ echo [成功] 系统模块表结构创建完成
 echo.
 echo [步骤 4/4] 正在导入初始数据...
 echo 导入用户模块数据...
-mysql -u root -p%MYSQL_PASSWORD% < data\pp_user.sql
+mysql -u root -p%MYSQL_PASSWORD% < data\am_user.sql
 if %errorlevel% neq 0 (
     echo [错误] 用户模块数据导入失败！错误代码：%errorlevel%
     pause
@@ -108,7 +108,7 @@ if %errorlevel% neq 0 (
 )
 
 echo 导入系统模块数据...
-mysql -u root -p%MYSQL_PASSWORD% < data\pp_system.sql
+mysql -u root -p%MYSQL_PASSWORD% < data\am_system.sql
 if %errorlevel% neq 0 (
     echo [错误] 系统模块数据导入失败！错误代码：%errorlevel%
     pause
@@ -126,8 +126,8 @@ echo 密码: Am20250914
 echo 角色: 超级管理员
 echo.
 echo 数据库连接信息：
-echo 用户数据库: pp_user
-echo 系统数据库: pp_system
+echo 用户数据库: am_user
+echo 系统数据库: am_system
 echo.
 echo 请确保在项目中配置正确的数据库连接参数。
 echo 参考文档: document/3.数据库部署指南.md

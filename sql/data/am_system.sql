@@ -16,7 +16,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- 使用 pp_user 数据库
-USE pp_system;
+USE am_system;
 
 --
 -- Dumping data for table `setting`
