@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.39, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: pp_system
+-- Host: 127.0.0.1    Database: am_system
 -- ------------------------------------------------------
 -- Server version	8.0.39
 
@@ -15,16 +15,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- 使用 pp_user 数据库
+-- 使用 pp_system 数据库
 USE am_system;
 
 --
 -- Dumping data for table `setting`
 --
 
-LOCK TABLES `setting` WRITE;
-INSERT INTO `setting` VALUES (1,'permission_display','权限显示','是否仅显示有权限操作的数据','0','2025-08-22 09:11:50','2025-09-13 19:28:20',0),(2,'project_title','项目名称','整个项目的项目名','Auth Matrix','2025-09-12 14:06:33','2025-09-12 21:44:41',0);
-UNLOCK TABLES;
+INSERT INTO `setting` VALUES (1,'permission_display','权限显示','是否仅显示有权限操作的数据','0','2025-08-22 09:11:50','2025-09-13 19:28:20',0),(2,'project_title','项目名称','整个项目的项目名','Auth Matrix','2025-09-12 14:06:33','2025-09-12 21:44:41',0),(3,'user_role_number_limit','用户角色数量限制','用户能拥有的最高角色数','3','2025-10-08 15:22:59','2025-10-08 15:22:59',0);
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -35,4 +33,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-14 18:05:09
+-- Dump completed on 2025-10-08 15:30:10

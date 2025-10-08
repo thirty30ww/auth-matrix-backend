@@ -29,11 +29,11 @@ public class AutoDataSourceAspect {
 
     @After("execution(* com.thirty.system.service..*(..))")
     public void clearCommonDataSource() {
-        DynamicDataSourceContextHolder.clear();
+        DynamicDataSourceContextHolder.poll();
     }
 
     @After("execution(* com.thirty.user.service..*(..))")
     public void clearUserDataSource() {
-        DynamicDataSourceContextHolder.clear();
+        DynamicDataSourceContextHolder.poll();
     }
 }
