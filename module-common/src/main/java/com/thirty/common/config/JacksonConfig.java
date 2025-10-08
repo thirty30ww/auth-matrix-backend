@@ -18,7 +18,6 @@ import static com.thirty.common.constant.DateConstant.DATE_TIME_FORMAT;
  */
 @Configuration
 public class JacksonConfig {
-
     /**
      * 配置LocalDateTime格式化
      */
