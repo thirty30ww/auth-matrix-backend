@@ -45,9 +45,11 @@ public class UserFacadeImpl implements UserFacade {
      * 添加用户
      * @param operatorUserId 操作人用户ID
      * @param addUserDTO 添加用户请求参数
+     *
+     * @return 新增用户的ID
      */
     @Override
-    public void addUser(Integer operatorUserId, AddUserDTO addUserDTO) {
+    public Integer addUser(Integer operatorUserId, AddUserDTO addUserDTO) {
         // 校验用户是否存在
         if (userValidationDomain.validateUserExists(addUserDTO.getUsername())) {
             throw new BusinessException(UserResultCode.USERNAME_ALREADY_EXISTS);
@@ -59,7 +61,7 @@ public class UserFacadeImpl implements UserFacade {
         ) {
             throw new BusinessException(UserResultCode.ROLE_NOT_AUTHORIZED_ADD);
         }
-        userOperationDomain.addUser(addUserDTO);
+        return  userOperationDomain.addUser(addUserDTO);
     }
 
     /**

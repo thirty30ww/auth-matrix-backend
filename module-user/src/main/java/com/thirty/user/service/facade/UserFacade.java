@@ -13,8 +13,10 @@ public interface UserFacade {
      * 添加用户
      * @param operatorUserId 操作人用户ID
      * @param addUserDTO 添加用户DTO
+     *
+     * @return 新增用户的ID
      */
-    void addUser(Integer operatorUserId, AddUserDTO addUserDTO);
+    Integer addUser(Integer operatorUserId, AddUserDTO addUserDTO);
 
     /**
      * 获取用户

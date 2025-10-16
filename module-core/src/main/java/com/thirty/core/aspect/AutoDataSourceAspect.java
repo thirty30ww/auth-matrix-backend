@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
-@Order(1) // 确保在事务之前执行
+@Order(0) // 确保在事务之前执行
 @Slf4j
 public class AutoDataSourceAspect {
     @Before("execution(* com.thirty.system.service..*(..))")
