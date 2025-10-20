@@ -1,6 +1,7 @@
 package com.thirty.user.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thirty.common.config.SecurityProperties;
 import com.thirty.common.enums.result.GlobalResultCode;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.filter.JwtAuthenticationFilter;
@@ -35,6 +36,9 @@ public class SecurityConfig {
 
     @Resource
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+    
+    @Resource
+    private SecurityProperties securityProperties;
 
     @Value("${springdoc.api-docs.path:/v3/api-docs}")
     private String apiDocsPath;
@@ -52,12 +56,17 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 启用CORS
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // 允许访问认证相关接口
-                .requestMatchers("/setting/public/**").permitAll() // 允许访问公共设置相关接口
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", apiDocsPath, swaggerUiPath).permitAll()
-                .anyRequest().authenticated() // 其他请求需要认证
-            )
+            .authorizeHttpRequests(auth -> {
+                // 动态添加允许访问的路径
+                for (String path : securityProperties.getPermitAllPaths()) {
+                    auth.requestMatchers(path).permitAll();
+                    log.info("Security: 允许无认证访问路径: {}", path);
+                }
+                
+                // 添加固定的文档访问路径
+                auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", apiDocsPath, swaggerUiPath).permitAll()
+                    .anyRequest().authenticated(); // 其他请求需要认证
+            })
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 不使用session
             )
