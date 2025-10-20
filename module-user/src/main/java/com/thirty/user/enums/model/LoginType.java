@@ -10,6 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum LoginType implements CodeEnum<String> {
     LOGIN("LOGIN", "登录"),
+    REGISTER("REGISTER", "注册"),
     LOGOUT("LOGOUT", "退出登录"),
     REFRESH("REFRESH", "刷新token"),
     ;

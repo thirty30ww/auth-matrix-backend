@@ -5,6 +5,7 @@ import com.thirty.user.annotation.LoginLog;
 import com.thirty.user.enums.model.LoginType;
 import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.model.dto.LoginDTO;
+import com.thirty.user.model.dto.RegisterDTO;
 import com.thirty.user.model.vo.JwtVO;
 import com.thirty.user.service.facade.AuthFacade;
 import com.thirty.user.utils.JwtUtil;
@@ -33,6 +34,15 @@ public class AuthController {
     @LoginLog(type = LoginType.LOGIN)
     public ResultDTO<JwtVO> login(@RequestBody @Valid LoginDTO loginDTO) {
         return ResultDTO.of(AuthResultCode.LOGIN_SUCCESS, authFacade.login(loginDTO));
+    }
+
+    /**
+     * 用户注册
+     */
+    @PostMapping("/register")
+    @LoginLog(type = LoginType.REGISTER)
+    public ResultDTO<JwtVO> register(@RequestBody @Valid RegisterDTO registerDTO) {
+        return ResultDTO.of(AuthResultCode.REGISTER_SUCCESS, authFacade.register(registerDTO));
     }
     
     /**

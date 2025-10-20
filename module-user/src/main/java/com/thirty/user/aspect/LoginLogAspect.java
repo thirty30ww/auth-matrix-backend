@@ -89,6 +89,7 @@ public class LoginLogAspect {
             case LOGIN -> logUtil.getCurrentUserId(joinPoint.getArgs());
             case LOGOUT -> logUtil.getCurrentUserId(request);
             case REFRESH -> logUtil.getCurrentUserId(request.getParameter(JwtConstant.REFRESH_TOKEN));
+            case REGISTER -> null;
         };
     }
 }

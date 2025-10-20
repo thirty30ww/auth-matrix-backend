@@ -1,9 +1,17 @@
 package com.thirty.user.service.facade.impl;
 
+import com.thirty.common.exception.BusinessException;
+import com.thirty.system.api.SettingApi;
+import com.thirty.user.converter.AuthConverter;
+import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.user.model.dto.AddUserDTO;
 import com.thirty.user.model.dto.LoginDTO;
+import com.thirty.user.model.dto.RegisterDTO;
 import com.thirty.user.model.vo.JwtVO;
 import com.thirty.user.model.vo.UserVO;
+import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.auth.AuthDomain;
+import com.thirty.user.service.domain.user.UserOperationDomain;
 import com.thirty.user.service.domain.user.UserQueryDomain;
 import com.thirty.user.service.facade.AuthFacade;
 import jakarta.annotation.Resource;
@@ -16,12 +24,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthFacadeImpl implements AuthFacade {
     @Resource
+    private UserService userService;
+
+    @Resource
     private AuthDomain authDomain;
     @Resource
     private UserQueryDomain userQueryDomain;
+    @Resource
+    private UserOperationDomain userOperationDomain;
 
     @Resource
     private AuthenticationManager authenticationManager;
+
+    @Resource
+    private SettingApi settingApi;
 
     /**
      * 用户登录
@@ -49,6 +65,26 @@ public class AuthFacadeImpl implements AuthFacade {
 
         // 生成JwtVO
         return authDomain.login(user, authentication);
+    }
+
+    /**
+     * 用户注册
+     * @param dto 注册DTO
+     * @return JwtVO
+     */
+    @Override
+    public JwtVO register(RegisterDTO dto) {
+        // 校验用户名是否存在
+        if (userService.validateUserExists(dto.getUsername())) {
+            throw new BusinessException(AuthResultCode.USERNAME_EXISTS);
+        }
+
+        // 注册用户
+        AddUserDTO addUserDTO = AuthConverter.INSTANCE.toAddUserDTO(dto, settingApi.getDefaultRoles());
+        Integer id = userOperationDomain.addUser(addUserDTO);
+
+        // 登录注册用户
+        return login(AuthConverter.INSTANCE.toLoginDTO(dto));
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.thirty.user.service.facade;
 
 import com.thirty.user.model.dto.LoginDTO;
+import com.thirty.user.model.dto.RegisterDTO;
 import com.thirty.user.model.vo.JwtVO;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,13 @@ public interface AuthFacade {
      * @return JwtVO
      */
     JwtVO login(LoginDTO loginDTO);
+
+    /**
+     * 用户注册
+     * @param dto 注册DTO
+     * @return JwtVO
+     */
+    JwtVO register(RegisterDTO dto);
 
     /**
      * 刷新令牌

@@ -13,7 +13,6 @@ import com.thirty.user.service.basic.DetailService;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.user.UserOperationDomain;
-import com.thirty.user.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,6 @@ public class UserOperationDomainImpl implements UserOperationDomain {
 
     @Resource
     private PasswordEncoder passwordEncoder;
-    @Resource
-    private JwtUtil jwtUtil;
 
 
     /**
