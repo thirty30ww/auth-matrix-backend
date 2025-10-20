@@ -2,14 +2,37 @@ package com.thirty.common.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Component
 public class TypeUtil {
 
-    @SuppressWarnings("unchecked")
     public <T> T convertValue(Object value, Class<T> targetType) {
+        return convertValue(value, targetType, null);
+    }
+
+    /**
+     * 通用类型转换方法（支持 List 类型）
+     * @param value 要转换的值
+     * @param targetType 目标类型
+     * @param elementType List 的元素类型（如果 targetType 是 List 的话，可以为 null）
+     * @return 转换后的值
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T convertValue(Object value, Class<T> targetType, Class<?> elementType) {
         if (value == null) {
             return null;
         }
+        
+        // 如果目标类型是 List
+        if (List.class.equals(targetType)) {
+            return (T) convertToList(value, elementType);
+        }
+        
+        // 处理基本类型
         if (targetType == Boolean.class) {
             return (T) Boolean.valueOf("1".equals(value));
         } else if (targetType == Integer.class) {
@@ -19,6 +42,36 @@ public class TypeUtil {
         } else {
             return (T) value.toString();
         }
+    }
+
+    /**
+     * 将值转换为指定元素类型的 List
+     * @param value 要转换的值
+     * @param elementType List 元素类型
+     * @return 转换后的 List
+     */
+    private List<?> convertToList(Object value, Class<?> elementType) {
+        String stringValue = value.toString();
+
+        // 处理空值或空字符串
+        if (stringValue == null || stringValue.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 按逗号分割字符串
+        String[] parts = stringValue.split(",");
+        List<Object> result = new ArrayList<>();
+
+        for (String part : parts) {
+            String trimmedPart = part.trim();
+            if (!trimmedPart.isEmpty()) {
+                // 根据元素类型转换每个元素
+                Object convertedElement = convertValue(trimmedPart, elementType);
+                result.add(convertedElement);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -66,6 +119,22 @@ public class TypeUtil {
     }
 
     /**
+     * 将 List 转换为逗号分隔的字符串
+     * @param value List 值
+     * @return 逗号分隔的字符串
+     */
+    private String convertListToString(Object value) {
+        if (!(value instanceof List<?> list)) {
+            throw new IllegalArgumentException("值不是 List 类型");
+        }
+
+        return list.stream()
+                .filter(Objects::nonNull)
+                .map(this::convertToString)
+                .collect(Collectors.joining(","));
+    }
+
+    /**
      * 带类型校验的转换为字符串方法
      * @param value 要转换的值
      * @param expectedType 期望的类型
@@ -73,14 +142,30 @@ public class TypeUtil {
      * @throws IllegalArgumentException 当类型不匹配时抛出异常
      */
     public String convertToStringWithValidation(Object value, Class<?> expectedType) {
+        return convertToStringWithValidation(value, expectedType, null);
+    }
+
+    /**
+     * 通用带类型校验的转换为字符串方法（支持 List）
+     * @param value 要转换的值
+     * @param expectedType 期望的类型
+     * @param elementType List 的元素类型（如果 expectedType 是 List 的话，可以为 null）
+     * @return 转换后的字符串
+     * @throws IllegalArgumentException 当类型不匹配时抛出异常
+     */
+    public String convertToStringWithValidation(Object value, Class<?> expectedType, Class<?> elementType) {
         if (value == null) {
             return null;
         }
         
-        // 进行类型校验
-        validateType(value, expectedType);
+        // 如果期望类型是 List
+        if (List.class.equals(expectedType)) {
+            validateListType(value, elementType);
+            return convertListToString(value);
+        }
         
-        // 校验通过后进行转换
+        // 处理基本类型
+        validateType(value, expectedType);
         return convertToString(value);
     }
 
@@ -188,6 +273,24 @@ public class TypeUtil {
             throw new IllegalArgumentException(
                 String.format("期望类型 %s，但实际类型为 %s", 
                     expectedType.getSimpleName(), value.getClass().getSimpleName()));
+        }
+    }
+
+    /**
+     * 校验 List 类型
+     * @param value 要校验的值
+     * @param elementType List 元素类型
+     * @throws IllegalArgumentException 当类型不匹配时抛出异常
+     */
+    private void validateListType(Object value, Class<?> elementType) {
+        if (!(value instanceof List<?> list)) {
+            throw new IllegalArgumentException("期望 List 类型，但实际类型为 " + value.getClass().getSimpleName());
+        }
+
+        for (Object element : list) {
+            if (element != null) {
+                validateType(element, elementType);
+            }
         }
     }
 }

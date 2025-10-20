@@ -6,6 +6,8 @@ import com.thirty.system.service.basic.SettingService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class SettingApiImpl implements SettingApi {
     @Resource
@@ -27,5 +29,14 @@ public class SettingApiImpl implements SettingApi {
      @Override
      public Integer getUserRoleNumberLimit() {
         return settingService.getSettingValue(SettingField.USER_ROLE_NUMBER_LIMIT);
-    }
+     }
+
+    /**
+     * 获取默认用户角色
+     * @return 默认用户角色ID列表
+     */
+    @Override
+    public List<Integer> getDefaultRoles() {
+         return settingService.getSettingValue(SettingField.DEFAULT_ROLES);
+     }
 }

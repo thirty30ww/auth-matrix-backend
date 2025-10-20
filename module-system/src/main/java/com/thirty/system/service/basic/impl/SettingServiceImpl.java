@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.utils.TypeUtil;
 import com.thirty.system.converter.SettingConverter;
 import com.thirty.system.enums.model.SettingField;
+import com.thirty.system.enums.model.SettingType;
 import com.thirty.system.mapper.SettingMapper;
 import com.thirty.system.model.dto.SettingDTO;
 import com.thirty.system.model.entity.Setting;
@@ -37,7 +38,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     @Override
     public <T> T getSettingValue(SettingField settingField) {
         Setting setting = getSettingByField(settingField.getCode());
-        return (T) typeUtil.convertValue(setting.getValue(), settingField.getValueType());
+        SettingType settingType = settingField.getValueType();
+        return (T) typeUtil.convertValue(setting.getValue(), settingType.getMainType(), settingType.getElementType());
     }
 
     /**
@@ -49,7 +51,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     @Override
     public <T> T getPublicSettingValue(SettingField settingField) {
         Setting setting = getPublicSettingByField(settingField.getCode());
-        return (T) typeUtil.convertValue(setting.getValue(), settingField.getValueType());
+        SettingType settingType = settingField.getValueType();
+        return (T) typeUtil.convertValue(setting.getValue(), settingType.getMainType(), settingType.getElementType());
     }
 
     /**
@@ -63,8 +66,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
 
         // 转换值类型
         settingVOS.forEach(settingVO ->{
-            Class<?> type = SettingField.getValueType(settingVO.getField());
-            settingVO.setValue(typeUtil.convertValue(settingVO.getValue(), type));
+            SettingType type = SettingField.getValueType(settingVO.getField());
+            settingVO.setValue(typeUtil.convertValue(settingVO.getValue(), type.getMainType(), type.getElementType()));
         });
         
         return settingVOS;
@@ -110,8 +113,10 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
         settingDTOS.forEach(settingDTO -> {
             Setting setting = settingMap.get(settingDTO.getId());
             SettingField settingField = SettingField.getByCode(setting.getField()); // 获取设置字段枚举
+            SettingType settingType = settingField.getValueType();
+            
             // 使用带类型校验的转换方法
-            setting.setValue(typeUtil.convertToStringWithValidation(settingDTO.getValue(), settingField.getValueType()));
+            setting.setValue(typeUtil.convertToStringWithValidation(settingDTO.getValue(), settingType.getMainType(), settingType.getElementType()));
         });
         updateBatchById(settings);
     }

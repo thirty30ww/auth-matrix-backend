@@ -1,5 +1,7 @@
 package com.thirty.system.api;
 
+import java.util.List;
+
 public interface SettingApi {
     /**
      * 是否仅显示有权限操作的数据
@@ -12,4 +14,10 @@ public interface SettingApi {
      * @return 限制的用户角色数量
      */
     Integer getUserRoleNumberLimit();
+
+    /**
+     * 获取默认用户角色
+     * @return 默认用户角色ID列表
+     */
+    List<Integer> getDefaultRoles();
 }

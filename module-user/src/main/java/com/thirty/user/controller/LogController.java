@@ -39,7 +39,7 @@ public class LogController {
      * 获取操作日志详情
      */
     @GetMapping("/operation/get")
-    @PreAuthorize("hasAuthority('log:detail')")
+    @PreAuthorize("hasAuthority('log:operation:detail')")
     public ResultDTO<LogOperationVO> getLogOperation(@RequestParam Integer id) {
         return ResultDTO.of(LogResultCode.GET_OPERATE_LOG_SUCCESS, logFacade.getLogOperation(id));
     }
