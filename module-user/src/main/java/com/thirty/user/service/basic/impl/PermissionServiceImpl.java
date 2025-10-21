@@ -249,9 +249,13 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      */
     @Override
     public void modifyPermission(Permission permission) {
+        // 处理权限父节点变化
         Permission oldPermission = getById(permission.getId());
+        // 如果父节点变化，需要尾插法添加权限
         if (!Objects.equals(permission.getParentNodeId(), oldPermission.getParentNodeId())) {
+            // 尾插法添加权限
             tailInsert(permission);
+            // 处理旧权限的邻居节点连接
             connectNeighborPermissions(oldPermission);
             return;
         }
@@ -271,20 +275,29 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      */
     @Override
     public void tailInsert(Permission permission) {
+        // 获得父节点的尾节点
         Permission tailPermission = getTailNode(permission.getParentNodeId());
+
+        // 处理permission的frontNodeId
         if (tailPermission == null) {
-            permission.setFrontNodeId(PermissionConstant.HEAD_VIEW_FRONT_ID);
+            // 如果父节点没有尾节点，permission的frontNodeId为头节点ID
+            permission.setFrontNodeId(PermissionConstant.HEAD_PERMISSION_FRONT_ID);
         } else {
+            // 如果父节点有尾节点，permission的frontNodeId为尾节点ID
             permission.setFrontNodeId(tailPermission.getId());
         }
 
+        // 处理permission的behindNodeId
+        permission.setBehindNodeId(PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
+
+        // 保存或更新权限
         if (permission.getId() == null) {
             save(permission);
         } else {
             updateById(permission);
         }
 
-        // 处理新权限前一个权限的的behindNodeId
+        // 处理permission前一个权限的的behindNodeId
         if (tailPermission != null) {
             tailPermission.setBehindNodeId(permission.getId());
             updateById(tailPermission);
@@ -297,18 +310,25 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      */
     @Override
     public void connectNeighborPermissions(Permission permission) {
+        // 将permission前后的邻居节点相互连接
         List<Permission> neighborPermissions = new ArrayList<>();
+        // 获取当前父节点下的所有权限
         Map<Integer, Permission> viewMap = Permission.buildMap(getByParentId(permission.getParentNodeId()));
-        if (!Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_VIEW_FRONT_ID)) {
+
+        // 处理permission前一个权限的的behindNodeId
+        if (!Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID)) {
             Permission frontPermission = viewMap.get(permission.getFrontNodeId());
             frontPermission.setBehindNodeId(permission.getBehindNodeId());
             neighborPermissions.add(frontPermission);
         }
-        if (!Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_VIEW_BEHIND_ID)) {
+        // 处理permission后一个权限的frontNodeId
+        if (!Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID)) {
             Permission behindPermission = viewMap.get(permission.getBehindNodeId());
             behindPermission.setFrontNodeId(permission.getFrontNodeId());
             neighborPermissions.add(behindPermission);
         }
+
+        // 更新邻居节点的连接
         updateBatchById(neighborPermissions);
     }
 
@@ -383,7 +403,7 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
     @Override
     public Permission getTailNode(Integer parentId) {
         List<Permission> permissions = getByParentId(parentId);
-        return Permission.extractMaxFrontIdView(permissions);
+        return Permission.extractMaxFrontIdPermission(permissions);
     }
 
     /**

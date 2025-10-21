@@ -91,7 +91,7 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
     @Override
     public boolean validateMoveUp(Integer viewId) {
         Permission permission = permissionService.getById(viewId);
-        return !Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_VIEW_FRONT_ID);
+        return !Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID);
     }
 
     /**
@@ -102,7 +102,7 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
     @Override
     public boolean validateMoveDown(Integer viewId) {
         Permission permission = permissionService.getById(viewId);
-        return !Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_VIEW_BEHIND_ID);
+        return !Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
     }
 
     /**

@@ -148,7 +148,7 @@ public class Permission implements Serializable {
      * @param permissions 权限列表
      * @return 最大的前一个节点ID的权限
      */
-    public static Permission extractMaxFrontIdView(List<Permission> permissions) {
+    public static Permission extractMaxFrontIdPermission(List<Permission> permissions) {
         return permissions.stream().max(Comparator.comparingInt(Permission::getFrontNodeId)).orElse(null);
     }
 }

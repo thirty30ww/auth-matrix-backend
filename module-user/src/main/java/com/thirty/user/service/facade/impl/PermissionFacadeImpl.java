@@ -131,7 +131,7 @@ public class PermissionFacadeImpl implements PermissionFacade {
         if (!permissionValidationDomain.validateTypeComply(permissionDTO.getParentNodeId(), permissionDTO.getType())) {
             throw new BusinessException(PermissionResultCode.VIEW_TYPE_NOT_COMPLY);
         }
-        if (!Objects.equals(permissionDTO.getParentNodeId(), PermissionConstant.ROOT_VIEW_PARENT_ID)
+        if (!Objects.equals(permissionDTO.getParentNodeId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)
                 && !permissionValidationDomain.validateViewContainUserViews(userId, permissionDTO.getParentNodeId())) {
             throw new BusinessException(PermissionResultCode.VIEW_NOT_AUTHORIZED_ADD);
         }
