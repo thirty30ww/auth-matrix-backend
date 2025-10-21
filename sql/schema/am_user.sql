@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.39, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: pp_user
+-- Host: 127.0.0.1    Database: am_user
 -- ------------------------------------------------------
 -- Server version	8.0.39
 
@@ -15,21 +15,20 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- 使用 pp_user 数据库
+-- 使用 am_user 数据库
 USE am_user;
 
 --
 -- Table structure for table `detail`
 --
 
-DROP TABLE IF EXISTS `detail`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detail` (
   `id` int NOT NULL COMMENT '用户ID',
   `name` varchar(255) NOT NULL COMMENT '用户的名字',
   `avatar_url` varchar(1024) DEFAULT NULL COMMENT '用户头像链接',
-  `sex` tinyint NOT NULL DEFAULT '1' COMMENT '性别(1:男,2:女,3:未知)',
+  `sex` tinyint NOT NULL DEFAULT '3' COMMENT '性别(1:男,2:女,3:未知)',
   `signature` varchar(1024) DEFAULT NULL COMMENT '签名',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -42,56 +41,53 @@ CREATE TABLE `detail` (
 -- Table structure for table `log_login`
 --
 
-DROP TABLE IF EXISTS `log_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `log_login` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '登录日志ID',
   `user_id` int DEFAULT NULL COMMENT '操作人ID',
-  `device_model` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OTHER' COMMENT '设备型号',
-  `ip` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作IP地址',
-  `operating_system` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OTHER' COMMENT '操作系统',
-  `browser` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OTHER' COMMENT '浏览器',
-  `type` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '登录类型(LOGIN/LOGOUT/REFRESH)',
-  `status` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '登录状态(SUCCESS/FAILED)',
-  `error_message` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '失败原因',
+  `device_model` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OTHER' COMMENT '设备型号',
+  `ip` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作IP地址',
+  `operating_system` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OTHER' COMMENT '操作系统',
+  `browser` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'OTHER' COMMENT '浏览器',
+  `type` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '登录类型(LOGIN/LOGOUT/REFRESH)',
+  `status` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '登录状态(SUCCESS/FAILED)',
+  `error_message` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '失败原因',
   `operate_time` int NOT NULL COMMENT '操作时间',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `log_operation`
 --
 
-DROP TABLE IF EXISTS `log_operation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `log_operation` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int DEFAULT NULL,
-  `module` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `method` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code` int NOT NULL,
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `request_param` text COLLATE utf8mb4_unicode_ci,
-  `response_param` text COLLATE utf8mb4_unicode_ci,
-  `error_message` longtext COLLATE utf8mb4_unicode_ci,
-  `operate_time` int NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+  `user_id` int DEFAULT NULL COMMENT '用户ID',
+  `module` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的模块',
+  `description` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作描述',
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的类型(SELECT OR UPDATE...)',
+  `method` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的方法(POST OR GET...)',
+  `code` int NOT NULL COMMENT '返回的操作码',
+  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '请求的URL',
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '发出请求的IP地址',
+  `request_param` text COLLATE utf8mb4_unicode_ci COMMENT '请求的参数',
+  `response_param` text COLLATE utf8mb4_unicode_ci COMMENT '相应的参数',
+  `error_message` longtext COLLATE utf8mb4_unicode_ci COMMENT '错误信息',
+  `operate_time` int NOT NULL COMMENT '操作的时间(单位是毫秒)',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2294 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6400 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='操作日志表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `permission`
 --
 
-DROP TABLE IF EXISTS `permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `permission` (
@@ -110,14 +106,13 @@ CREATE TABLE `permission` (
   `is_valid` tinyint NOT NULL DEFAULT '1' COMMENT '是否启用(1:是 0:否)',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='页面表';
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='页面表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `preference`
 --
 
-DROP TABLE IF EXISTS `preference`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `preference` (
@@ -137,7 +132,6 @@ CREATE TABLE `preference` (
 -- Table structure for table `role`
 --
 
-DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `role` (
@@ -157,7 +151,6 @@ CREATE TABLE `role` (
 -- Table structure for table `role_permission`
 --
 
-DROP TABLE IF EXISTS `role_permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `role_permission` (
@@ -174,7 +167,6 @@ CREATE TABLE `role_permission` (
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
@@ -184,14 +176,13 @@ CREATE TABLE `user` (
   `is_valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效(1:有效 0:无效)',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户主表';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户主表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user_role`
 --
 
-DROP TABLE IF EXISTS `user_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_role` (
@@ -201,7 +192,7 @@ CREATE TABLE `user_role` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -213,4 +204,4 @@ CREATE TABLE `user_role` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-26 17:10:39
+-- Dump completed on 2025-10-21 10:22:33
