@@ -14,6 +14,7 @@ public enum OperationType implements CodeEnum<String> {
     UPDATE("UPDATE"),
     DELETE("DELETE"),
     UPLOAD("UPLOAD"),
+    SEND("SEND"),
     ;
 
     @EnumValue
