@@ -78,6 +78,10 @@ public class AuthFacadeImpl implements AuthFacade {
         if (userService.validateUserExists(dto.getUsername())) {
             throw new BusinessException(AuthResultCode.USERNAME_EXISTS);
         }
+        // 校验密码是否一致
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            throw new BusinessException(AuthResultCode.PASSWORD_MISMATCH);
+        }
 
         // 注册用户
         AddUserDTO addUserDTO = AuthConverter.INSTANCE.toAddUserDTO(dto, settingApi.getDefaultRoles());

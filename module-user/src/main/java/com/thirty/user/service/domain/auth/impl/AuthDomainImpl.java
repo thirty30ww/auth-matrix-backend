@@ -33,7 +33,7 @@ public class AuthDomainImpl implements AuthDomain {
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername(), user.getId());
 
         // 生成JwtVO
-        return new JwtVO(accessToken, refreshToken, user.getUsername());
+        return new JwtVO(accessToken, refreshToken, user.getUsername(), user.getId());
     }
 
     /**
@@ -62,7 +62,7 @@ public class AuthDomainImpl implements AuthDomain {
         jwtUtil.addRefreshTokenToBlacklist(refreshToken);
 
         // 生成JwtVO
-        return new JwtVO(newAccessToken, newRefreshToken, username);
+        return new JwtVO(newAccessToken, newRefreshToken, username, user.getId());
     }
 
     /**
