@@ -85,11 +85,17 @@ public class LoginLogAspect {
      * @return 当前登录用户ID
      */
     private Integer getCurrentUserIdByType(LoginType loginType, ProceedingJoinPoint joinPoint, HttpServletRequest request) {
-        return switch (loginType) {
-            case LOGIN -> logUtil.getCurrentUserId(joinPoint.getArgs());
-            case LOGOUT -> logUtil.getCurrentUserId(request);
-            case REFRESH -> logUtil.getCurrentUserId(request.getParameter(JwtConstant.REFRESH_TOKEN));
-            case REGISTER -> null;
-        };
+        try {
+            return switch (loginType) {
+                case LOGIN -> logUtil.getCurrentUserId(joinPoint.getArgs());
+                case LOGOUT -> logUtil.getCurrentUserId(request);
+                case REFRESH -> logUtil.getCurrentUserId(request.getParameter(JwtConstant.REFRESH_TOKEN));
+                case REGISTER -> null;
+            };
+        } catch (Exception e) {
+            // JWT解析失败时，记录调试日志但不影响日志记录流程
+            log.info("accessToken无效，无法获取当前用户ID记录登录日志");
+            return null;
+        }
     }
 }

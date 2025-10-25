@@ -10,6 +10,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtUtil {
     @Value("${jwt.secret}")
     protected String secret;
@@ -192,26 +194,38 @@ public class JwtUtil {
     }
     
     /**
-     * 将访问令牌加入黑名单
+     * 将访问令牌加入黑名单，过期时间为令牌过期时间
+     * 无效的令牌将不会加入黑名单
      * @param token JWT访问令牌
      */
     public void addAccessTokenToBlacklist(String token) {
         String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.ACCESS_TOKEN_BLACKLIST_SUFFIX + token;
-        long remainingTime = extractExpiration(token).getTime() - System.currentTimeMillis();
-        if (remainingTime > 0) {
-            redisTemplate.opsForValue().set(key, JwtConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
+        try {
+            long remainingTime = extractExpiration(token).getTime() - System.currentTimeMillis();
+            if (remainingTime > 0) {
+                redisTemplate.opsForValue().set(key, JwtConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
+            }
+        } catch (Exception e) {
+            // JWT解析失败时，无需加入黑名单
+            log.info("accessToken无效，无需加入黑名单");
         }
     }
     
     /**
-     * 将刷新令牌加入黑名单
+     * 将刷新令牌加入黑名单，过期时间为令牌过期时间
+     * 无效的令牌将不会加入黑名单
      * @param token JWT刷新令牌
      */
     public void addRefreshTokenToBlacklist(String token) {
         String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.REFRESH_TOKEN_BLACKLIST_SUFFIX + token;
-        long remainingTime = extractExpiration(token).getTime() - System.currentTimeMillis();
-        if (remainingTime > 0) {
-            redisTemplate.opsForValue().set(key, JwtConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
+        try {
+            long remainingTime = extractExpiration(token).getTime() - System.currentTimeMillis();
+            if (remainingTime > 0) {
+                redisTemplate.opsForValue().set(key, JwtConstant.BLACKLIST_VALUE, remainingTime, TimeUnit.MILLISECONDS);
+            }
+        } catch (Exception e) {
+            // JWT解析失败时，无需加入黑名单
+            log.info("refreshToken无效，无需加入黑名单");
         }
     }
     
