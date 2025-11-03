@@ -65,9 +65,9 @@ public interface RoleService extends IService<Role> {
     void deleteRole(Integer roleId);
 
     /**
-     * 获取子角色列表
+     * 获取子孙角色列表
      * @param roleIds 角色id列表
-     * @return 子角色列表
+     * @return 子孙角色列表
      */
     List<Role> getDescendantRoles(List<Integer> roleIds);
 

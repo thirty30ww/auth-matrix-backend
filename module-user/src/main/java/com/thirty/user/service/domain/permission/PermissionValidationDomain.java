@@ -11,7 +11,7 @@ public interface PermissionValidationDomain {
      * @param userIds 权限ID列表
      * @return 是否有权限权限
      */
-    boolean validateViewContainUserViews(Integer userId, List<Integer> userIds);
+    boolean validateUserHavePermissions(Integer userId, List<Integer> userIds);
 
     /**
      * 校验用户是否有权限权限
@@ -19,7 +19,7 @@ public interface PermissionValidationDomain {
      * @param viewId 权限ID
      * @return 是否有权限权限
      */
-    boolean validateViewContainUserViews(Integer userId, Integer viewId);
+    boolean validateUserHavePermission(Integer userId, Integer viewId);
 
     /**
      * 校验类型是否符合

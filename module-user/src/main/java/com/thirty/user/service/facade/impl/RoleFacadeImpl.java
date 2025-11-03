@@ -192,8 +192,8 @@ public class RoleFacadeImpl implements RoleFacade {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_ASSIGN);
         }
         // 如果要分配的权限是当前角色没有的，则不能分配
-        if (!permissionValidationDomain.validateViewContainUserViews(userId, newViewIds)) {
-            throw new BusinessException(PermissionResultCode.VIEW_NOT_AUTHORIZED_ASSIGN);
+        if (!permissionValidationDomain.validateUserHavePermissions(userId, newViewIds)) {
+            throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_ASSIGN);
         }
 
         List<Integer> oldViewIds = permissionQueryDomain.getPermissionId(targetRoleId);

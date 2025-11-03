@@ -124,9 +124,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     /**
-     * 获取子角色列表
+     * 获取子孙角色列表
      * @param roleIds 角色id列表
-     * @return 子角色列表
+     * @return 子孙角色列表
      */
     @Override
     public List<Role> getDescendantRoles(List<Integer> roleIds) {
@@ -139,7 +139,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         Set<Integer> childRoleIds = new HashSet<>();
         addChildRoleIds(roleIds, parentChildMap, childRoleIds);
 
-        // 返回子孙角色列表
+        // 过滤出实际存在的子孙角色
         return allRoles.stream()
                 .filter(role -> childRoleIds.contains(role.getId()))
                 .collect(Collectors.toList());

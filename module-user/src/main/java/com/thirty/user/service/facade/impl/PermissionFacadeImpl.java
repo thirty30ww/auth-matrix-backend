@@ -129,11 +129,11 @@ public class PermissionFacadeImpl implements PermissionFacade {
     @Override
     public void addPermission(Integer userId, PermissionDTO permissionDTO) {
         if (!permissionValidationDomain.validateTypeComply(permissionDTO.getParentNodeId(), permissionDTO.getType())) {
-            throw new BusinessException(PermissionResultCode.VIEW_TYPE_NOT_COMPLY);
+            throw new BusinessException(PermissionResultCode.PERMISSION_TYPE_NOT_COMPLY);
         }
         if (!Objects.equals(permissionDTO.getParentNodeId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)
-                && !permissionValidationDomain.validateViewContainUserViews(userId, permissionDTO.getParentNodeId())) {
-            throw new BusinessException(PermissionResultCode.VIEW_NOT_AUTHORIZED_ADD);
+                && !permissionValidationDomain.validateUserHavePermission(userId, permissionDTO.getParentNodeId())) {
+            throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_ADD);
         }
         permissionOperationDomain.addPermission(permissionDTO);
     }
@@ -145,17 +145,19 @@ public class PermissionFacadeImpl implements PermissionFacade {
      */
     @Override
     public void modifyPermission(Integer userId, PermissionDTO permissionDTO) {
+        // 父ID不能等于当前ID或者当前ID的子ID
         if (permissionValidationDomain.validateParentIdEqualsSelfAndDescendants(permissionDTO.getId(), permissionDTO.getParentNodeId())) {
-            throw new BusinessException(PermissionResultCode.VIEW_CANNOT_BE_PARENT);
+            throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_BE_PARENT);
         }
+        // 父权限有规定的子权限类型，比如 DIRECTORY 的子权限不能是 BUTTON
         if (!permissionValidationDomain.validateTypeComply(permissionDTO.getParentNodeId(), permissionDTO.getType())) {
-            throw new BusinessException(PermissionResultCode.VIEW_TYPE_NOT_COMPLY);
+            throw new BusinessException(PermissionResultCode.PERMISSION_TYPE_NOT_COMPLY);
         }
         if (!permissionValidationDomain.validateModifyValid(userId, permissionDTO.getId(), permissionDTO.getIsValid())) {
-            throw new BusinessException(PermissionResultCode.VIEW_CANNOT_MODIFY_VALID);
+            throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_MODIFY_VALID);
         }
-        if (!permissionValidationDomain.validateViewContainUserViews(userId, permissionDTO.getId())) {
-            throw new BusinessException(PermissionResultCode.VIEW_NOT_AUTHORIZED_MODIFY);
+        if (!permissionValidationDomain.validateUserHavePermission(userId, permissionDTO.getId())) {
+            throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_MODIFY);
         }
         permissionOperationDomain.modifyPermission(permissionDTO);
     }
@@ -167,8 +169,8 @@ public class PermissionFacadeImpl implements PermissionFacade {
      */
     @Override
     public void deletePermission(Integer userId, Integer viewId) {
-        if (!permissionValidationDomain.validateViewContainUserViews(userId, viewId)) {
-            throw new BusinessException(PermissionResultCode.VIEW_NOT_AUTHORIZED_DELETE);
+        if (!permissionValidationDomain.validateUserHavePermission(userId, viewId)) {
+            throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_DELETE);
         }
         permissionOperationDomain.deletePermission(viewId);
     }
@@ -180,10 +182,10 @@ public class PermissionFacadeImpl implements PermissionFacade {
     @Override
     public void movePermission(Integer viewId, Boolean isUp) {
         if (isUp && !permissionValidationDomain.validateMoveUp(viewId)) {
-            throw new BusinessException(PermissionResultCode.VIEW_CANNOT_MOVE_UP);
+            throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_MOVE_UP);
         }
         if (!isUp && !permissionValidationDomain.validateMoveDown(viewId)) {
-            throw new BusinessException(PermissionResultCode.VIEW_CANNOT_MOVE_DOWN);
+            throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_MOVE_DOWN);
         }
         permissionOperationDomain.movePermission(viewId, isUp);
     }

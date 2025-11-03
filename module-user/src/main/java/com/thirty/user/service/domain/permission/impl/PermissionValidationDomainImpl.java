@@ -3,8 +3,9 @@ package com.thirty.user.service.domain.permission.impl;
 import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.Permission;
-import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.PermissionService;
+import com.thirty.user.service.basic.RoleService;
+import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.domain.permission.PermissionQueryDomain;
 import com.thirty.user.service.domain.permission.PermissionValidationDomain;
 import jakarta.annotation.Resource;
@@ -22,6 +23,8 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
     private PermissionQueryDomain permissionQueryDomain;
 
     @Resource
+    private RoleService roleService;
+    @Resource
     private UserRoleService userRoleService;
     @Resource
     private PermissionService permissionService;
@@ -29,25 +32,26 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
     /**
      * 校验用户是否有权限权限
      * @param userId 用户ID
-     * @param viewIds 权限ID列表
+     * @param permissionIds 权限ID列表
      * @return 是否有权限权限
      */
     @Override
-    public boolean validateViewContainUserViews(Integer userId, List<Integer> viewIds) {
-        List<Integer> currentUserRoleIds = userRoleService.getRoleIds(userId);
-        List<Integer> currentViewIds = permissionQueryDomain.getPermissionId(currentUserRoleIds);
-        return new HashSet<>(currentViewIds).containsAll(viewIds);
+    public boolean validateUserHavePermissions(Integer userId, List<Integer> permissionIds) {
+        List<Integer> roleIds = userRoleService.getRoleIds(userId);
+        roleIds.addAll(roleService.getDescendantRoleIds(roleIds));
+        List<Integer> currentViewIds = permissionQueryDomain.getPermissionId(roleIds);
+        return new HashSet<>(currentViewIds).containsAll(permissionIds);
     }
 
     /**
      * 校验用户是否有权限权限
      * @param userId 用户ID
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @return 是否有权限权限
      */
     @Override
-    public boolean validateViewContainUserViews(Integer userId, Integer viewId) {
-        return validateViewContainUserViews(userId, List.of(viewId));
+    public boolean validateUserHavePermission(Integer userId, Integer permissionId) {
+        return validateUserHavePermissions(userId, List.of(permissionId));
     }
 
     /**
@@ -71,54 +75,56 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
     /**
      * 校验父节点ID是否不等于权限ID及其后代节点ID
      * @param parentId 父节点ID
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @return 是否不等于权限ID及其后代节点ID
      */
     @Override
-    public boolean validateParentIdEqualsSelfAndDescendants(Integer parentId, Integer viewId) {
-        if (Objects.equals(parentId, viewId)) {
+    public boolean validateParentIdEqualsSelfAndDescendants(Integer parentId, Integer permissionId) {
+        if (Objects.equals(parentId, permissionId)) {
             return true;
         }
         List<Integer> descendantIds = permissionService.getDescendantIds(parentId);
-        return !CollectionUtils.isEmpty(descendantIds) && descendantIds.contains(viewId);
+        return !CollectionUtils.isEmpty(descendantIds) && descendantIds.contains(permissionId);
     }
 
     /**
      * 校验是否可以上移
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @return 是否可以上移
      */
     @Override
-    public boolean validateMoveUp(Integer viewId) {
-        Permission permission = permissionService.getById(viewId);
+    public boolean validateMoveUp(Integer permissionId) {
+        Permission permission = permissionService.getById(permissionId);
         return !Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID);
     }
 
     /**
      * 校验是否可以下移
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @return 是否可以下移
      */
     @Override
-    public boolean validateMoveDown(Integer viewId) {
-        Permission permission = permissionService.getById(viewId);
+    public boolean validateMoveDown(Integer permissionId) {
+        Permission permission = permissionService.getById(permissionId);
         return !Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
     }
 
     /**
-     * 校验权限是否可以修改状态
+     * 验证是否有权限修改权限的启用状态
      * @param userId 用户ID
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @param isValid 权限状态
-     * @return 是否可以修改状态
+     * @return
      */
     @Override
-    public boolean validateModifyValid(Integer userId, Integer viewId, Boolean isValid) {
-        Permission permission = permissionService.getById(viewId);
+    public boolean validateModifyValid(Integer userId, Integer permissionId, Boolean isValid) {
+        Permission permission = permissionService.getById(permissionId);
+        // 验证是否修改了权限的启用状态
         if (permission.getIsValid() == isValid) {
             return true;
         }
-        List<Integer> descendantIds = permissionService.getDescendantIds(viewId);
-        return validateViewContainUserViews(userId, descendantIds);
+        // 如果对该权限的后代权限都有权限，就可以修改启用状态
+        List<Integer> descendantIds = permissionService.getDescendantIds(permissionId);
+        return validateUserHavePermissions(userId, descendantIds);
     }
 }
