@@ -9,21 +9,21 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>module-user</artifactId>
+    <artifactId>am-user</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>module-user</name>
+    <name>am-user</name>
     <description>用户组件模块</description>
 
     <dependencies>
         <!--    依赖common模块    -->
         <dependency>
             <groupId>com.thirty</groupId>
-            <artifactId>module-common</artifactId>
+            <artifactId>am-common</artifactId>
         </dependency>
         <!--    依赖system模块    -->
         <dependency>
             <groupId>com.thirty</groupId>
-            <artifactId>module-system</artifactId>
+            <artifactId>am-system</artifactId>
         </dependency>
 
         <!--    引入spring security    -->

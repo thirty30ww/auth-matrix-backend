@@ -20,7 +20,7 @@ public class EnvUtil {
         
         // 确定.env文件的路径 - 始终指向backend目录
         String envPath = currentDir.endsWith("backend") ? "." : 
-                        currentDir.endsWith("module-core") ? ".." :
+                        currentDir.endsWith("am-core") ? ".." :
                         ".";
         
         log.debug("尝试从路径加载.env文件: {}", envPath);

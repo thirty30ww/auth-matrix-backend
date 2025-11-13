@@ -17,10 +17,10 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>module-user</module>
-        <module>module-core</module>
-        <module>module-common</module>
-        <module>module-system</module>
+        <module>am-user</module>
+        <module>am-core</module>
+        <module>am-common</module>
+        <module>am-system</module>
     </modules>
 
     <properties>
@@ -42,22 +42,22 @@
             <!-- 子模块依赖 -->
             <dependency>
                 <groupId>com.thirty</groupId>
-                <artifactId>module-common</artifactId>
+                <artifactId>am-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.thirty</groupId>
-                <artifactId>module-user</artifactId>
+                <artifactId>am-user</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.thirty</groupId>
-                <artifactId>module-core</artifactId>
+                <artifactId>am-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.thirty</groupId>
-                <artifactId>module-system</artifactId>
+                <artifactId>am-system</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -35,10 +35,10 @@
 
 ```
 auth-matrix-backend/
-├── 🚀 module-core          # 核心启动模块 - 统一配置与服务编排
-├── 👥 module-user          # 用户权限模块 - RBAC核心实现
-├── ⚙️ module-system        # 系统管理模块 - 配置与日志管理  
-├── 🔧 module-common        # 通用组件模块 - 共享工具与枚举
+├── 🚀 am-core          # 核心启动模块 - 统一配置与服务编排
+├── 👥 am-user          # 用户权限模块 - RBAC核心实现
+├── ⚙️ am-system        # 系统管理模块 - 配置与日志管理  
+├── 🔧 am-common        # 通用组件模块 - 共享工具与枚举
 ├── 📊 sql/                 # 数据库脚本 - 自动化部署脚本
 └── 📖 document/           # 详细文档 - 分步部署指南
 ```

@@ -9,23 +9,23 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>module-core</artifactId>
+    <artifactId>am-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>module-core</name>
+    <name>am-core</name>
     <description>核心启动组件模块</description>
 
     <dependencies>
         <dependency>
             <groupId>com.thirty</groupId>
-            <artifactId>module-user</artifactId>
+            <artifactId>am-user</artifactId>
         </dependency>
         <dependency>
             <groupId>com.thirty</groupId>
-            <artifactId>module-system</artifactId>
+            <artifactId>am-system</artifactId>
         </dependency>
         <dependency>
             <groupId>com.thirty</groupId>
-            <artifactId>module-common</artifactId>
+            <artifactId>am-common</artifactId>
         </dependency>
     </dependencies>
 

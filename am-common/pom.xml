@@ -9,15 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>module-system</artifactId>
+    <artifactId>am-common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>module-system</name>
-    <description>系统模块</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.thirty</groupId>
-            <artifactId>module-common</artifactId>
-        </dependency>
-    </dependencies>
+    <name>am-common</name>
+    <description>通用组件模块</description>
 </project>
