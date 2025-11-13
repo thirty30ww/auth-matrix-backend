@@ -1,5 +1,6 @@
 package com.thirty.user.model.vo;
 
+import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.model.entity.Role;
 import lombok.Data;
 
@@ -25,6 +26,22 @@ public class RoleVO {
                 (first, second) -> first, // 冲突时保留先出现的值
                 LinkedHashMap::new
         ));
+    }
+
+    /**
+     * 从角色VO列表中提取全局角色，同时从角色VO列表中移除全局角色
+     *
+     * @param roleVOS 角色VO列表
+     * @return 全局角色VO列表
+     */
+    public static List<RoleVO> extractGlobalRoles(List<RoleVO> roleVOS) {
+        List<RoleVO> globalRoles = roleVOS.stream()
+                .filter(roleVO -> roleVO.getNode().getParentNodeId().equals(RoleConstant.GLOBAL_ROLE_PARENT_ID))
+                .toList();
+
+        // 从角色VO列表中移除全局角色
+        roleVOS.removeAll(globalRoles);
+        return globalRoles;
     }
 
     /**

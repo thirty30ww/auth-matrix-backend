@@ -1,5 +1,6 @@
 package com.thirty.user.service.domain.role.builder;
 
+import com.thirty.common.utils.TreeBuilder;
 import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.converter.RoleConverter;
 import com.thirty.user.enums.model.RoleType;
@@ -122,36 +123,23 @@ public class RolesBuilder {
      * 构建角色树
      */
     private List<RoleVO> buildRoleTree(List<RoleVO> roleVOS) {
-        List<RoleVO> roleTree = new ArrayList<>();
-        List<RoleVO> globalRoleVOS = new ArrayList<>();
-        Map<Integer, RoleVO> roleMap = RoleVO.buildMap(roleVOS);
+        // 从角色VO列表中提取全局角色，同时从角色VO列表中移除全局角色
+        List<RoleVO> globalRoleVOS = RoleVO.extractGlobalRoles(roleVOS);
 
-        // 遍历角色列表
-        roleMap.forEach((roleId, roleVO) -> {
-            // 当前遍历到的角色
-            Role currentRole = roleVO.getNode();
-            // 根角色添加到角色树
-            if (currentRole.getParentNodeId().equals(RoleConstant.ROOT_ROLE_PARENT_ID)) {
-                roleTree.add(roleVO);
-            } else if (currentRole.getParentNodeId().equals(RoleConstant.GLOBAL_ROLE_PARENT_ID)) {
-                // 全局角色添加到全局角色列表
-                globalRoleVOS.add(roleVO);
-            } else {
-                // 非根角色添加到父角色的子角色列表
-                RoleVO parentVO = roleMap.get(currentRole.getParentNodeId());
+        TreeBuilder<RoleVO, Integer> treeBuilder = new TreeBuilder<>();
 
-                // 父角色存在，添加到父角色的子角色列表
-                if (parentVO != null) {
-                    parentVO.getChildren().add(roleVO);
-                } else {
-                    // 父角色不存在，添加到角色树
-                    roleTree.add(roleVO);
-                }
-            }
-        });
+        // 构建角色树
+        List<RoleVO> roleTree = treeBuilder.buildTree(
+                roleVOS,
+                roleVO -> roleVO.getNode().getId(),
+                roleVO -> roleVO.getNode().getParentNodeId(),
+                RoleVO::getChildren,
+                RoleConstant.ROOT_ROLE_PARENT_ID,
+                true
+        );
+
         // 全局角色添加到角色树
         roleTree.addAll(globalRoleVOS);
-
         return roleTree;
     }
 }
