@@ -54,7 +54,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
         if (CollectionUtils.isEmpty(types)) {
             return Collections.emptyList();
         }
-        wrapper.in("type", types);
+        wrapper.in("type", types)
+                .orderByAsc("front_node_id");
         if (keyword != null) {
             wrapper.like("name", keyword);
         }

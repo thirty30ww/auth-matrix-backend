@@ -1,5 +1,6 @@
 package com.thirty.user.service.domain.permission.builder;
 
+import com.thirty.common.utils.TreeBuilder;
 import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.vo.PermissionVO;
@@ -9,7 +10,6 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE) // 所有字段默认私有
@@ -101,7 +101,7 @@ public class PermissionsBuilder {
      */
     public List<PermissionVO> buildTree() {
         List<PermissionVO> permissionVOS = build();
-        return getTreeByParentNodeId(permissionVOS, RoleConstant.ROOT_ROLE_PARENT_ID);
+        return getTreeByParentNodeId(permissionVOS);
     }
 
     /**
@@ -139,21 +139,16 @@ public class PermissionsBuilder {
     /**
      * 根据父节点ID构建树
      */
-    private List<PermissionVO> getTreeByParentNodeId(List<PermissionVO> permissions, Integer parentNodeId) {
-        // 获取同一个父节点的ViewVO列表并且按FrontNodeId的从小到大排序
-        List<PermissionVO> permissionVOS = PermissionVO.sortByFrontNodeId(permissions, parentNodeId);
+    private List<PermissionVO> getTreeByParentNodeId(List<PermissionVO> permissions) {
+        TreeBuilder<PermissionVO, Integer> treeBuilder = new TreeBuilder<>();
 
-        // 记录返回结果
-        List<PermissionVO> responses = new ArrayList<>();
-
-        // 遍历排序后的ViewVO列表
-        permissionVOS.forEach(viewVO -> {
-            // 递归构建子树
-            viewVO.setChildren(getTreeByParentNodeId(permissions, viewVO.getNode().getId()));
-            // 添加到返回结果
-            responses.add(viewVO);
-        });
-
-        return responses;
+        // 构建树结构
+        return treeBuilder.buildTree(
+                permissions,
+                permissionVO -> permissionVO.getNode().getId(),
+                permissionVO -> permissionVO.getNode().getParentNodeId(),
+                PermissionVO::getChildren,
+                RoleConstant.ROOT_ROLE_PARENT_ID
+        );
     }
 }
