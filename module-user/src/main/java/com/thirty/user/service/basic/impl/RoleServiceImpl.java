@@ -1,6 +1,6 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.mapper.RoleMapper;
@@ -24,10 +24,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         if (CollectionUtils.isEmpty(roleIds)) {
             return null;
         }
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("id", roleIds)
-                .ge("level", 0)
-                .orderByAsc("level")
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(Role::getId, roleIds)
+                .ge(Role::getLevel, 0)
+                .orderByAsc(Role::getLevel)
                 .last("limit 1");
         Role role = getOne(queryWrapper);
         if (role == null) {
@@ -43,8 +43,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      */
     @Override
     public List<Role> getChildRoles(Integer roleId) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("parent_node_id", roleId);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Role::getParentNodeId, roleId);
         return list(queryWrapper);
     }
 
@@ -65,8 +65,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      */
     @Override
     public List<Role> getRoles(List<Integer> roleIds) {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("id", roleIds);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(Role::getId, roleIds);
         return list(queryWrapper);
     }
 
@@ -76,8 +76,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
      */
     @Override
     public List<Role> getNotGlobalRoles() {
-        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ne("level", RoleConstant.GLOBAL_ROLE_LEVEL);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.ne(Role::getLevel, RoleConstant.GLOBAL_ROLE_LEVEL);
         return list(queryWrapper);
     }
 

@@ -1,6 +1,6 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.converter.RoleConverter;
 import com.thirty.user.mapper.RolePermissionMapper;
@@ -28,8 +28,8 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public List<Integer> getPermissionIds(Integer roleId) {
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_id", roleId);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RolePermission::getRoleId, roleId);
         return RolePermission.extractPermissionIds(list(queryWrapper));
     }
 
@@ -43,8 +43,8 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptyList();
         }
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("role_id", roleIds);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(RolePermission::getRoleId, roleIds);
 
         return RolePermission.extractPermissionIds(list(queryWrapper));
     }
@@ -55,8 +55,8 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public void deleteByRoleId(Integer roleId) {
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_id", roleId);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RolePermission::getRoleId, roleId);
         remove(queryWrapper);
     }
     /**
@@ -65,8 +65,8 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public void deleteByPermissionId(Integer permissionId) {
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("permission_id", permissionId);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RolePermission::getPermissionId, permissionId);
         remove(queryWrapper);
     }
 
@@ -78,8 +78,8 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public List<String> getExists(List<Integer> roleIds, List<Integer> permissionIds) {
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("role_id", roleIds).in("permission_id", permissionIds);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(RolePermission::getRoleId, roleIds).in(RolePermission::getPermissionId, permissionIds);
         return RolePermission.spliceRolePermissionIds(list(queryWrapper));
     }
 
@@ -123,9 +123,9 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             return;
         }
 
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_id", roleId);
-        queryWrapper.in("permission_id", permissionIds);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RolePermission::getRoleId, roleId);
+        queryWrapper.in(RolePermission::getPermissionId, permissionIds);
         remove(queryWrapper);
     }
 
@@ -140,13 +140,9 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             return;
         }
 
-        QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("role_id", roleIds);
-        queryWrapper.in("permission_id", permissionIds);
+        LambdaQueryWrapper<RolePermission> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(RolePermission::getRoleId, roleIds);
+        queryWrapper.in(RolePermission::getPermissionId, permissionIds);
         remove(queryWrapper);
     }
 }
-
-
-
-

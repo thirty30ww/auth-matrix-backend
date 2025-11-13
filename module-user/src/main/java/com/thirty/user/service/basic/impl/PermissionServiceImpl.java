@@ -1,9 +1,9 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.constant.PermissionConstant;
+import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.converter.PermissionConverter;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.mapper.ViewMapper;
@@ -32,12 +32,12 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      */
     @Override
     public List<Permission> getPermissionByTypeAndKeyword(PermissionType type, String keyword) {
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
         if (type != null) {
-            wrapper.eq("type", type);
+            wrapper.eq(Permission::getType, type);
         }
         if (keyword != null) {
-            wrapper.like("name", keyword);
+            wrapper.like(Permission::getName, keyword);
         }
         return list(wrapper);
     }
@@ -50,14 +50,14 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      */
     @Override
     public List<Permission> getPermissionByTypesAndKeyword(List<PermissionType> types, String keyword) {
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
         if (CollectionUtils.isEmpty(types)) {
             return Collections.emptyList();
         }
-        wrapper.in("type", types)
-                .orderByAsc("front_node_id");
+        wrapper.in(Permission::getType, types)
+                .orderByAsc(Permission::getFrontNodeId);
         if (keyword != null) {
-            wrapper.like("name", keyword);
+            wrapper.like(Permission::getName, keyword);
         }
         return list(wrapper);
     }
@@ -68,7 +68,7 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      * @return 权限列表
      */
     @Override
-    public List<Permission> getPermissionByWrapper(QueryWrapper<Permission> wrapper) {
+    public List<Permission> getPermissionByWrapper(LambdaQueryWrapper<Permission> wrapper) {
         return list(wrapper);
     }
 
@@ -122,7 +122,7 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      * @return 权限VO列表
      */
     @Override
-    public List<PermissionVO> getPermissionVOByWrapper(QueryWrapper<Permission> wrapper) {
+    public List<PermissionVO> getPermissionVOByWrapper(LambdaQueryWrapper<Permission> wrapper) {
         List<Permission> permissions = list(wrapper);
         return PermissionConverter.INSTANCE.toPermissionVOS(permissions);
     }
@@ -186,17 +186,17 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
 
     /**
      * 获取权限的所有后代ID
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @return 后代ID列表
      */
     @Override
-    public List<Integer> getDescendantIds(Integer viewId) {
+    public List<Integer> getDescendantIds(Integer permissionId) {
         List<Integer> descendantIds = new ArrayList<>();
         List<Permission> permissions = list();
 
         Map<Integer, List<Permission>> parentChildMap = Permission.buildParentChildMap(permissions);
 
-        List<Permission> currentLevel = parentChildMap.get(viewId);
+        List<Permission> currentLevel = parentChildMap.get(permissionId);
         while (!CollectionUtils.isEmpty(currentLevel)) {
             List<Permission> nextLevel = new ArrayList<>();
             for (Permission permission : currentLevel) {
@@ -211,13 +211,13 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
 
     /**
      * 获取权限列表的所有后代ID
-     * @param viewIds 权限ID列表
+     * @param permissionIds 权限ID列表
      * @return 后代ID列表
      */
     @Override
-    public List<Integer> getDescendantIds(List<Integer> viewIds)  {
+    public List<Integer> getDescendantIds(List<Integer> permissionIds)  {
         Set<Integer> descendantIds = new HashSet<>();
-        for (Integer viewId : viewIds) {
+        for (Integer viewId : permissionIds) {
             descendantIds.addAll(getDescendantIds(viewId));
         }
         return new ArrayList<>(descendantIds);
@@ -225,18 +225,18 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
 
     /**
      * 获取权限列表的所有权限码
-     * @param viewIds 权限ID列表
+     * @param permissionIds 权限ID列表
      * @return 权限码列表
      */
     @Override
-    public List<String> getPermissionCodes(List<Integer> viewIds) {
-        if (CollectionUtils.isEmpty(viewIds)) {
+    public List<String> getPermissionCodes(List<Integer> permissionIds) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
             return List.of();
         }
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.in("id", viewIds)
-                .eq("is_valid", true)
-                .eq("type", PermissionType.BUTTON);
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Permission::getId, permissionIds)
+                .eq(Permission::getIsValid, true)
+                .eq(Permission::getType, PermissionType.BUTTON);
         List<Permission> permissions = list(wrapper);
         if (CollectionUtils.isEmpty(permissions)) {
             return List.of();
@@ -414,12 +414,8 @@ public class PermissionServiceImpl extends ServiceImpl<ViewMapper, Permission>
      */
     @Override
     public List<Permission> getByParentId(Integer parentId) {
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_node_id", parentId);
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Permission::getParentNodeId, parentId);
         return list(wrapper);
     }
 }
-
-
-
-

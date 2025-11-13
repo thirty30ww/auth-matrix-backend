@@ -1,8 +1,8 @@
 package com.thirty.user.service.basic.impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -34,8 +34,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public boolean validateUserExists(String username) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, username);
         return getOne(queryWrapper) != null;
     }
 
@@ -73,8 +73,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public User getUser(String username) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, username);
         return getOne(queryWrapper);
     }
 
@@ -85,9 +85,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void banUsers(List<Integer> userIds) {
         // 将用户状态设置为无效
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.in("id", userIds);
-        updateWrapper.set("is_valid", false);
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.in(User::getId, userIds);
+        updateWrapper.set(User::getIsValid, false);
         update(updateWrapper);
     }
 
@@ -97,9 +97,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public void unbanUsers(List<Integer> userIds) {
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.in("id", userIds);
-        updateWrapper.set("is_valid", true);
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.in(User::getId, userIds);
+        updateWrapper.set(User::getIsValid, true);
         update(updateWrapper);
     }
 

@@ -1,6 +1,6 @@
 package com.thirty.system.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.utils.TypeUtil;
 import com.thirty.system.converter.SettingConverter;
@@ -80,8 +80,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
      */
     @Override
     public Setting getSettingByField(String field) {
-        QueryWrapper<Setting> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("field", field);
+        LambdaQueryWrapper<Setting> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Setting::getField, field);
         return getOne(queryWrapper);
     }
 
@@ -92,8 +92,8 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
      */
     @Override
     public Setting getPublicSettingByField(String field) {
-        QueryWrapper<Setting> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("field", field);
+        LambdaQueryWrapper<Setting> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Setting::getField, field);
         Setting setting = getOne(queryWrapper);
         return SettingField.isPublic(setting.getField()) ? setting : null;
     }
@@ -122,7 +122,3 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting>
     }
 
 }
-
-
-
-

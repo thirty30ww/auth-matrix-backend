@@ -1,14 +1,13 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.model.dto.PageQueryDTO;
+import com.thirty.user.mapper.LogLoginMapper;
 import com.thirty.user.model.dto.LogLoginDTO;
 import com.thirty.user.model.entity.LogLogin;
-import com.thirty.user.mapper.LogLoginMapper;
-import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.LogLoginVO;
 import com.thirty.user.service.basic.LogLoginService;
 import jakarta.annotation.Resource;
@@ -58,10 +57,10 @@ public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin>
      */
     @Override
     public List<String> getOperatingSystems() {
-        List<LogLogin> logLogins = list(new QueryWrapper<LogLogin>()
-                .select("DISTINCT operating_system")
-                .isNotNull("operating_system")
-                .orderByAsc("operating_system")
+        List<LogLogin> logLogins = list(new LambdaQueryWrapper<LogLogin>()
+                .select(LogLogin::getOperatingSystem)
+                .isNotNull(LogLogin::getOperatingSystem)
+                .orderByAsc(LogLogin::getOperatingSystem)
         );
         return LogLogin.getOperatingSystems(logLogins);
     }
@@ -72,10 +71,10 @@ public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin>
      */
     @Override
     public List<String> getBrowsers() {
-        List<LogLogin> logLogins = list(new QueryWrapper<LogLogin>()
-                .select("DISTINCT browser")
-                .isNotNull("browser")
-                .orderByAsc("browser")
+        List<LogLogin> logLogins = list(new LambdaQueryWrapper<LogLogin>()
+                .select(LogLogin::getBrowser)
+                .isNotNull(LogLogin::getBrowser)
+                .orderByAsc(LogLogin::getBrowser)
         );
         return LogLogin.getBrowsers(logLogins);
     }
@@ -88,11 +87,7 @@ public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin>
       */
      @Override
      public Integer deleteLogLogins(Integer limitDays) {
-         return logLoginMapper.delete(new QueryWrapper<LogLogin>()
-                         .le("create_time", LocalDateTime.now().minusDays(limitDays)));
+         return logLoginMapper.delete(new LambdaQueryWrapper<LogLogin>()
+                         .le(LogLogin::getCreateTime, LocalDateTime.now().minusDays(limitDays)));
     }
 }
-
-
-
-

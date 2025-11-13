@@ -1,6 +1,6 @@
 package com.thirty.user.service.basic;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.Permission;
@@ -36,7 +36,7 @@ public interface PermissionService extends IService<Permission> {
      * @param wrapper 查询条件
      * @return 权限列表
      */
-    List<Permission> getPermissionByWrapper(QueryWrapper<Permission> wrapper);
+    List<Permission> getPermissionByWrapper(LambdaQueryWrapper<Permission> wrapper);
 
     /**
      * 根据类型获取权限列表
@@ -73,7 +73,7 @@ public interface PermissionService extends IService<Permission> {
      * @param wrapper 查询条件
      * @return 权限VO列表
      */
-    List<PermissionVO> getPermissionVOByWrapper(QueryWrapper<Permission> wrapper);
+    List<PermissionVO> getPermissionVOByWrapper(LambdaQueryWrapper<Permission> wrapper);
 
     /**
      * 根据类型获取权限VO列表

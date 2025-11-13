@@ -1,6 +1,6 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.common.exception.BusinessException;
@@ -51,8 +51,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
         if (userId == null) {
             return List.of();
         }
-        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRole::getUserId, userId);
         List<UserRole> userRoles = list(wrapper);
         return UserRole.extractRoleIds(userRoles);
     }
@@ -96,8 +96,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
      */
     @Override
     public void deleteUserRoles(Integer userId) {
-        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRole::getUserId, userId);
         remove(wrapper);
     }
 
@@ -110,9 +110,9 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
         if (CollectionUtils.isEmpty(roleIds)) {
             return;
         }
-        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
-        wrapper.in("role_id", roleIds);
+        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRole::getUserId, userId);
+        wrapper.in(UserRole::getRoleId, roleIds);
         remove(wrapper);
     }
 
@@ -136,8 +136,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
      */
     @Override
     public void deleteByRoleId(Integer roleId) {
-        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq("role_id", roleId);
+        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRole::getRoleId, roleId);
         remove(wrapper);
     }
 
@@ -150,7 +150,3 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole>
         deleteByRoleId(role.getId());
     }
 }
-
-
-
-

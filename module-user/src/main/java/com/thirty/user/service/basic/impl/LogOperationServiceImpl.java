@@ -1,6 +1,6 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -57,10 +57,10 @@ public class LogOperationServiceImpl extends ServiceImpl<LogOperationMapper, Log
      */
     @Override
     public List<Integer> getCodes() {
-        List<LogOperation> logOperations = list(new QueryWrapper<LogOperation>()
-                .select("DISTINCT code")
-                .isNotNull("code")
-                .orderByAsc("code")
+        List<LogOperation> logOperations = list(new LambdaQueryWrapper<LogOperation>()
+                .select(LogOperation::getCode)
+                .isNotNull(LogOperation::getCode)
+                .orderByAsc(LogOperation::getCode)
         );
         return LogOperation.getCodes(logOperations);
     }
@@ -72,10 +72,10 @@ public class LogOperationServiceImpl extends ServiceImpl<LogOperationMapper, Log
      */
     @Override
     public List<String> getModules() {
-        List<LogOperation> logOperations = list(new QueryWrapper<LogOperation>()
-                .select("DISTINCT module")
-                .isNotNull("module")
-                .orderByAsc("module")
+        List<LogOperation> logOperations = list(new LambdaQueryWrapper<LogOperation>()
+                .select(LogOperation::getModule)
+                .isNotNull(LogOperation::getModule)
+                .orderByAsc(LogOperation::getModule)
         );
         return LogOperation.getModules(logOperations);
     }
@@ -88,11 +88,7 @@ public class LogOperationServiceImpl extends ServiceImpl<LogOperationMapper, Log
      */
     @Override
     public Integer deleteLogOperations(Integer limitDays) {
-        return logOperationMapper.delete(new QueryWrapper<LogOperation>()
-                        .le("create_time", LocalDateTime.now().minusDays(limitDays)));
+        return logOperationMapper.delete(new LambdaQueryWrapper<LogOperation>()
+                        .le(LogOperation::getCreateTime, LocalDateTime.now().minusDays(limitDays)));
     }
 }
-
-
-
-
