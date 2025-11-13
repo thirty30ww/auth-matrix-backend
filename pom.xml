@@ -34,6 +34,7 @@
         <dotenv.version>3.0.0</dotenv.version>
         <springdoc.version>2.7.0</springdoc.version>
         <uap-java.version>1.6.1</uap-java.version>
+        <defargs.version>1.0.4</defargs.version>
     </properties>
 
     <dependencyManagement>
@@ -146,6 +147,13 @@
                 <artifactId>uap-java</artifactId>
                 <version>${uap-java.version}</version>
             </dependency>
+
+            <!-- defargs -->
+            <dependency>
+                <groupId>io.github.thirty30ww</groupId>
+                <artifactId>defargs</artifactId>
+                <version>${defargs.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     
@@ -223,6 +231,12 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+
+        <!-- defargs -->
+        <dependency>
+            <groupId>io.github.thirty30ww</groupId>
+            <artifactId>defargs</artifactId>
         </dependency>
     </dependencies>
 
