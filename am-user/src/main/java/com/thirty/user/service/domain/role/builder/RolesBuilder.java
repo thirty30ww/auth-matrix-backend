@@ -102,17 +102,22 @@ public class RolesBuilder {
     }
 
     /**
-     * 构建角色树（当前构建的角色列表作为有权限的角色）
+     * 构建角色树（根据是否显示权限过滤角色）
+     * @param hasPermissionDisplay 是否显示权限
+     * @param permittedRoleIds 权限角色ID列表
+     * @return 角色树
      */
     public List<RoleVO> buildTree(boolean hasPermissionDisplay, List<Integer> permittedRoleIds) {
         // 当前构建的角色ID列表作为基础角色列表
         List<Role> roles = build();
         List<RoleVO> roleVOS = RoleConverter.INSTANCE.toRoleVOS(roles);
 
+        // 过滤出角色树中有权限的角色
         if (hasPermissionDisplay) {
             RoleVO.filterHasPermission(permittedRoleIds, roleVOS);
         }
 
+        // 设置角色是否有权限
         RoleVO.setHasPermission(permittedRoleIds, roleVOS);
 
         // 构建角色树
@@ -120,7 +125,9 @@ public class RolesBuilder {
     }
 
     /**
-     * 构建角色树
+     * 具体的角色树构建方法，根据角色VO列表构建角色树
+     * @param roleVOS 角色VO列表
+     * @return 角色树
      */
     private List<RoleVO> buildRoleTree(List<RoleVO> roleVOS) {
         // 从角色VO列表中提取全局角色，同时从角色VO列表中移除全局角色

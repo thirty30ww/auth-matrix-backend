@@ -34,14 +34,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+                <!-- 生成两个JAR：普通JAR和可执行JAR -->
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <!-- 生成两个JAR：普通JAR和可执行JAR -->
                     <classifier>exec</classifier>
                 </configuration>
 
