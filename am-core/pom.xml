@@ -35,9 +35,29 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
 
-                <!-- 生成两个JAR：普通JAR和可执行JAR -->
                 <configuration>
+                    <!-- 生成两个JAR：普通JAR和可执行JAR -->
                     <classifier>exec</classifier>
+
+                    <!-- 打包可执行jar包时排除注解处理器相关的依赖 -->
+                    <excludes>
+                        <exclude>
+                            <groupId>io.github.thirty30ww</groupId>
+                            <artifactId>defargs</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
 
                 <executions>
