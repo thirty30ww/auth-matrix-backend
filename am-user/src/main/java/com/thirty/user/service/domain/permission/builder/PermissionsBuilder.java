@@ -106,6 +106,9 @@ public class PermissionsBuilder {
 
     /**
      * 处理权限相关逻辑
+     *
+     * @param permissionVOS 权限VO列表
+     * @return 处理后的权限VO列表
      */
     private List<PermissionVO> processPermissions(List<PermissionVO> permissionVOS) {
         if (CollectionUtils.isEmpty(currentRoleIds)) {
@@ -113,23 +116,23 @@ public class PermissionsBuilder {
         }
 
         // 获取当前角色的权限权限ID
-        List<Integer> currentViewIds = permissionQueryDomain.getPermissionId(currentRoleIds);
+        List<Integer> currentPermissionIds = permissionQueryDomain.getPermissionId(currentRoleIds);
 
         // 过滤权限
         if (filterPermission) {
-            PermissionVO.filterHasPermission(currentViewIds, permissionVOS);
+            PermissionVO.filterHasPermission(currentPermissionIds, permissionVOS);
         } else if (setChangeFlag) {
-            PermissionVO.setHasChange(currentViewIds, permissionVOS);
+            PermissionVO.setHasChange(currentPermissionIds, permissionVOS);
         }
 
         // 设置权限标志
         if (setPermissionFlag) {
             if (targetRoleId != null) {
                 // 目标角色的权限权限ID
-                List<Integer> targetViewIds = permissionQueryDomain.getPermissionId(targetRoleId);
-                PermissionVO.setHasPermission(targetViewIds, permissionVOS);
+                List<Integer> targetPermissionIds = permissionQueryDomain.getPermissionId(targetRoleId);
+                PermissionVO.setHasPermission(targetPermissionIds, permissionVOS);
             } else {
-                PermissionVO.setHasPermission(currentViewIds, permissionVOS);
+                PermissionVO.setHasPermission(currentPermissionIds, permissionVOS);
             }
         }
 
