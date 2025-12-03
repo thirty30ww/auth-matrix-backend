@@ -1,28 +1,19 @@
 package com.thirty.user.model.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.thirty.common.model.entity.BaseEntity;
 import com.thirty.user.enums.model.UserSex;
 import lombok.Data;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import lombok.EqualsAndHashCode;
 
 /**
  * 用户的具体信息
  * @TableName detail
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="detail")
 @Data
-public class Detail implements Serializable {
-    /**
-     * 用户ID
-     */
-    @TableId
-    private Integer id;
-
+public class Detail extends BaseEntity {
     /**
      * 用户的名字
      */
@@ -42,24 +33,4 @@ public class Detail implements Serializable {
      * 签名
      */
     private String signature;
-
-    /**
-     * 创建时间
-     * LocalDateTime 是不可变的，线程安全
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 是否被删除(1:是 0:否)
-     */
-    @TableLogic
-    private Boolean isDelete;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

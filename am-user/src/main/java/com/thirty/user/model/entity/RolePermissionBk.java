@@ -1,10 +1,10 @@
 package com.thirty.user.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.thirty.common.model.entity.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,15 +12,10 @@ import java.util.stream.Collectors;
  * 角色页面表
  * @TableName role_view
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="role_permission_bk")
 @Data
-public class RolePermissionBk implements Serializable {
-    /**
-     * 角色页面ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-
+public class RolePermissionBk extends BaseEntity {
     /**
      * 角色ID（关联role表）
      */
@@ -30,20 +25,6 @@ public class RolePermissionBk implements Serializable {
      * 页面ID（关联permission_bk表）
      */
     private Integer permissionId;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 是否被删除(1:是 0:否)
-     */
-    @TableLogic
-    private Boolean isDelete;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     /**
      * 从角色权限列表中提取权限id列表

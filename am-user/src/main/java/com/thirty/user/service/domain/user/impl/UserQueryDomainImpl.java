@@ -47,7 +47,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         // 获取用户角色
         List<Role> roles = userRoleService.getRolesByUserId(user.getId());
 
-        return UserConverter.INSTANCE.toUserResponse(user, detail, roles);
+        return UserConverter.INSTANCE.toUserVO(user, detail, roles);
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         // 获取用户角色
         List<Role> roles = userRoleService.getRolesByUserId(user.getId());
 
-        return UserConverter.INSTANCE.toUserResponse(user, detail, roles);
+        return UserConverter.INSTANCE.toUserVO(user, detail, roles);
     }
 
     /**

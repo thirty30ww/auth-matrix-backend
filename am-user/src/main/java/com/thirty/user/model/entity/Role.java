@@ -1,11 +1,14 @@
 package com.thirty.user.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.thirty.common.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -14,14 +17,8 @@ import java.util.stream.Collectors;
  */
 @TableName(value ="role")
 @Data
-@EqualsAndHashCode(of = "id") // 仅使用 id 字段计算 equals 和 hashCode
-public class Role implements Serializable {
-    /**
-     * 角色ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-
+@EqualsAndHashCode(callSuper = true) // 仅使用 id 字段计算 equals 和 hashCode
+public class Role extends BaseEntity {
     /**
      * 角色名
      */
@@ -41,26 +38,6 @@ public class Role implements Serializable {
      * 层级(如果是根节点则为0)
      */
     private Integer level;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 是否被删除(1:是 0:否)
-     */
-    @TableLogic
-    private Boolean isDelete;
-
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     /**
      * 从角色列表中提取角色ID

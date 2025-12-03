@@ -1,10 +1,10 @@
 package com.thirty.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.thirty.common.model.entity.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,15 +13,10 @@ import java.util.stream.Collectors;
  * 全局设置表
  * @TableName setting
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="setting")
 @Data
-public class Setting implements Serializable {
-    /**
-     * 设置ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-
+public class Setting extends BaseEntity {
     /**
      * 设置的字段名
      */
@@ -41,25 +36,6 @@ public class Setting implements Serializable {
      * 设置的值
      */
     private String value;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 是否被删除(1:是 0:否)
-     */
-    @TableLogic
-    private Boolean isDelete;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     /**
      * 构建ID到设置实体的映射

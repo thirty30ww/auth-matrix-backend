@@ -39,5 +39,7 @@ public interface UserConverter {
      * 将User和Detail对象转换为UserVO对象
      */
     @Mapping(source = "user.id", target = "id")
-    UserVO toUserResponse(User user, Detail detail, List<Role> roles);
+    @Mapping(source = "detail.createTime", target = "createTime")
+    @Mapping(source = "detail.updateTime", target = "updateTime")
+    UserVO toUserVO(User user, Detail detail, List<Role> roles);
 }

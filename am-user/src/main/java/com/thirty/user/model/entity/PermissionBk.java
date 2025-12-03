@@ -1,11 +1,11 @@
 package com.thirty.user.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.thirty.common.model.entity.BaseEntity;
 import com.thirty.user.enums.model.PermissionType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -15,15 +15,10 @@ import java.util.stream.Collectors;
  * 页面表
  * @TableName view
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="permission_bk")
 @Data
-public class PermissionBk implements Serializable {
-    /**
-     * 菜单ID
-     */
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-
+public class PermissionBk extends BaseEntity {
     /**
      * 菜单名
      */
@@ -70,28 +65,9 @@ public class PermissionBk implements Serializable {
     private String permissionCode;
 
     /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
      * 是否启用(1:有效 0:无效)
      */
     private Boolean isValid;
-
-    /**
-     * 是否被删除(1:是 0:否)
-     */
-    @TableLogic
-    private Boolean isDelete;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 
     /**
      * 构建无效权限列表
