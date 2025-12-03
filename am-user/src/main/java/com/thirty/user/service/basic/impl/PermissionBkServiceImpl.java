@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.constant.RoleConstant;
 import com.thirty.user.converter.PermissionBkConverter;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.mapper.PermissionBkMapper;
 import com.thirty.user.model.entity.PermissionBk;
 import com.thirty.user.model.vo.PermissionBkVO;
@@ -31,7 +31,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限列表
      */
     @Override
-    public List<PermissionBk> getPermissionByTypeAndKeyword(PermissionType type, String keyword) {
+    public List<PermissionBk> getPermissionByTypeAndKeyword(PermissionBkType type, String keyword) {
         LambdaQueryWrapper<PermissionBk> wrapper = new LambdaQueryWrapper<>();
         if (type != null) {
             wrapper.eq(PermissionBk::getType, type);
@@ -49,7 +49,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限列表
      */
     @Override
-    public List<PermissionBk> getPermissionByTypesAndKeyword(List<PermissionType> types, String keyword) {
+    public List<PermissionBk> getPermissionByTypesAndKeyword(List<PermissionBkType> types, String keyword) {
         LambdaQueryWrapper<PermissionBk> wrapper = new LambdaQueryWrapper<>();
         if (CollectionUtils.isEmpty(types)) {
             return Collections.emptyList();
@@ -78,7 +78,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限列表
      */
     @Override
-    public List<PermissionBk> getPermissionByType(PermissionType type) {
+    public List<PermissionBk> getPermissionByType(PermissionBkType type) {
         return getPermissionByTypeAndKeyword(type, null);
     }
 
@@ -88,7 +88,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限列表
      */
     @Override
-    public List<PermissionBk> getPermissionByTypes(List<PermissionType> types) {
+    public List<PermissionBk> getPermissionByTypes(List<PermissionBkType> types) {
         return getPermissionByTypesAndKeyword(types, null);
     }
 
@@ -99,7 +99,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限VO列表
      */
     @Override
-    public List<PermissionBkVO> getPermissionVOByTypeAndKeyword(PermissionType type, String keyword) {
+    public List<PermissionBkVO> getPermissionVOByTypeAndKeyword(PermissionBkType type, String keyword) {
         List<PermissionBk> permissionBks = getPermissionByTypeAndKeyword(type, keyword);
         return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
     }
@@ -111,7 +111,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限VO列表
      */
     @Override
-    public List<PermissionBkVO> getPermissionVOByTypesAndKeyword(List<PermissionType> types, String keyword) {
+    public List<PermissionBkVO> getPermissionVOByTypesAndKeyword(List<PermissionBkType> types, String keyword) {
         List<PermissionBk> permissionBks = getPermissionByTypesAndKeyword(types, keyword);
         return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
     }
@@ -133,7 +133,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限VO列表
      */
     @Override
-    public List<PermissionBkVO> getPermissionVOByType(PermissionType type) {
+    public List<PermissionBkVO> getPermissionVOByType(PermissionBkType type) {
         List<PermissionBk> permissionBks = getPermissionByType(type);
         return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
     }
@@ -144,7 +144,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
      * @return 权限VO列表
      */
     @Override
-    public List<PermissionBkVO> getPermissionVOByTypes(List<PermissionType> types) {
+    public List<PermissionBkVO> getPermissionVOByTypes(List<PermissionBkType> types) {
         List<PermissionBk> permissionBks = getPermissionByTypes(types);
         return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
     }
@@ -236,7 +236,7 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
         LambdaQueryWrapper<PermissionBk> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(PermissionBk::getId, permissionIds)
                 .eq(PermissionBk::getIsValid, true)
-                .eq(PermissionBk::getType, PermissionType.BUTTON);
+                .eq(PermissionBk::getType, PermissionBkType.BUTTON);
         List<PermissionBk> permissionBks = list(wrapper);
         if (CollectionUtils.isEmpty(permissionBks)) {
             return List.of();

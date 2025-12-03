@@ -1,6 +1,7 @@
 package com.thirty.user.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.thirty.user.enums.model.PermissionFtType;
 import com.thirty.user.model.entity.base.BasePermission;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,7 @@ public class PermissionFt extends BasePermission {
     /**
      * 类型 1-页面 2-按钮
      */
-    private Integer type;
+    private PermissionFtType type;
 
     /**
      * 是否需要验证登录

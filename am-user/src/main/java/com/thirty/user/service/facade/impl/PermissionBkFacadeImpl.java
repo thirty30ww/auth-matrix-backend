@@ -2,7 +2,7 @@ package com.thirty.user.service.facade.impl;
 
 import com.thirty.common.exception.BusinessException;
 import com.thirty.user.constant.PermissionConstant;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.enums.model.RoleType;
 import com.thirty.user.enums.result.PermissionResultCode;
 import com.thirty.user.model.dto.PermissionBkDTO;
@@ -45,7 +45,7 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
     public List<PermissionBkVO> getViewTree(Integer userId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
         return permissionsBkBuilderFactory.create(currentRoleIds)
-                .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU, PermissionType.PAGE))
+                .withPermissionTypes(List.of(PermissionBkType.DIRECTORY, PermissionBkType.MENU, PermissionBkType.PAGE))
                 .withPermissionFlag()
                 .buildTree();
     }
@@ -59,7 +59,7 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
     public List<PermissionBkVO> getMenuTree(Integer userId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
         return permissionsBkBuilderFactory.create(currentRoleIds)
-                .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU))
+                .withPermissionTypes(List.of(PermissionBkType.DIRECTORY, PermissionBkType.MENU))
                 .filterByPermission()
                 .buildTree();
     }
@@ -74,7 +74,7 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
 
         return permissionsBkBuilderFactory.create(currentRoleIds, targetRoleId)
-                .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU, PermissionType.BUTTON))
+                .withPermissionTypes(List.of(PermissionBkType.DIRECTORY, PermissionBkType.MENU, PermissionBkType.BUTTON))
                 .withChangeFlag()
                 .withPermissionFlag()
                 .buildTree();
@@ -88,7 +88,7 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
     public List<PermissionBkVO> getDirectoryTree(Integer userId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
         return permissionsBkBuilderFactory.create(currentRoleIds)
-                .withPermissionTypes(List.of(PermissionType.DIRECTORY))
+                .withPermissionTypes(List.of(PermissionBkType.DIRECTORY))
                 .filterByPermission()
                 .buildTree();
     }
@@ -102,7 +102,7 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
     public List<PermissionBkVO> getViewVOS(Integer userId, String keyword) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
         return permissionsBkBuilderFactory.create(currentRoleIds)
-                .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU, PermissionType.PAGE))
+                .withPermissionTypes(List.of(PermissionBkType.DIRECTORY, PermissionBkType.MENU, PermissionBkType.PAGE))
                 .withKeyword(keyword)
                 .filterByPermission()
                 .build();

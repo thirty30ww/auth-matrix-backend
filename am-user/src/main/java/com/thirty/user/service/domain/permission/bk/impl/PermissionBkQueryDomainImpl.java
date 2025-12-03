@@ -1,7 +1,7 @@
 package com.thirty.user.service.domain.permission.bk.impl;
 
 import com.thirty.user.constant.RoleConstant;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.entity.PermissionBk;
 import com.thirty.user.service.basic.PermissionBkService;
 import com.thirty.user.service.basic.RoleService;
@@ -45,9 +45,9 @@ public class PermissionBkQueryDomainImpl implements PermissionBkQueryDomain {
         if (Objects.equals(highestLevel, RoleConstant.ROLE_HIGHEST_LEVEL)) {
             // 返回所有菜单
             return PermissionBk.extractViewIds(permissionBkService.getPermissionByTypes(List.of(
-                    PermissionType.DIRECTORY,
-                    PermissionType.MENU,
-                    PermissionType.BUTTON
+                    PermissionBkType.DIRECTORY,
+                    PermissionBkType.MENU,
+                    PermissionBkType.BUTTON
             )));
         }
         // 否则返回角色菜单列表

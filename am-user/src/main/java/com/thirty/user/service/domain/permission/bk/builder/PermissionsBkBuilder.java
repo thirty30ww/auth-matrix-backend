@@ -2,7 +2,7 @@ package com.thirty.user.service.domain.permission.bk.builder;
 
 import com.thirty.common.utils.TreeBuilder;
 import com.thirty.user.constant.RoleConstant;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.vo.PermissionBkVO;
 import com.thirty.user.service.basic.PermissionBkService;
 import com.thirty.user.service.domain.permission.bk.PermissionBkQueryDomain;
@@ -27,7 +27,7 @@ public class PermissionsBkBuilder {
     Integer targetRoleId;
     String keyword;
 
-    List<PermissionType> permissionTypes;
+    List<PermissionBkType> permissionBkTypes;
     boolean filterPermission = false;
     boolean setChangeFlag = false;
     boolean setPermissionFlag = false;
@@ -43,8 +43,8 @@ public class PermissionsBkBuilder {
     /**
      * 设置权限列表
      */
-    public PermissionsBkBuilder withPermissionTypes(List<PermissionType> permissionTypes) {
-        this.permissionTypes = permissionTypes;
+    public PermissionsBkBuilder withPermissionTypes(List<PermissionBkType> permissionBkTypes) {
+        this.permissionBkTypes = permissionBkTypes;
         return this;
     }
 
@@ -92,7 +92,7 @@ public class PermissionsBkBuilder {
      * 构建成列表（平铺结构）
      */
     public List<PermissionBkVO> build() {
-        List<PermissionBkVO> permissionBkVOS = permissionBkService.getPermissionVOByTypesAndKeyword(permissionTypes, keyword);
+        List<PermissionBkVO> permissionBkVOS = permissionBkService.getPermissionVOByTypesAndKeyword(permissionBkTypes, keyword);
         return processPermissions(permissionBkVOS);
     }
 

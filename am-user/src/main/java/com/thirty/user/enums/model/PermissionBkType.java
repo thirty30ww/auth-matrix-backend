@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PermissionType implements CodeEnum<Integer> {
+public enum PermissionBkType implements CodeEnum<Integer> {
     DIRECTORY(1, "目录"),
     MENU(2, "菜单"),
     PAGE(3, "页面"),
@@ -21,7 +21,7 @@ public enum PermissionType implements CodeEnum<Integer> {
     @JsonValue  // JSON序列化时返回这个值
     private final String type;
 
-    public static PermissionType getByCode(Integer code) {
-        return CodeEnum.getByCode(PermissionType.class, code);
+    public static PermissionBkType getByCode(Integer code) {
+        return CodeEnum.getByCode(PermissionBkType.class, code);
     }
 }

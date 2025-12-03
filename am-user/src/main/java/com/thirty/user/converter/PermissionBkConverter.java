@@ -1,6 +1,6 @@
 package com.thirty.user.converter;
 
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.dto.PermissionBkDTO;
 import com.thirty.user.model.entity.PermissionBk;
 import com.thirty.user.model.vo.PermissionBkVO;
@@ -46,7 +46,7 @@ public interface PermissionBkConverter {
      */
     @AfterMapping
     default void afterMappingToPermissionVO(@MappingTarget PermissionBkVO permissionBkVO, PermissionBk permissionBk) {
-        if (permissionBk.getType() == PermissionType.PAGE) {
+        if (permissionBk.getType() == PermissionBkType.PAGE) {
             permissionBkVO.setHasPermission(true);
         }
     }

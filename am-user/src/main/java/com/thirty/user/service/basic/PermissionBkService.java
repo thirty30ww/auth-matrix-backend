@@ -2,7 +2,7 @@ package com.thirty.user.service.basic;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.entity.PermissionBk;
 import com.thirty.user.model.vo.PermissionBkVO;
 
@@ -21,7 +21,7 @@ public interface PermissionBkService extends IService<PermissionBk> {
      * @param keyword 权限名称
      * @return 权限列表
      */
-    List<PermissionBk> getPermissionByTypeAndKeyword(PermissionType type, String keyword);
+    List<PermissionBk> getPermissionByTypeAndKeyword(PermissionBkType type, String keyword);
 
     /**
      * 根据类型列表和名称获取权限列表
@@ -29,7 +29,7 @@ public interface PermissionBkService extends IService<PermissionBk> {
      * @param keyword 权限名称
      * @return 权限列表
      */
-    List<PermissionBk> getPermissionByTypesAndKeyword(List<PermissionType> types, String keyword);
+    List<PermissionBk> getPermissionByTypesAndKeyword(List<PermissionBkType> types, String keyword);
 
     /**
      * 根据查询条件获取权限列表
@@ -43,14 +43,14 @@ public interface PermissionBkService extends IService<PermissionBk> {
      * @param type 权限类型
      * @return 权限列表
      */
-    List<PermissionBk> getPermissionByType(PermissionType type);
+    List<PermissionBk> getPermissionByType(PermissionBkType type);
 
     /**
      * 根据类型列表获取权限列表
      * @param types 权限类型列表
      * @return 权限列表
      */
-    List<PermissionBk> getPermissionByTypes(List<PermissionType> types);
+    List<PermissionBk> getPermissionByTypes(List<PermissionBkType> types);
 
     /**
      * 根据类型和名称获取权限VO列表
@@ -58,7 +58,7 @@ public interface PermissionBkService extends IService<PermissionBk> {
      * @param keyword 权限名称
      * @return 权限VO列表
      */
-    List<PermissionBkVO> getPermissionVOByTypeAndKeyword(PermissionType type, String keyword);
+    List<PermissionBkVO> getPermissionVOByTypeAndKeyword(PermissionBkType type, String keyword);
 
     /**
      * 根据类型列表和名称获取权限VO列表
@@ -66,7 +66,7 @@ public interface PermissionBkService extends IService<PermissionBk> {
      * @param keyword 权限名称
      * @return 权限VO列表
      */
-    List<PermissionBkVO> getPermissionVOByTypesAndKeyword(List<PermissionType> types, String keyword);
+    List<PermissionBkVO> getPermissionVOByTypesAndKeyword(List<PermissionBkType> types, String keyword);
 
     /**
      * 根据查询条件获取权限VO列表
@@ -80,14 +80,14 @@ public interface PermissionBkService extends IService<PermissionBk> {
      * @param type 权限类型
      * @return 权限VO列表
      */
-    List<PermissionBkVO> getPermissionVOByType(PermissionType type);
+    List<PermissionBkVO> getPermissionVOByType(PermissionBkType type);
 
     /**
      * 根据类型列表获取权限VO列表
      * @param types 权限类型列表
      * @return 权限VO列表
      */
-    List<PermissionBkVO> getPermissionVOByTypes(List<PermissionType> types);
+    List<PermissionBkVO> getPermissionVOByTypes(List<PermissionBkType> types);
 
     /**
      * 获取权限的所有祖先ID（不包含当前权限）

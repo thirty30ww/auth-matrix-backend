@@ -1,7 +1,7 @@
 package com.thirty.user.service.domain.permission.bk.impl;
 
 import com.thirty.user.constant.PermissionConstant;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.entity.PermissionBk;
 import com.thirty.user.service.basic.PermissionBkService;
 import com.thirty.user.service.basic.RoleService;
@@ -61,14 +61,14 @@ public class PermissionBkValidationDomainImpl implements PermissionBkValidationD
      * @return 是否符合
      */
     @Override
-    public boolean validateTypeComply(Integer parentId, PermissionType type) {
+    public boolean validateTypeComply(Integer parentId, PermissionBkType type) {
         PermissionBk parentPermissionBk = permissionBkService.getById(parentId);
-        PermissionType parentType = parentPermissionBk == null ? PermissionType.DIRECTORY : parentPermissionBk.getType();
+        PermissionBkType parentType = parentPermissionBk == null ? PermissionBkType.DIRECTORY : parentPermissionBk.getType();
 
-        if (type == PermissionType.DIRECTORY || type == PermissionType.MENU) {
-            return parentType == PermissionType.DIRECTORY;
+        if (type == PermissionBkType.DIRECTORY || type == PermissionBkType.MENU) {
+            return parentType == PermissionBkType.DIRECTORY;
         } else {
-            return parentType == PermissionType.MENU;
+            return parentType == PermissionBkType.MENU;
         }
     }
 

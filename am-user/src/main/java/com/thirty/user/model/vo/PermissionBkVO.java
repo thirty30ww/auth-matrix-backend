@@ -1,6 +1,6 @@
 package com.thirty.user.model.vo;
 
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.entity.PermissionBk;
 import lombok.Data;
 
@@ -85,6 +85,6 @@ public class PermissionBkVO {
      * @param menus 菜单列表
      */
     public static void filterHasPermission(List<Integer> permittedViewIds, List<PermissionBkVO> menus) {
-        menus.removeIf(view -> view.getNode().getType() != PermissionType.PAGE && !permittedViewIds.contains(view.getNode().getId()));
+        menus.removeIf(view -> view.getNode().getType() != PermissionBkType.PAGE && !permittedViewIds.contains(view.getNode().getId()));
     }
 }

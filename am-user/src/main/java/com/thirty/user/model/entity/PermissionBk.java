@@ -1,7 +1,7 @@
 package com.thirty.user.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 import com.thirty.user.model.entity.base.BasePermission;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +27,7 @@ public class PermissionBk extends BasePermission {
     /**
      * 页面类型(1:目录, 2:菜单, 3:页面)
      */
-    private PermissionType type;
+    private PermissionBkType type;
 
     /**
      * 构建无效权限列表

@@ -1,6 +1,6 @@
 package com.thirty.user.service.domain.permission.bk;
 
-import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.enums.model.PermissionBkType;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface PermissionBkValidationDomain {
      * @param type 权限类型
      * @return 是否符合
      */
-    boolean validateTypeComply(Integer parentId, PermissionType type);
+    boolean validateTypeComply(Integer parentId, PermissionBkType type);
 
     /**
      * 校验父节点ID是否不等于权限ID及其后代节点ID
