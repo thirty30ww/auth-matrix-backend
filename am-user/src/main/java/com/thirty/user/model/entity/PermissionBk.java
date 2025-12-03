@@ -1,8 +1,8 @@
 package com.thirty.user.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.thirty.common.model.entity.BaseEntity;
 import com.thirty.user.enums.model.PermissionType;
+import com.thirty.user.model.entity.base.BasePermission;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,37 +18,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @TableName(value ="permission_bk")
 @Data
-public class PermissionBk extends BaseEntity {
-    /**
-     * 菜单名
-     */
-    private String name;
-
-    /**
-     * 路由路径
-     */
-    private String path;
-
-    /**
-     * 组件路径
-     */
-    private String component;
-
-    /**
-     * 父节点ID(无父结点则为0)
-     */
-    private Integer parentId;
-
-    /**
-     * 该节点的前一个节点ID(若为第1个节点则取0)
-     */
-    private Integer frontId;
-
-    /**
-     * 该节点的后继节点ID
-     */
-    private Integer behindId;
-
+public class PermissionBk extends BasePermission {
     /**
      * 菜单的图标
      */
@@ -58,16 +28,6 @@ public class PermissionBk extends BaseEntity {
      * 页面类型(1:目录, 2:菜单, 3:页面)
      */
     private PermissionType type;
-
-    /**
-     * 权限码
-     */
-    private String permissionCode;
-
-    /**
-     * 是否启用(1:有效 0:无效)
-     */
-    private Boolean isValid;
 
     /**
      * 构建无效权限列表
