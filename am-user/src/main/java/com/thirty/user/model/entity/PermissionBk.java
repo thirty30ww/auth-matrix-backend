@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
  * 页面表
  * @TableName view
  */
-@TableName(value ="permission")
+@TableName(value ="permission_bk")
 @Data
-public class Permission implements Serializable {
+public class PermissionBk implements Serializable {
     /**
      * 菜单ID
      */
@@ -42,17 +42,17 @@ public class Permission implements Serializable {
     /**
      * 父节点ID(无父结点则为0)
      */
-    private Integer parentNodeId;
+    private Integer parentId;
 
     /**
      * 该节点的前一个节点ID(若为第1个节点则取0)
      */
-    private Integer frontNodeId;
+    private Integer frontId;
 
     /**
      * 该节点的后继节点ID
      */
-    private Integer behindNodeId;
+    private Integer behindId;
 
     /**
      * 菜单的图标
@@ -98,57 +98,57 @@ public class Permission implements Serializable {
      * @param permissionIds 权限ID列表
      * @return 无效权限列表
      */
-    public static List<Permission> toNotValidPermission(List<Integer> permissionIds) {
+    public static List<PermissionBk> toNotValidPermission(List<Integer> permissionIds) {
         return permissionIds.stream().map(permissionId -> {
-            Permission permission = new Permission();
-            permission.setId(permissionId);
-            permission.setIsValid(false);
-            return permission;
+            PermissionBk permissionBk = new PermissionBk();
+            permissionBk.setId(permissionId);
+            permissionBk.setIsValid(false);
+            return permissionBk;
         }).collect(Collectors.toList());
     }
 
     /**
      * 构建权限Map，key为权限ID，value为View
-     * @param permissions 权限列表
+     * @param permissionBks 权限列表
      * @return 权限Map
      */
-    public static Map<Integer, Permission> buildMap(List<Permission> permissions) {
-        return permissions.stream().collect(Collectors.toMap(Permission::getId, view -> view));
+    public static Map<Integer, PermissionBk> buildMap(List<PermissionBk> permissionBks) {
+        return permissionBks.stream().collect(Collectors.toMap(PermissionBk::getId, view -> view));
     }
 
     /**
      * 构建父节点ID和子节点列表的Map，key为父节点ID，value为子节点列表
-     * @param permissions 权限列表
+     * @param permissionBks 权限列表
      * @return 父节点ID和子节点列表的Map
      */
-    public static Map<Integer, List<Permission>> buildParentChildMap(List<Permission> permissions) {
-        return permissions.stream().collect(Collectors.groupingBy(Permission::getParentNodeId));
+    public static Map<Integer, List<PermissionBk>> buildParentChildMap(List<PermissionBk> permissionBks) {
+        return permissionBks.stream().collect(Collectors.groupingBy(PermissionBk::getParentId));
     }
 
     /**
      * 从权限列表中提取权限ID列表
-     * @param permissions 权限列表
+     * @param permissionBks 权限列表
      * @return 权限ID列表
      */
-    public static List<Integer> extractViewIds(List<Permission> permissions) {
-        return permissions.stream().map(Permission::getId).distinct().collect(Collectors.toList());
+    public static List<Integer> extractViewIds(List<PermissionBk> permissionBks) {
+        return permissionBks.stream().map(PermissionBk::getId).distinct().collect(Collectors.toList());
     }
 
     /**
      * 从权限列表中提取权限码列表
-     * @param permissions 权限列表
+     * @param permissionBks 权限列表
      * @return 权限码列表
      */
-    public static List<String> extractPermissionCodes(List<Permission> permissions) {
-        return permissions.stream().map(Permission::getPermissionCode).distinct().collect(Collectors.toList());
+    public static List<String> extractPermissionCodes(List<PermissionBk> permissionBks) {
+        return permissionBks.stream().map(PermissionBk::getPermissionCode).distinct().collect(Collectors.toList());
     }
 
     /**
      * 从权限列表中提取最大的前一个节点ID的权限
-     * @param permissions 权限列表
+     * @param permissionBks 权限列表
      * @return 最大的前一个节点ID的权限
      */
-    public static Permission extractMaxFrontIdPermission(List<Permission> permissions) {
-        return permissions.stream().max(Comparator.comparingInt(Permission::getFrontNodeId)).orElse(null);
+    public static PermissionBk extractMaxFrontIdPermission(List<PermissionBk> permissionBks) {
+        return permissionBks.stream().max(Comparator.comparingInt(PermissionBk::getFrontId)).orElse(null);
     }
 }

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class PermissionDTO {
+public class PermissionBkDTO {
     public interface Add {}
     public interface Modify {}
 

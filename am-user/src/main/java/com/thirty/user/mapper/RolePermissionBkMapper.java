@@ -1,6 +1,6 @@
 package com.thirty.user.mapper;
 
-import com.thirty.user.model.entity.RolePermission;
+import com.thirty.user.model.entity.RolePermissionBk;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2025-08-22 14:21:16
 * @Entity com.thirty.user.model.entity.RoleView
 */
-public interface RolePermissionMapper extends BaseMapper<RolePermission> {
+public interface RolePermissionBkMapper extends BaseMapper<RolePermissionBk> {
 
 }
 

@@ -4,7 +4,7 @@ import com.thirty.user.enums.result.AuthResultCode;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
-import com.thirty.user.service.domain.permission.PermissionQueryDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Resource
     private UserRoleService userRoleService;
     @Resource
-    private PermissionQueryDomain permissionQueryDomain;
+    private PermissionBkQueryDomain permissionBkQueryDomain;
 
     /**
      * 根据用户名加载用户详情
@@ -43,7 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Integer> roleIds = userRoleService.getRoleIds(user.getId());
 
         // 获取用户权限码列表
-        List<String> permissionCodes = permissionQueryDomain.getPermissionCode(roleIds);
+        List<String> permissionCodes = permissionBkQueryDomain.getPermissionCode(roleIds);
 
         // 转换为Spring Security的Authority
         List<SimpleGrantedAuthority> authorities = permissionCodes.stream()

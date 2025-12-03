@@ -5,15 +5,15 @@ import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.enums.model.RoleType;
 import com.thirty.user.enums.result.PermissionResultCode;
-import com.thirty.user.model.dto.PermissionDTO;
-import com.thirty.user.model.vo.PermissionVO;
-import com.thirty.user.service.domain.permission.PermissionOperationDomain;
-import com.thirty.user.service.domain.permission.PermissionQueryDomain;
-import com.thirty.user.service.domain.permission.PermissionValidationDomain;
-import com.thirty.user.service.domain.permission.builder.PermissionsBuilderFactory;
+import com.thirty.user.model.dto.PermissionBkDTO;
+import com.thirty.user.model.vo.PermissionBkVO;
+import com.thirty.user.service.domain.permission.bk.PermissionBkOperationDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkQueryDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkValidationDomain;
+import com.thirty.user.service.domain.permission.bk.builder.PermissionsBkBuilderFactory;
 import com.thirty.user.service.domain.role.RoleQueryDomain;
 import com.thirty.user.service.domain.role.builder.RolesBuilderFactory;
-import com.thirty.user.service.facade.PermissionFacade;
+import com.thirty.user.service.facade.PermissionBkFacade;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +21,20 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PermissionFacadeImpl implements PermissionFacade {
+public class PermissionBkFacadeImpl implements PermissionBkFacade {
     @Resource
-    private PermissionQueryDomain permissionQueryDomain;
+    private PermissionBkQueryDomain permissionBkQueryDomain;
     @Resource
-    private PermissionValidationDomain permissionValidationDomain;
+    private PermissionBkValidationDomain permissionBkValidationDomain;
     @Resource
-    private PermissionOperationDomain permissionOperationDomain;
+    private PermissionBkOperationDomain permissionBkOperationDomain;
     @Resource
     private RoleQueryDomain roleQueryDomain;
 
     @Resource
     private RolesBuilderFactory rolesBuilderFactory;
     @Resource
-    private PermissionsBuilderFactory permissionsBuilderFactory;
+    private PermissionsBkBuilderFactory permissionsBkBuilderFactory;
 
     /**
      * 获取权限树
@@ -42,9 +42,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
      * @return 权限树
      */
     @Override
-    public List<PermissionVO> getViewTree(Integer userId) {
+    public List<PermissionBkVO> getViewTree(Integer userId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
-        return permissionsBuilderFactory.create(currentRoleIds)
+        return permissionsBkBuilderFactory.create(currentRoleIds)
                 .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU, PermissionType.PAGE))
                 .withPermissionFlag()
                 .buildTree();
@@ -56,9 +56,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
      * @return 菜单树
      */
     @Override
-    public List<PermissionVO> getMenuTree(Integer userId) {
+    public List<PermissionBkVO> getMenuTree(Integer userId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
-        return permissionsBuilderFactory.create(currentRoleIds)
+        return permissionsBkBuilderFactory.create(currentRoleIds)
                 .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU))
                 .filterByPermission()
                 .buildTree();
@@ -70,10 +70,10 @@ public class PermissionFacadeImpl implements PermissionFacade {
      * @return 菜单和按钮树
      */
     @Override
-    public List<PermissionVO> getMenuAndButtonTree(Integer userId, Integer targetRoleId) {
+    public List<PermissionBkVO> getMenuAndButtonTree(Integer userId, Integer targetRoleId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
 
-        return permissionsBuilderFactory.create(currentRoleIds, targetRoleId)
+        return permissionsBkBuilderFactory.create(currentRoleIds, targetRoleId)
                 .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU, PermissionType.BUTTON))
                 .withChangeFlag()
                 .withPermissionFlag()
@@ -85,9 +85,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
      * @return 目录树
      */
     @Override
-    public List<PermissionVO> getDirectoryTree(Integer userId) {
+    public List<PermissionBkVO> getDirectoryTree(Integer userId) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
-        return permissionsBuilderFactory.create(currentRoleIds)
+        return permissionsBkBuilderFactory.create(currentRoleIds)
                 .withPermissionTypes(List.of(PermissionType.DIRECTORY))
                 .filterByPermission()
                 .buildTree();
@@ -99,9 +99,9 @@ public class PermissionFacadeImpl implements PermissionFacade {
      * @return 权限列表
      */
     @Override
-    public List<PermissionVO> getViewVOS(Integer userId, String keyword) {
+    public List<PermissionBkVO> getViewVOS(Integer userId, String keyword) {
         List<Integer> currentRoleIds = roleQueryDomain.getRoleIds(userId);
-        return permissionsBuilderFactory.create(currentRoleIds)
+        return permissionsBkBuilderFactory.create(currentRoleIds)
                 .withPermissionTypes(List.of(PermissionType.DIRECTORY, PermissionType.MENU, PermissionType.PAGE))
                 .withKeyword(keyword)
                 .filterByPermission()
@@ -118,48 +118,48 @@ public class PermissionFacadeImpl implements PermissionFacade {
         List<Integer> currentAndChildRoleIds = rolesBuilderFactory.create(userId).forRoleTypes(List.of(
                 RoleType.SELF, RoleType.CHILD
         )).buildIds();
-        return permissionQueryDomain.getPermissionCode(currentAndChildRoleIds);
+        return permissionBkQueryDomain.getPermissionCode(currentAndChildRoleIds);
     }
 
     /**
      * 添加权限
      * @param userId 用户ID
-     * @param permissionDTO 权限DTO
+     * @param permissionBkDTO 权限DTO
      */
     @Override
-    public void addPermission(Integer userId, PermissionDTO permissionDTO) {
-        if (!permissionValidationDomain.validateTypeComply(permissionDTO.getParentNodeId(), permissionDTO.getType())) {
+    public void addPermission(Integer userId, PermissionBkDTO permissionBkDTO) {
+        if (!permissionBkValidationDomain.validateTypeComply(permissionBkDTO.getParentNodeId(), permissionBkDTO.getType())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_TYPE_NOT_COMPLY);
         }
-        if (!Objects.equals(permissionDTO.getParentNodeId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)
-                && !permissionValidationDomain.validateUserHavePermission(userId, permissionDTO.getParentNodeId())) {
+        if (!Objects.equals(permissionBkDTO.getParentNodeId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)
+                && !permissionBkValidationDomain.validateUserHavePermission(userId, permissionBkDTO.getParentNodeId())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_ADD);
         }
-        permissionOperationDomain.addPermission(permissionDTO);
+        permissionBkOperationDomain.addPermission(permissionBkDTO);
     }
 
     /**
      * 修改权限
      * @param userId 用户ID
-     * @param permissionDTO 权限DTO
+     * @param permissionBkDTO 权限DTO
      */
     @Override
-    public void modifyPermission(Integer userId, PermissionDTO permissionDTO) {
+    public void modifyPermission(Integer userId, PermissionBkDTO permissionBkDTO) {
         // 父ID不能等于当前ID或者当前ID的子ID
-        if (permissionValidationDomain.validateParentIdEqualsSelfAndDescendants(permissionDTO.getId(), permissionDTO.getParentNodeId())) {
+        if (permissionBkValidationDomain.validateParentIdEqualsSelfAndDescendants(permissionBkDTO.getId(), permissionBkDTO.getParentNodeId())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_BE_PARENT);
         }
         // 父权限有规定的子权限类型，比如 DIRECTORY 的子权限不能是 BUTTON
-        if (!permissionValidationDomain.validateTypeComply(permissionDTO.getParentNodeId(), permissionDTO.getType())) {
+        if (!permissionBkValidationDomain.validateTypeComply(permissionBkDTO.getParentNodeId(), permissionBkDTO.getType())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_TYPE_NOT_COMPLY);
         }
-        if (!permissionValidationDomain.validateModifyValid(userId, permissionDTO.getId(), permissionDTO.getIsValid())) {
+        if (!permissionBkValidationDomain.validateModifyValid(userId, permissionBkDTO.getId(), permissionBkDTO.getIsValid())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_MODIFY_VALID);
         }
-        if (!permissionValidationDomain.validateUserHavePermission(userId, permissionDTO.getId())) {
+        if (!permissionBkValidationDomain.validateUserHavePermission(userId, permissionBkDTO.getId())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_MODIFY);
         }
-        permissionOperationDomain.modifyPermission(permissionDTO);
+        permissionBkOperationDomain.modifyPermission(permissionBkDTO);
     }
 
     /**
@@ -169,10 +169,10 @@ public class PermissionFacadeImpl implements PermissionFacade {
      */
     @Override
     public void deletePermission(Integer userId, Integer viewId) {
-        if (!permissionValidationDomain.validateUserHavePermission(userId, viewId)) {
+        if (!permissionBkValidationDomain.validateUserHavePermission(userId, viewId)) {
             throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_DELETE);
         }
-        permissionOperationDomain.deletePermission(viewId);
+        permissionBkOperationDomain.deletePermission(viewId);
     }
     /**
      * 移动权限
@@ -181,13 +181,13 @@ public class PermissionFacadeImpl implements PermissionFacade {
      */
     @Override
     public void movePermission(Integer viewId, Boolean isUp) {
-        if (isUp && !permissionValidationDomain.validateMoveUp(viewId)) {
+        if (isUp && !permissionBkValidationDomain.validateMoveUp(viewId)) {
             throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_MOVE_UP);
         }
-        if (!isUp && !permissionValidationDomain.validateMoveDown(viewId)) {
+        if (!isUp && !permissionBkValidationDomain.validateMoveDown(viewId)) {
             throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_MOVE_DOWN);
         }
-        permissionOperationDomain.movePermission(viewId, isUp);
+        permissionBkOperationDomain.movePermission(viewId, isUp);
     }
 
 }

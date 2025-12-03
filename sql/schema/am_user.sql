@@ -85,12 +85,12 @@ CREATE TABLE `log_operation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `permission`
+-- Table structure for table `permissionBk`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `permission` (
+CREATE TABLE `permissionBk` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
   `name` varchar(1024) NOT NULL COMMENT '菜单名',
   `path` varchar(1024) DEFAULT NULL COMMENT '路由路径',

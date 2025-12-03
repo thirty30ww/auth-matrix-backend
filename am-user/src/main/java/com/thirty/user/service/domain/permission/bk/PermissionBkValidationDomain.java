@@ -1,10 +1,10 @@
-package com.thirty.user.service.domain.permission;
+package com.thirty.user.service.domain.permission.bk;
 
 import com.thirty.user.enums.model.PermissionType;
 
 import java.util.List;
 
-public interface PermissionValidationDomain {
+public interface PermissionBkValidationDomain {
     /**
      * 校验用户是否有权限权限
      * @param userId 用户ID

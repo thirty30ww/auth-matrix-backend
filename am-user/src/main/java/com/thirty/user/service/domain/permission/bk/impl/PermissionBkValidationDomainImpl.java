@@ -1,13 +1,13 @@
-package com.thirty.user.service.domain.permission.impl;
+package com.thirty.user.service.domain.permission.bk.impl;
 
 import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.enums.model.PermissionType;
-import com.thirty.user.model.entity.Permission;
-import com.thirty.user.service.basic.PermissionService;
+import com.thirty.user.model.entity.PermissionBk;
+import com.thirty.user.service.basic.PermissionBkService;
 import com.thirty.user.service.basic.RoleService;
 import com.thirty.user.service.basic.UserRoleService;
-import com.thirty.user.service.domain.permission.PermissionQueryDomain;
-import com.thirty.user.service.domain.permission.PermissionValidationDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkQueryDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkValidationDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -17,17 +17,17 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PermissionValidationDomainImpl implements PermissionValidationDomain {
+public class PermissionBkValidationDomainImpl implements PermissionBkValidationDomain {
 
     @Resource
-    private PermissionQueryDomain permissionQueryDomain;
+    private PermissionBkQueryDomain permissionBkQueryDomain;
 
     @Resource
     private RoleService roleService;
     @Resource
     private UserRoleService userRoleService;
     @Resource
-    private PermissionService permissionService;
+    private PermissionBkService permissionBkService;
 
     /**
      * 校验用户是否有权限权限
@@ -39,7 +39,7 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
     public boolean validateUserHavePermissions(Integer userId, List<Integer> permissionIds) {
         List<Integer> roleIds = userRoleService.getRoleIds(userId);
         roleIds.addAll(roleService.getDescendantRoleIds(roleIds));
-        List<Integer> currentViewIds = permissionQueryDomain.getPermissionId(roleIds);
+        List<Integer> currentViewIds = permissionBkQueryDomain.getPermissionId(roleIds);
         return new HashSet<>(currentViewIds).containsAll(permissionIds);
     }
 
@@ -62,8 +62,8 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
      */
     @Override
     public boolean validateTypeComply(Integer parentId, PermissionType type) {
-        Permission parentPermission = permissionService.getById(parentId);
-        PermissionType parentType = parentPermission == null ? PermissionType.DIRECTORY : parentPermission.getType();
+        PermissionBk parentPermissionBk = permissionBkService.getById(parentId);
+        PermissionType parentType = parentPermissionBk == null ? PermissionType.DIRECTORY : parentPermissionBk.getType();
 
         if (type == PermissionType.DIRECTORY || type == PermissionType.MENU) {
             return parentType == PermissionType.DIRECTORY;
@@ -83,7 +83,7 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
         if (Objects.equals(parentId, permissionId)) {
             return true;
         }
-        List<Integer> descendantIds = permissionService.getDescendantIds(parentId);
+        List<Integer> descendantIds = permissionBkService.getDescendantIds(parentId);
         return !CollectionUtils.isEmpty(descendantIds) && descendantIds.contains(permissionId);
     }
 
@@ -94,8 +94,8 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
      */
     @Override
     public boolean validateMoveUp(Integer permissionId) {
-        Permission permission = permissionService.getById(permissionId);
-        return !Objects.equals(permission.getFrontNodeId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID);
+        PermissionBk permissionBk = permissionBkService.getById(permissionId);
+        return !Objects.equals(permissionBk.getFrontId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID);
     }
 
     /**
@@ -105,8 +105,8 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
      */
     @Override
     public boolean validateMoveDown(Integer permissionId) {
-        Permission permission = permissionService.getById(permissionId);
-        return !Objects.equals(permission.getBehindNodeId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
+        PermissionBk permissionBk = permissionBkService.getById(permissionId);
+        return !Objects.equals(permissionBk.getBehindId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
     }
 
     /**
@@ -118,13 +118,13 @@ public class PermissionValidationDomainImpl implements PermissionValidationDomai
      */
     @Override
     public boolean validateModifyValid(Integer userId, Integer permissionId, Boolean isValid) {
-        Permission permission = permissionService.getById(permissionId);
+        PermissionBk permissionBk = permissionBkService.getById(permissionId);
         // 验证是否修改了权限的启用状态
-        if (permission.getIsValid() == isValid) {
+        if (permissionBk.getIsValid() == isValid) {
             return true;
         }
         // 如果对该权限的后代权限都有权限，就可以修改启用状态
-        List<Integer> descendantIds = permissionService.getDescendantIds(permissionId);
+        List<Integer> descendantIds = permissionBkService.getDescendantIds(permissionId);
         return validateUserHavePermissions(userId, descendantIds);
     }
 }

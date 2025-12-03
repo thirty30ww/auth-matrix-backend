@@ -1,6 +1,6 @@
 package com.thirty.user.service.basic;
 
-import com.thirty.user.model.entity.RolePermission;
+import com.thirty.user.model.entity.RolePermissionBk;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 * @description 针对表【role_view(角色页面表)】的数据库操作Service
 * @createDate 2025-08-22 14:21:16
 */
-public interface RolePermissionService extends IService<RolePermission> {
+public interface RolePermissionBkService extends IService<RolePermissionBk> {
     /**
      * 获取权限id列表
      * @param roleId 角色id

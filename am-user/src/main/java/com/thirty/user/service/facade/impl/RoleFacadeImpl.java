@@ -10,8 +10,8 @@ import com.thirty.user.model.dto.AssignPermissionDTO;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
-import com.thirty.user.service.domain.permission.PermissionQueryDomain;
-import com.thirty.user.service.domain.permission.PermissionValidationDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkQueryDomain;
+import com.thirty.user.service.domain.permission.bk.PermissionBkValidationDomain;
 import com.thirty.user.service.domain.role.RoleOperationDomain;
 import com.thirty.user.service.domain.role.builder.RoleValidationBuilderFactory;
 import com.thirty.user.service.domain.role.builder.RolesBuilderFactory;
@@ -27,9 +27,9 @@ public class RoleFacadeImpl implements RoleFacade {
     @Resource
     private RoleOperationDomain roleOperationDomain;
     @Resource
-    private PermissionQueryDomain permissionQueryDomain;
+    private PermissionBkQueryDomain permissionBkQueryDomain;
     @Resource
-    private PermissionValidationDomain permissionValidationDomain;
+    private PermissionBkValidationDomain permissionBkValidationDomain;
 
     @Resource
     private RolesBuilderFactory rolesBuilderFactory;
@@ -192,11 +192,11 @@ public class RoleFacadeImpl implements RoleFacade {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_ASSIGN);
         }
         // 如果要分配的权限是当前角色没有的，则不能分配
-        if (!permissionValidationDomain.validateUserHavePermissions(userId, newViewIds)) {
+        if (!permissionBkValidationDomain.validateUserHavePermissions(userId, newViewIds)) {
             throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_ASSIGN);
         }
 
-        List<Integer> oldViewIds = permissionQueryDomain.getPermissionId(targetRoleId);
+        List<Integer> oldViewIds = permissionBkQueryDomain.getPermissionId(targetRoleId);
         roleOperationDomain.assignNormalPermission(targetRoleId, oldViewIds, newViewIds);
     }
 
@@ -208,7 +208,7 @@ public class RoleFacadeImpl implements RoleFacade {
     public void assignGlobalPermission(AssignPermissionDTO assignPermissionDTO) {
         Integer targetRoleId = assignPermissionDTO.getRoleId();
         List<Integer> newPermissionIds = assignPermissionDTO.getViewIds();
-        List<Integer> oldPermissionIds = permissionQueryDomain.getPermissionId(targetRoleId);
+        List<Integer> oldPermissionIds = permissionBkQueryDomain.getPermissionId(targetRoleId);
         roleOperationDomain.assignGlobalPermission(targetRoleId, oldPermissionIds, newPermissionIds);
     }
 }

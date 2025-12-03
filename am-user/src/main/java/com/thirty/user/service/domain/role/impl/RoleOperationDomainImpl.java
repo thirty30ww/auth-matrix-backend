@@ -6,9 +6,9 @@ import com.thirty.user.converter.RoleConverter;
 import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.service.basic.RoleService;
-import com.thirty.user.service.basic.RolePermissionService;
+import com.thirty.user.service.basic.RolePermissionBkService;
 import com.thirty.user.service.basic.UserRoleService;
-import com.thirty.user.service.basic.PermissionService;
+import com.thirty.user.service.basic.PermissionBkService;
 import com.thirty.user.service.domain.role.RoleOperationDomain;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +29,9 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
     @Resource
     private UserRoleService userRoleService;
     @Resource
-    private RolePermissionService rolePermissionService;
+    private RolePermissionBkService rolePermissionBkService;
     @Resource
-    private PermissionService permissionService;
+    private PermissionBkService permissionBkService;
 
     /**
      * 添加角色
@@ -43,13 +43,13 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
         roleService.addRole(role);
         // 获取全局角色有权限的页面
         List<Integer> globalViewIds = getPermissionIdsByParentRoleId(RoleConstant.GLOBAL_ROLE_PARENT_ID);
-        List<Integer> parentViewIds = rolePermissionService.getPermissionIds(roleDTO.getParentNodeId());
+        List<Integer> parentViewIds = rolePermissionBkService.getPermissionIds(roleDTO.getParentNodeId());
 
         // 取公共部分
         List<Integer> commonViewIds = CollectionUtil.CommonCompare(globalViewIds, parentViewIds);
 
         // 分配权限权限
-        rolePermissionService.addRolePermissions(role.getId(), commonViewIds);
+        rolePermissionBkService.addRolePermissions(role.getId(), commonViewIds);
     }
 
     /**
@@ -90,7 +90,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
     public void deleteRole(Integer roleId) {
         roleService.deleteRole(roleId);
         userRoleService.deleteByRoleId(roleId);
-        rolePermissionService.deleteByRoleId(roleId);
+        rolePermissionBkService.deleteByRoleId(roleId);
     }
 
     /**
@@ -107,16 +107,16 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
         List<Integer> removedAndDescendantViewIds = getRemovedAndDescendantViewIds(oldPermissionIds, newPermissionIds);
 
         // 修改当前角色权限
-        rolePermissionService.addRolePermissions(roleId, addedAndAncestorViewIds);
-        rolePermissionService.deleteRolePermissions(roleId, removedAndDescendantViewIds);
+        rolePermissionBkService.addRolePermissions(roleId, addedAndAncestorViewIds);
+        rolePermissionBkService.deleteRolePermissions(roleId, removedAndDescendantViewIds);
 
         // 修改当前角色的所有子孙角色权限
         List<Integer> childRoleIds = roleService.getDescendantRoleIds(roleId);
-        rolePermissionService.deleteRolePermissions(childRoleIds, removedAndDescendantViewIds);
+        rolePermissionBkService.deleteRolePermissions(childRoleIds, removedAndDescendantViewIds);
 
         // 修改当前角色的所有祖先角色权限
         List<Integer> ancestorRoleIds = roleService.getAncestorRoleIds(roleId);
-        rolePermissionService.addRolePermissions(ancestorRoleIds, addedAndAncestorViewIds);
+        rolePermissionBkService.addRolePermissions(ancestorRoleIds, addedAndAncestorViewIds);
     }
 
     /**
@@ -133,12 +133,12 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
         List<Integer> removedAndDescendantViewIds = getRemovedAndDescendantViewIds(oldPermissionIds, newPermissionIds);
 
         // 修改当前角色权限
-        rolePermissionService.addRolePermissions(roleId, addedAndAncestorViewIds);
-        rolePermissionService.deleteRolePermissions(roleId, removedAndDescendantViewIds);
+        rolePermissionBkService.addRolePermissions(roleId, addedAndAncestorViewIds);
+        rolePermissionBkService.deleteRolePermissions(roleId, removedAndDescendantViewIds);
 
         // 修改当前所有普通角色的权限
         List<Integer> notGlobalRoleIds = roleService.getNotGlobalRoleIds();
-        rolePermissionService.addRolePermissions(notGlobalRoleIds, addedAndAncestorViewIds);
+        rolePermissionBkService.addRolePermissions(notGlobalRoleIds, addedAndAncestorViewIds);
     }
 
     /**
@@ -149,7 +149,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
     @Override
     public List<Integer> getPermissionIdsByParentRoleId(Integer parentRoleId) {
         List<Integer> childRoleIds = roleService.getChildRoleIds(parentRoleId);
-        return rolePermissionService.getPermissionIds(childRoleIds);
+        return rolePermissionBkService.getPermissionIds(childRoleIds);
     }
 
     /**
@@ -160,7 +160,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
      */
     private List<Integer> getAddedAndAncestorViewIds(List<Integer> oldViewIds, List<Integer> newViewIds) {
         List<Integer> addedViewIds = CollectionUtil.AddedCompare(oldViewIds, newViewIds);
-        List<Integer> ancestorIds = permissionService.getAncestorIds(addedViewIds);
+        List<Integer> ancestorIds = permissionBkService.getAncestorIds(addedViewIds);
 
         // 流式去重
         return Stream.concat(addedViewIds.stream(), ancestorIds.stream()).distinct().collect(Collectors.toList());
@@ -174,7 +174,7 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
      */
     private List<Integer> getRemovedAndDescendantViewIds(List<Integer> oldViewIds, List<Integer> newViewIds) {
         List<Integer> removedViewIds = CollectionUtil.RemovedCompare(oldViewIds, newViewIds);
-        List<Integer> descendantIds = permissionService.getDescendantIds(removedViewIds);
+        List<Integer> descendantIds = permissionBkService.getDescendantIds(removedViewIds);
 
         // 流式去重
         return Stream.concat(removedViewIds.stream(), descendantIds.stream()).distinct().collect(Collectors.toList());
