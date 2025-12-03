@@ -44,7 +44,7 @@ public class PermissionBkQueryDomainImpl implements PermissionBkQueryDomain {
         Integer highestLevel = roleService.getHighestLevel(roleIds);
         if (Objects.equals(highestLevel, RoleConstant.ROLE_HIGHEST_LEVEL)) {
             // 返回所有菜单
-            return PermissionBk.extractViewIds(permissionBkService.getPermissionByTypes(List.of(
+            return PermissionBk.extractPermissionIds(permissionBkService.getPermissionByTypes(List.of(
                     PermissionBkType.DIRECTORY,
                     PermissionBkType.MENU,
                     PermissionBkType.BUTTON

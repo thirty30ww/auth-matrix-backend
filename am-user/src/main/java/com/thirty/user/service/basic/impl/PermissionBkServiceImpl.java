@@ -63,16 +63,6 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
     }
 
     /**
-     * 根据查询条件获取权限列表
-     * @param wrapper 查询条件
-     * @return 权限列表
-     */
-    @Override
-    public List<PermissionBk> getPermissionByWrapper(LambdaQueryWrapper<PermissionBk> wrapper) {
-        return list(wrapper);
-    }
-
-    /**
      * 根据类型获取权限列表
      * @param type 权限类型
      * @return 权限列表
@@ -93,18 +83,6 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
     }
 
     /**
-     * 根据类型和名称获取权限VO列表
-     * @param type 权限类型
-     * @param keyword 权限名称
-     * @return 权限VO列表
-     */
-    @Override
-    public List<PermissionBkVO> getPermissionVOByTypeAndKeyword(PermissionBkType type, String keyword) {
-        List<PermissionBk> permissionBks = getPermissionByTypeAndKeyword(type, keyword);
-        return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
-    }
-
-    /**
      * 根据类型列表和名称获取权限VO列表
      * @param types 权限类型列表
      * @param keyword 权限名称
@@ -117,51 +95,18 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
     }
 
     /**
-     * 根据查询条件获取权限VO列表
-     * @param wrapper 查询条件
-     * @return 权限VO列表
-     */
-    @Override
-    public List<PermissionBkVO> getPermissionVOByWrapper(LambdaQueryWrapper<PermissionBk> wrapper) {
-        List<PermissionBk> permissionBks = list(wrapper);
-        return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
-    }
-
-    /**
-     * 根据类型获取权限VO列表
-     * @param type 权限类型
-     * @return 权限VO列表
-     */
-    @Override
-    public List<PermissionBkVO> getPermissionVOByType(PermissionBkType type) {
-        List<PermissionBk> permissionBks = getPermissionByType(type);
-        return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
-    }
-
-    /**
-     * 根据类型列表获取权限VO列表
-     * @param types 权限类型列表
-     * @return 权限VO列表
-     */
-    @Override
-    public List<PermissionBkVO> getPermissionVOByTypes(List<PermissionBkType> types) {
-        List<PermissionBk> permissionBks = getPermissionByTypes(types);
-        return PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
-    }
-
-    /**
      * 获取权限的所有祖先ID
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @return 祖先ID列表
      */
     @Override
-    public List<Integer> getAncestorIds(Integer viewId) {
+    public List<Integer> getAncestorIds(Integer permissionId) {
         List<Integer> ancestorIds = new ArrayList<>();
         List<PermissionBk> permissionBks = list();
 
         Map<Integer, PermissionBk> viewMap = PermissionBk.buildMap(permissionBks);
 
-        PermissionBk currentPermissionBk = viewMap.get(viewId);
+        PermissionBk currentPermissionBk = viewMap.get(permissionId);
         while (!Objects.equals(currentPermissionBk.getParentId(), RoleConstant.ROOT_ROLE_PARENT_ID)) {
             ancestorIds.add(currentPermissionBk.getParentId());
             currentPermissionBk = viewMap.get(currentPermissionBk.getParentId());
@@ -172,13 +117,13 @@ public class PermissionBkServiceImpl extends ServiceImpl<PermissionBkMapper, Per
 
     /**
      * 获取权限列表的所有祖先ID
-     * @param viewIds 权限ID列表
+     * @param permissionIds 权限ID列表
      * @return 祖先ID列表
      */
     @Override
-    public List<Integer> getAncestorIds(List<Integer> viewIds) {
+    public List<Integer> getAncestorIds(List<Integer> permissionIds) {
         Set<Integer> ancestorIds = new HashSet<>();
-        for (Integer viewId : viewIds) {
+        for (Integer viewId : permissionIds) {
             ancestorIds.addAll(getAncestorIds(viewId));
         }
         return new ArrayList<>(ancestorIds);

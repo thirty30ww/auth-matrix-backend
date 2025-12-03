@@ -4,6 +4,11 @@ import com.thirty.common.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BasePermission extends BaseEntity {
@@ -46,4 +51,54 @@ public class BasePermission extends BaseEntity {
        * 是否启用(1:启用 0:不启用)
        */
      private Boolean isValid;
+
+     /**
+      * 从权限列表中提取权限ID列表
+      * @param permissions 权限列表
+      * @return 权限ID列表
+      */
+     public static <T extends BasePermission> List<Integer> extractPermissionIds(List<T> permissions) {
+         return permissions.stream().map(BasePermission::getId).distinct().collect(Collectors.toList());
+     }
+
+     /**
+      * 构建权限Map，key为权限ID，value为权限对象
+      * @param permissions 权限列表
+      * @param <T> 权限类型，必须继承自BasePermission
+      * @return 权限Map
+      */
+     public static <T extends BasePermission> Map<Integer, T> buildMap(List<T> permissions) {
+         return permissions.stream().collect(Collectors.toMap(BasePermission::getId, permission -> permission));
+     }
+
+    /**
+     * 构建父节点ID和子节点列表的Map，key为父节点ID，value为子节点列表
+     * @param permissions 权限列表
+     * @param <T> 权限类型，必须继承自BasePermission
+     * @return 父节点ID和子节点列表的Map
+     */
+    public static <T extends BasePermission> Map<Integer, List<T>> buildParentChildMap(List<T> permissions) {
+        return permissions.stream().collect(Collectors.groupingBy(BasePermission::getParentId));
+    }
+
+    /**
+     * 从权限列表中提取权限码列表
+     * @param permissions 权限列表
+     * @param <T> 权限类型，必须继承自BasePermission
+     * @return 权限码列表
+     */
+    public static <T extends BasePermission> List<String> extractPermissionCodes(List<T> permissions) {
+        return permissions.stream().map(BasePermission::getPermissionCode).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 从权限列表中提取最大的前一个节点ID权限
+     * @param permissions 权限列表
+     * @return 最大的前一个节点ID权限
+     * @param <T> 权限类型，必须继承自BasePermission
+     */
+    public static <T extends BasePermission> T extractMaxFrontIdPermission(List<T> permissions) {
+
+        return permissions.stream().max(Comparator.comparingInt(BasePermission::getFrontId)).orElse(null);
+    }
 }
