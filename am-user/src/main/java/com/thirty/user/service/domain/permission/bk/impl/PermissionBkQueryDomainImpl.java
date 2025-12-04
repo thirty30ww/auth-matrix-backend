@@ -65,6 +65,4 @@ public class PermissionBkQueryDomainImpl implements PermissionBkQueryDomain {
         List<Integer> permissionId = getPermissionId(roleIds);
         return permissionBkService.getPermissionCodes(permissionId);
     }
-
-
 }

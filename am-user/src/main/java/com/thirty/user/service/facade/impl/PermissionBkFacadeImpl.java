@@ -128,11 +128,11 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
      */
     @Override
     public void addPermission(Integer userId, PermissionBkDTO permissionBkDTO) {
-        if (!permissionBkValidationDomain.validateTypeComply(permissionBkDTO.getParentNodeId(), permissionBkDTO.getType())) {
+        if (!permissionBkValidationDomain.validateTypeComply(permissionBkDTO.getParentId(), permissionBkDTO.getType())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_TYPE_NOT_COMPLY);
         }
-        if (!Objects.equals(permissionBkDTO.getParentNodeId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)
-                && !permissionBkValidationDomain.validateUserHavePermission(userId, permissionBkDTO.getParentNodeId())) {
+        if (!Objects.equals(permissionBkDTO.getParentId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)
+                && !permissionBkValidationDomain.validateUserHavePermission(userId, permissionBkDTO.getParentId())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_ADD);
         }
         permissionBkOperationDomain.addPermission(permissionBkDTO);
@@ -146,11 +146,11 @@ public class PermissionBkFacadeImpl implements PermissionBkFacade {
     @Override
     public void modifyPermission(Integer userId, PermissionBkDTO permissionBkDTO) {
         // 父ID不能等于当前ID或者当前ID的子ID
-        if (permissionBkValidationDomain.validateParentIdEqualsSelfAndDescendants(permissionBkDTO.getId(), permissionBkDTO.getParentNodeId())) {
+        if (permissionBkValidationDomain.validateParentIdEqualsSelfAndDescendants(permissionBkDTO.getId(), permissionBkDTO.getParentId())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_CANNOT_BE_PARENT);
         }
         // 父权限有规定的子权限类型，比如 DIRECTORY 的子权限不能是 BUTTON
-        if (!permissionBkValidationDomain.validateTypeComply(permissionBkDTO.getParentNodeId(), permissionBkDTO.getType())) {
+        if (!permissionBkValidationDomain.validateTypeComply(permissionBkDTO.getParentId(), permissionBkDTO.getType())) {
             throw new BusinessException(PermissionResultCode.PERMISSION_TYPE_NOT_COMPLY);
         }
         if (!permissionBkValidationDomain.validateModifyValid(userId, permissionBkDTO.getId(), permissionBkDTO.getIsValid())) {

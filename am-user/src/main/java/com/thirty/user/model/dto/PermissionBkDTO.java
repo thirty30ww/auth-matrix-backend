@@ -20,9 +20,9 @@ public class PermissionBkDTO {
     private PermissionBkType type;
     private String permissionCode;
     @NotNull(groups = {Add.class, Modify.class}, message = "父节点ID不能为空")
-    private Integer parentNodeId;
-    private Integer frontNodeId;
-    private Integer behindNodeId;
+    private Integer parentId;
+    private Integer frontId;
+    private Integer behindId;
     private String icon;
     private Boolean isValid;
 }

@@ -3,10 +3,11 @@ package com.thirty.user.model.entity.base;
 import com.thirty.common.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
@@ -88,17 +89,22 @@ public class BasePermission extends BaseEntity {
      * @return 权限码列表
      */
     public static <T extends BasePermission> List<String> extractPermissionCodes(List<T> permissions) {
-        return permissions.stream().map(BasePermission::getPermissionCode).distinct().collect(Collectors.toList());
+        return permissions.stream().map(BasePermission::getPermissionCode).filter(StringUtils::hasText).distinct().collect(Collectors.toList());
     }
 
     /**
-     * 从权限列表中提取最大的前一个节点ID权限
-     * @param permissions 权限列表
-     * @return 最大的前一个节点ID权限
+     * 将权限ID列表转换为无效权限列表
+     * @param permissionIds 权限ID列表
+     * @param supplier 权限对象供应商
      * @param <T> 权限类型，必须继承自BasePermission
+     * @return 无效权限列表
      */
-    public static <T extends BasePermission> T extractMaxFrontIdPermission(List<T> permissions) {
-
-        return permissions.stream().max(Comparator.comparingInt(BasePermission::getFrontId)).orElse(null);
+    public static <T extends BasePermission> List<T> toNotValidPermission(List<Integer> permissionIds, Supplier<T> supplier) {
+        return permissionIds.stream().map(permissionId -> {
+            T permission = supplier.get();
+            permission.setId(permissionId);
+            permission.setIsValid(false);
+            return permission;
+        }).collect(Collectors.toList());
     }
 }
