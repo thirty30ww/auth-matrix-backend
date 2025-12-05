@@ -12,7 +12,6 @@ public enum PermissionResultCode implements IResult {
     GET_VIEW_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取权限树成功"),
     GET_MENU_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取菜单树成功"),
     GET_LIST_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取页面列表成功"),
-    GET_DIRECTORY_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取目录树成功"),
     GET_MENU_AND_BUTTON_TREE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取菜单和按钮树成功"),
     GET_PERMISSION_CODE_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "获取权限码列表成功"),
     ADD_SUCCESS(GlobalResultCode.SUCCESS.getCode(), "添加成功"),

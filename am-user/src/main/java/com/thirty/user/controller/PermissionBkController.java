@@ -54,19 +54,6 @@ public class PermissionBkController {
     }
 
     /**
-     * 获取目录树
-     * @param authHeader 授权头
-     * @return 目录树
-     */
-    @GetMapping("/directory/tree")
-    @OperateLog(type = OperationType.SELECT, description = "获取目录树")
-    public ResultDTO<List<PermissionBkVO>> getDirectoryTree(@RequestHeader("Authorization") String authHeader) {
-        Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
-        List<PermissionBkVO> directoryTree = permissionBkFacade.getDirectoryTree(userId);
-        return ResultDTO.of(PermissionResultCode.GET_DIRECTORY_TREE_SUCCESS, directoryTree);
-    }
-
-    /**
      * 获取菜单和按钮树
      * @param targetRoleId 目标角色ID
      * @param authHeader 授权头
