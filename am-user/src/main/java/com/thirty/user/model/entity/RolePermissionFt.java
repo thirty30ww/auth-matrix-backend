@@ -6,11 +6,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 角色页面表
- * @TableName role_view
+ * 角色前台权限表
+ * @TableName role_permission_ft
  */
 @EqualsAndHashCode(callSuper = true)
-@TableName(value ="role_permission_bk")
+@TableName(value ="role_permission_ft")
 @Data
-public class RolePermissionBk extends BaseRolePermission {
+public class RolePermissionFt extends BaseRolePermission {
 }

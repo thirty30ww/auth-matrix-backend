@@ -72,11 +72,11 @@ public class PermissionBkVO {
 
     /**
      * 设置权限是否有变更
-     * @param permittedViewIds 权限权限ID列表
+     * @param permittedPermissionIds 权限ID列表
      * @param menus 菜单列表
      */
-    public static void setHasChange(List<Integer> permittedViewIds, List<PermissionBkVO> menus) {
-        menus.forEach(view -> view.setHasChange(permittedViewIds.contains(view.getNode().getId())));
+    public static void setHasChange(List<Integer> permittedPermissionIds, List<PermissionBkVO> menus) {
+        menus.forEach(view -> view.setHasChange(permittedPermissionIds.contains(view.getNode().getId())));
     }
 
     /**
