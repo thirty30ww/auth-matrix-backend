@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @param <T> 基础权限实体类型
  */
 public class BasePermissionServiceImpl<M extends BaseMapper<T>, T extends BasePermission> extends ServiceImpl<M, T>
-        implements BasePermissionService<T> {
+    implements BasePermissionService<T> {
 
     /**
      * 获取指定权限ID的所有祖先权限ID（不包含当前权限）

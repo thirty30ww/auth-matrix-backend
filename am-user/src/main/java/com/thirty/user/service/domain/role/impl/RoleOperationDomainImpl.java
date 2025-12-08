@@ -42,14 +42,14 @@ public class RoleOperationDomainImpl implements RoleOperationDomain {
         Role role = RoleConverter.INSTANCE.toRole(roleDTO);
         roleService.addRole(role);
         // 获取全局角色有权限的页面
-        List<Integer> globalViewIds = getPermissionIdsByParentRoleId(RoleConstant.GLOBAL_ROLE_PARENT_ID);
-        List<Integer> parentViewIds = rolePermissionBkService.getPermissionIds(roleDTO.getParentNodeId());
+        List<Integer> globalPermissionIds = getPermissionIdsByParentRoleId(RoleConstant.GLOBAL_ROLE_PARENT_ID);
+        List<Integer> parentPermissionIds = rolePermissionBkService.getPermissionIds(roleDTO.getParentNodeId());
 
         // 取公共部分
-        List<Integer> commonViewIds = CollectionUtil.CommonCompare(globalViewIds, parentViewIds);
+        List<Integer> commonPermissionIds = CollectionUtil.CommonCompare(globalPermissionIds, parentPermissionIds);
 
         // 分配权限权限
-        rolePermissionBkService.addRolePermissions(role.getId(), commonViewIds);
+        rolePermissionBkService.addRolePermissions(role.getId(), commonPermissionIds);
     }
 
     /**

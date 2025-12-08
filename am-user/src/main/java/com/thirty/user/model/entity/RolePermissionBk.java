@@ -13,4 +13,12 @@ import lombok.EqualsAndHashCode;
 @TableName(value ="role_permission_bk")
 @Data
 public class RolePermissionBk extends BaseRolePermission {
+    /**
+     * 构造函数，显式继承父类构造函数
+     * @param roleId 角色id
+     * @param permissionId 权限id
+     */
+    public RolePermissionBk(Integer roleId, Integer permissionId) {
+        super(roleId, permissionId);
+    }
 }

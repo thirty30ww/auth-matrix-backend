@@ -1,9 +1,8 @@
 package com.thirty.user.service.basic.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.thirty.user.mapper.RolePermissionFtMapper;
 import com.thirty.user.model.entity.RolePermissionFt;
 import com.thirty.user.service.basic.RolePermissionFtService;
-import com.thirty.user.mapper.RolePermissionFtMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 * @createDate 2025-12-07 16:50:42
 */
 @Service
-public class RolePermissionFtServiceImpl extends ServiceImpl<RolePermissionFtMapper, RolePermissionFt>
+public class RolePermissionFtServiceImpl extends BaseRolePermissionServiceImpl<RolePermissionFtMapper, RolePermissionFt>
     implements RolePermissionFtService{
 
 }
