@@ -13,31 +13,31 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 /**
- * View实体与DTO之间的转换器
+ * PermissionBk转换接口
  */
 @Mapper
 public interface PermissionBkConverter {
     PermissionBkConverter INSTANCE = Mappers.getMapper(PermissionBkConverter.class);
     
     /**
-     * 将Permission对象转换为PermissionVO对象
-     * @param permissionBk Permission对象
+     * 将PermissionBk对象转换为PermissionVO对象
+     * @param permissionBk PermissionBk对象
      * @return PermissionVO对象
      */
     @Mapping(source = ".", target = "node")
     PermissionBkVO toPermissionVO(PermissionBk permissionBk);
     
     /**
-     * 将Permission列表转换为PermissionVO列表
-     * @param permissionBks Permission列表
+     * 将PermissionBk列表转换为PermissionVO列表
+     * @param permissionBks PermissionBk列表
      * @return PermissionVO列表
      */
     List<PermissionBkVO> toPermissionVOS(List<PermissionBk> permissionBks);
 
     /**
-     * 将PermissionDTO对象转换为Permission对象
-     * @param permissionBkDTO PermissionDTO对象
-     * @return Permission对象
+     * 将PermissionBkDTO对象转换为PermissionBk对象
+     * @param permissionBkDTO PermissionBkDTO对象
+     * @return PermissionBk对象
      */
     PermissionBk toPermission(PermissionBkDTO permissionBkDTO);
 
