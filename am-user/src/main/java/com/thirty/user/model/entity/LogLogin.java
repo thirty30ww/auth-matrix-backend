@@ -89,7 +89,7 @@ public class LogLogin implements Serializable {
      * @return 浏览器列表
      */
     public static List<String> getBrowsers(List<LogLogin> logLogins) {
-        return logLogins.stream().map(LogLogin::getBrowser).collect(Collectors.toList());
+        return logLogins.stream().map(LogLogin::getBrowser).distinct().collect(Collectors.toList());
     }
 
     /**
@@ -98,6 +98,6 @@ public class LogLogin implements Serializable {
      * @return 操作系统列表
      */
     public static List<String> getOperatingSystems(List<LogLogin> logLogins) {
-        return logLogins.stream().map(LogLogin::getOperatingSystem).collect(Collectors.toList());
+        return logLogins.stream().map(LogLogin::getOperatingSystem).distinct().collect(Collectors.toList());
     }
 }

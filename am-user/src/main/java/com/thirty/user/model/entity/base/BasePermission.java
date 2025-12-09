@@ -7,7 +7,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
@@ -99,9 +98,14 @@ public class BasePermission extends BaseEntity {
      * @param <T> 权限类型，必须继承自BasePermission
      * @return 无效权限列表
      */
-    public static <T extends BasePermission> List<T> toNotValidPermission(List<Integer> permissionIds, Supplier<T> supplier) {
+    public static <T extends BasePermission> List<T> toNotValidPermission(Class<T> entityClass, List<Integer> permissionIds) {
         return permissionIds.stream().map(permissionId -> {
-            T permission = supplier.get();
+            T permission = null;
+            try {
+                permission = entityClass.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException("创建权限实例失败", e);
+            }
             permission.setId(permissionId);
             permission.setIsValid(false);
             return permission;

@@ -209,13 +209,7 @@ public class BasePermissionServiceImpl<M extends BaseMapper<T>, T extends BasePe
 
         if (!permission.getIsValid() && oldPermission.getIsValid()) {   // 如果权限状态从有效变为无效，需要更新所有后代权限
             List<Integer> descendantIds = getDescendantIds(permission.getId()); // 获取所有后代权限ID
-            List<T> descendantPermissions = T.toNotValidPermission(descendantIds, () -> {   // 更新所有后代权限为无效状态
-                try {
-                    return getEntityClass().getDeclaredConstructor().newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException("创建权限实例失败", e);
-                }
-            });
+            List<T> descendantPermissions = T.toNotValidPermission(getEntityClass(), descendantIds);    // 将所有后代权限ID转换为无效权限列表
             updateBatchById(descendantPermissions); // 更新所有后代权限
         }
         updateById(permission);

@@ -104,7 +104,7 @@ public class LogOperation implements Serializable {
      * @return 代码列表
      */
     public static List<Integer> getCodes(List<LogOperation> logOperations) {
-        return logOperations.stream().map(LogOperation::getCode).collect(Collectors.toList());
+        return logOperations.stream().map(LogOperation::getCode).distinct().collect(Collectors.toList());
     }
 
     /**
@@ -113,6 +113,6 @@ public class LogOperation implements Serializable {
      * @return 模块列表
      */
     public static List<String> getModules(List<LogOperation> logOperations) {
-        return logOperations.stream().map(LogOperation::getModule).collect(Collectors.toList());
+        return logOperations.stream().map(LogOperation::getModule).distinct().collect(Collectors.toList());
     }
 }
