@@ -41,25 +41,25 @@ public class PermissionBkOperationDomainImpl implements PermissionBkOperationDom
 
     /**
      * 删除权限
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      */
     @Override
-    public void deletePermission(Integer viewId) {
-        permissionBkService.deletePermission(viewId);
-        rolePermissionBkService.deleteByPermissionId(viewId);
+    public void deletePermission(Integer permissionId) {
+        permissionBkService.deletePermission(permissionId);
+        rolePermissionBkService.deleteByPermissionId(permissionId);
     }
 
     /**
      * 移动权限
-     * @param viewId 权限ID
+     * @param permissionId 权限ID
      * @param isUp 是否上移
      */
     @Override
-    public void movePermission(Integer viewId, Boolean isUp) {
+    public void movePermission(Integer permissionId, Boolean isUp) {
         if (isUp) {
-            permissionBkService.moveUp(viewId);
+            permissionBkService.moveUp(permissionId);
         } else {
-            permissionBkService.moveDown(viewId);
+            permissionBkService.moveDown(permissionId);
         }
     }
 }
