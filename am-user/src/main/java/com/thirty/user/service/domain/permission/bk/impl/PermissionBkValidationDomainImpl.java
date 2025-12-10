@@ -39,8 +39,8 @@ public class PermissionBkValidationDomainImpl implements PermissionBkValidationD
     public boolean validateUserHavePermissions(Integer userId, List<Integer> permissionIds) {
         List<Integer> roleIds = userRoleService.getRoleIds(userId);
         roleIds.addAll(roleService.getDescendantRoleIds(roleIds));
-        List<Integer> currentViewIds = permissionBkQueryDomain.getPermissionId(roleIds);
-        return new HashSet<>(currentViewIds).containsAll(permissionIds);
+        List<Integer> currentPermissionIds = permissionBkQueryDomain.getPermissionId(roleIds);
+        return new HashSet<>(currentPermissionIds).containsAll(permissionIds);
     }
 
     /**

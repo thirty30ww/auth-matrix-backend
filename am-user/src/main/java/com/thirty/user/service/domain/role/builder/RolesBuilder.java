@@ -142,7 +142,7 @@ public class RolesBuilder {
                 roleVO -> roleVO.getNode().getParentNodeId(),
                 RoleVO::getChildren,
                 RoleConstant.ROOT_ROLE_PARENT_ID,
-                true
+                null
         );
 
         // 全局角色添加到角色树

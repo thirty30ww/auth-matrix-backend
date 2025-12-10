@@ -53,6 +53,7 @@ public class PermissionBkServiceImpl extends BasePermissionServiceImpl<Permissio
             return Collections.emptyList();
         }
         wrapper.in(PermissionBk::getType, types)
+                .orderByAsc(PermissionBk::getParentId)
                 .orderByAsc(PermissionBk::getFrontId);
         if (keyword != null) {
             wrapper.like(PermissionBk::getName, keyword);

@@ -1,5 +1,6 @@
 package com.thirty.user.model.vo.base;
 
+import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.model.entity.base.BasePermission;
 import lombok.Data;
 
@@ -14,11 +15,11 @@ public class BasePermissionVO <T extends BasePermission, SELF extends BasePermis
     private List<SELF> children = new ArrayList<>();
 
     /**
-     * 获取父节点id到子节点列表的映射
+     * 构建id到权限VO的映射
      * @param permissionVOS 节点列表
-     * @return 父节点id到子节点列表的映射
+     * @return id到权限VO的映射
      */
-    public static <T extends BasePermission, V extends BasePermissionVO<T, V>> Map<Integer, V> buildParentChildMap(List<V> permissionVOS) {
+    public static <T extends BasePermission, V extends BasePermissionVO<T, V>> Map<Integer, V> buildMap(List<V> permissionVOS) {
         return permissionVOS.stream().collect(Collectors.toMap(vo -> vo.getNode().getId(), vo -> vo));
     }
 
@@ -64,6 +65,19 @@ public class BasePermissionVO <T extends BasePermission, SELF extends BasePermis
                 vo.setHasPermission(true);
             }
         });
+    }
+
+    /**
+     * 获取头权限id
+     * @param permissionVOS 权限VO列表
+     * @return 头权限id
+     */
+    public static <T extends BasePermission, V extends BasePermissionVO<T, V>> Integer getHeadPermissionId(List<V> permissionVOS) {
+        return permissionVOS.stream().filter(vo -> vo.getNode().getFrontId().equals(PermissionConstant.HEAD_PERMISSION_FRONT_ID))
+                .findFirst()
+                .map(V::getNode)
+                .map(BasePermission::getId)
+                .orElse(null);
     }
 
     /**

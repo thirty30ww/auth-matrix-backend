@@ -6,32 +6,36 @@ import com.thirty.user.model.entity.base.BasePermission;
 import com.thirty.user.model.entity.base.BaseRolePermission;
 import com.thirty.user.service.basic.BasePermissionService;
 import com.thirty.user.service.basic.BaseRolePermissionService;
+import com.thirty.user.service.basic.factory.PermissionServiceFactory;
+import com.thirty.user.service.basic.factory.RolePermissionServiceFactory;
 import com.thirty.user.service.domain.permission.base.BasePermissionOperationDomain;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 
 public class BasePermissionOperationDomainImpl<
         T extends BasePermission,
-        DTO extends BasePermissionDTO,
-        RP extends BaseRolePermission
+        RP extends BaseRolePermission,
+        DTO extends BasePermissionDTO
         >
         implements BasePermissionOperationDomain<DTO> {
 
     @Resource
     private PermissionGenericConverter permissionGenericConverter;
 
-    protected final BasePermissionService<T> permissionService;
-    protected final BaseRolePermissionService<RP> rolePermissionService;
+    @Resource
+    private PermissionServiceFactory permissionServiceFactory;
 
-    /**
-     * 构造函数
-     * @param permissionService 权限服务
-     * @param rolePermissionService 角色权限服务
-     */
-    public BasePermissionOperationDomainImpl(
-            BasePermissionService<T> permissionService,
-            BaseRolePermissionService<RP> rolePermissionService) {
-        this.permissionService = permissionService;
-        this.rolePermissionService = rolePermissionService;
+    @Resource
+    private RolePermissionServiceFactory rolePermissionServiceFactory;
+
+    protected BasePermissionService<T> permissionService;
+    protected BaseRolePermissionService<RP> rolePermissionService;
+
+    @PostConstruct
+    public void init() {
+        // 通过工厂的反射方法获取服务，指定泛型参数位置
+        this.permissionService = permissionServiceFactory.getServiceByGeneric(this, 0); // 第一个泛型参数
+        this.rolePermissionService = rolePermissionServiceFactory.getServiceByGeneric(this, 1); // 第二个泛型参数
     }
 
     /**
@@ -41,8 +45,7 @@ public class BasePermissionOperationDomainImpl<
     @Override
     public void addPermission(DTO permissionDTO) {
         T permission = permissionGenericConverter.toPermission(permissionDTO);
-        permissionService.tailInsert(permission);
-    }
+        permissionService.tailInsert(permission);    }
 
     /**
      * 修改权限
