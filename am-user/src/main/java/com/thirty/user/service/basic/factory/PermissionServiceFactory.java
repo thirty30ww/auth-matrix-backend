@@ -11,8 +11,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
 @Component
 public class PermissionServiceFactory extends BaseServiceFactory<BasePermissionService<?>, BasePermission> {
     @Resource
@@ -23,9 +21,8 @@ public class PermissionServiceFactory extends BaseServiceFactory<BasePermissionS
 
     @PostConstruct
     public void init() {
-        serviceMap = new HashMap<>();
-        serviceMap.put(PermissionBk.class, permissionBkService);
-        serviceMap.put(PermissionFt.class, permissionFtService);
+        registerService(PermissionBk.class, permissionBkService);
+        registerService(PermissionFt.class, permissionFtService);
     }
 
 }

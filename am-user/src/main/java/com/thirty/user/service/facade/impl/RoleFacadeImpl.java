@@ -177,12 +177,12 @@ public class RoleFacadeImpl implements RoleFacade {
     /**
      * 分配权限权限
      * @param userId 当前操作用户ID
-     * @param assignPermissionDTO 分配权限dto
+     * @param dto 分配权限dto
      */
     @Override
-    public void assignPermission(Integer userId, AssignPermissionDTO assignPermissionDTO) {
-        Integer targetRoleId = assignPermissionDTO.getRoleId();
-        List<Integer> newViewIds = assignPermissionDTO.getViewIds();
+    public void assignPermission(Integer userId, AssignPermissionDTO dto) {
+        Integer targetRoleId = dto.getRoleId();
+        List<Integer> newPermissionIds = dto.getViewIds();
 
         // 如果要分配权限的角色不是当前角色的子角色，则不能分配
         if (!roleValidationBuilderFactory.create(userId)
@@ -192,22 +192,22 @@ public class RoleFacadeImpl implements RoleFacade {
             throw new BusinessException(RoleResultCode.ROLE_NOT_AUTHORIZED_ASSIGN);
         }
         // 如果要分配的权限是当前角色没有的，则不能分配
-        if (!permissionBkValidationDomain.validateUserHavePermissions(userId, newViewIds)) {
+        if (!permissionBkValidationDomain.validateUserHavePermissions(userId, newPermissionIds)) {
             throw new BusinessException(PermissionResultCode.PERMISSION_NOT_AUTHORIZED_ASSIGN);
         }
 
         List<Integer> oldViewIds = permissionBkQueryDomain.getPermissionId(targetRoleId);
-        roleOperationDomain.assignNormalPermission(targetRoleId, oldViewIds, newViewIds);
+        roleOperationDomain.assignNormalPermission(targetRoleId, oldViewIds, newPermissionIds);
     }
 
     /**
      * 分配全局权限权限
-     * @param assignPermissionDTO 分配权限dto
+     * @param dto 分配权限dto
      */
     @Override
-    public void assignGlobalPermission(AssignPermissionDTO assignPermissionDTO) {
-        Integer targetRoleId = assignPermissionDTO.getRoleId();
-        List<Integer> newPermissionIds = assignPermissionDTO.getViewIds();
+    public void assignGlobalPermission(AssignPermissionDTO dto) {
+        Integer targetRoleId = dto.getRoleId();
+        List<Integer> newPermissionIds = dto.getViewIds();
         List<Integer> oldPermissionIds = permissionBkQueryDomain.getPermissionId(targetRoleId);
         roleOperationDomain.assignGlobalPermission(targetRoleId, oldPermissionIds, newPermissionIds);
     }

@@ -1,4 +1,3 @@
-// service/basic/factory/RolePermissionServiceFactory.java
 package com.thirty.user.service.basic.factory;
 
 import com.thirty.common.factory.BaseServiceFactory;
@@ -12,8 +11,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
 @Component
 public class RolePermissionServiceFactory extends BaseServiceFactory<BaseRolePermissionService<?>, BaseRolePermission> {
 
@@ -25,8 +22,7 @@ public class RolePermissionServiceFactory extends BaseServiceFactory<BaseRolePer
 
     @PostConstruct
     public void init() {
-        serviceMap = new HashMap<>();
-        serviceMap.put(RolePermissionBk.class, rolePermissionBkService);
-        serviceMap.put(RolePermissionFt.class, rolePermissionFtService);
+        registerService(RolePermissionBk.class, rolePermissionBkService);
+        registerService(RolePermissionFt.class, rolePermissionFtService);
     }
 }

@@ -20,15 +20,15 @@ import java.lang.annotation.*;
 @Pattern.List({
     @Pattern(
         regexp = "^(?=.*[0-9])(?=.*[a-z]).{8,}$",
-        message = "新密码必须至少8位且包含数字和小写字母"
+        message = "密码必须至少8位且包含数字和小写字母"
     ),
     @Pattern(
         regexp = "^(?=.*[A-Z@_]).+$",
-        message = "新密码必须包含大写字母或特殊字符(@或_)其中一种"
+        message = "密码必须包含大写字母或特殊字符(@或_)其中一种"
     ),
     @Pattern(
         regexp = "^[a-zA-Z0-9@_]+$",
-        message = "新密码只能包含数字、大小写字母、@、_"
+        message = "密码只能包含数字、大小写字母、@、_"
     )
 })
 public @interface ValidPassword {

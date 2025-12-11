@@ -134,9 +134,9 @@ public class RoleController {
     @PostMapping("/assign/permission")
     @PreAuthorize("hasAuthority('permission:role:assign')")
     @OperateLog(type = OperationType.UPDATE, description = "分配角色权限")
-    public ResultDTO<Void> assignPermission(@RequestBody AssignPermissionDTO assignPermissionDTO, @RequestHeader(value = "Authorization") String authHeader) {
+    public ResultDTO<Void> assignPermission(@RequestBody AssignPermissionDTO dto, @RequestHeader(value = "Authorization") String authHeader) {
         Integer userId = jwtUtil.getUserIdFromAuthHeader(authHeader);
-        roleFacade.assignPermission(userId, assignPermissionDTO);
+        roleFacade.assignPermission(userId, dto);
         return ResultDTO.of(RoleResultCode.ROLE_ASSIGN_VIEW_SUCCESS);
     }
 
@@ -146,8 +146,8 @@ public class RoleController {
     @PostMapping("/assign/permission/global")
     @PreAuthorize("hasAuthority('permission:role:global') and hasAuthority('permission:role:assign')")
     @OperateLog(type = OperationType.UPDATE, description = "分配全局角色权限")
-    public ResultDTO<Void> assignGlobalPermission(@RequestBody AssignPermissionDTO assignPermissionDTO) {
-        roleFacade.assignGlobalPermission(assignPermissionDTO);
+    public ResultDTO<Void> assignGlobalPermission(@RequestBody AssignPermissionDTO dto) {
+        roleFacade.assignGlobalPermission(dto);
         return ResultDTO.of(RoleResultCode.ROLE_ASSIGN_VIEW_SUCCESS);
     }
 }

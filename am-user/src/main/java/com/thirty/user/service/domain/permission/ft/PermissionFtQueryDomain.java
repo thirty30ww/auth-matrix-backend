@@ -1,4 +1,6 @@
 package com.thirty.user.service.domain.permission.ft;
 
-public interface PermissionFtQueryDomain {
+import com.thirty.user.service.domain.permission.base.BasePermissionQueryDomain;
+
+public interface PermissionFtQueryDomain extends BasePermissionQueryDomain {
 }

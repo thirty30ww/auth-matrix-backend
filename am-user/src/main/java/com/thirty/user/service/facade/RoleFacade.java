@@ -68,13 +68,13 @@ public interface RoleFacade {
     /**
      * 分配权限权限
      * @param userId 当前操作用户ID
-     * @param assignPermissionDTO 分配权限dto
+     * @param dto 分配权限dto
      */
-    void assignPermission(Integer userId, AssignPermissionDTO assignPermissionDTO);
+    void assignPermission(Integer userId, AssignPermissionDTO dto);
 
     /**
      * 分配全局权限权限
-     * @param assignPermissionDTO 分配权限dto
+     * @param dto 分配权限dto
      */
-    void assignGlobalPermission(AssignPermissionDTO assignPermissionDTO);
+    void assignGlobalPermission(AssignPermissionDTO dto);
 }

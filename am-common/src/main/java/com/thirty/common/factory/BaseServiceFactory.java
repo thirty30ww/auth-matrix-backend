@@ -4,6 +4,7 @@ package com.thirty.common.factory;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 基础服务工厂类，用于根据实体类获取对应的服务
@@ -12,7 +13,26 @@ import java.util.Map;
  */
 public abstract class BaseServiceFactory<S, T> {
     
-    protected Map<Class<?>, S> serviceMap;
+    private Map<Class<?>, S> serviceMap;
+
+    /**
+     * 初始化服务映射表，确保在使用前已初始化
+     */
+    protected void initServiceMap() {
+        if (serviceMap == null) {
+            serviceMap = new ConcurrentHashMap<>();
+        }
+    }
+
+    /**
+     * 注册服务，将实体类与服务实例关联起来
+     * @param entityClass 实体类
+     * @param service 服务实例
+     */
+    protected <E extends T, R extends S> void registerService(Class<E> entityClass, R service) {
+        initServiceMap();
+        serviceMap.put(entityClass, service);
+    }
     
     /**
      * 根据实体类获取对应的服务
