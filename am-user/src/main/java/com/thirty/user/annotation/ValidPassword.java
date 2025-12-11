@@ -9,9 +9,11 @@ import java.lang.annotation.*;
 /**
  * 密码验证注解
  * 密码规则：
- * 1. 必须至少8位且包含数字和小写字母
- * 2. 必须包含大写字母或特殊字符(@或_)其中一种
- * 3. 只能包含数字、大小写字母、@、_
+ * <ol>
+ *     <li>必须至少8位且包含数字和小写字母</li>
+ *     <li>必须包含大写字母或特殊字符(@或_)其中一种</li>
+ *     <li>只能包含数字、大小写字母、@、_</li>
+ * </ol>
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
