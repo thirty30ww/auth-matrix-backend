@@ -1,6 +1,5 @@
 package com.thirty.common.utils;
 
-import io.swagger.v3.core.util.Json;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -31,8 +30,6 @@ public class TreeBuilder<T, ID> {
 
         Map<ID, T> nodeMap = buildMap(nodes, getId);    // 节点ID到节点的映射
         Map<ID, List<T>> parentChildrenMap = buildParentChildrenMap(nodes, getParentId);    // 父节点ID到子节点列表的映射
-
-        log.debug("parentChildrenMap: {}", Json.pretty(parentChildrenMap));
 
         // 对每个父节点的子节点列表进行排序
         if (siblingSorter != null) {
