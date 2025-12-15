@@ -15,7 +15,6 @@ public class TreeBuilder<T, ID> {
      * @param getParentId 父节点ID获取函数
      * @param getChildren 子节点列表获取函数
      * @param rootParentId 根节点的父节点ID
-     * @param addOrphanNodes 是否添加孤立节点到树中
      * @return 树结构的节点列表
      */
     public List<T> buildTree(List<T> nodes,

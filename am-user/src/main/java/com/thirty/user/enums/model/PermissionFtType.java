@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PermissionFtType implements CodeEnum<Integer> {
+public enum PermissionFtType implements PermissionType {
     PAGE(1, "页面"),
     BUTTON(2, "按钮")
     ;

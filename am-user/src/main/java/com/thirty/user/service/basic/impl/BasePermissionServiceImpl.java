@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.constant.PermissionConstant;
+import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.base.BasePermission;
 import com.thirty.user.service.basic.BasePermissionService;
 import org.springframework.util.CollectionUtils;
@@ -19,8 +20,71 @@ import java.util.stream.Collectors;
  * @param <M> 基础权限映射器类型
  * @param <T> 基础权限实体类型
  */
-public class BasePermissionServiceImpl<M extends BaseMapper<T>, T extends BasePermission> extends ServiceImpl<M, T>
-    implements BasePermissionService<T> {
+public class BasePermissionServiceImpl<
+        M extends BaseMapper<T>,
+        T extends BasePermission
+        >
+        extends ServiceImpl<M, T>
+        implements BasePermissionService<T> {
+
+    /**
+     * 根据权限类型和关键字查询权限列表
+     * @param type 权限类型
+     * @param keyword 权限名称关键字
+     * @return 权限列表
+     */
+    @Override
+    public <E extends PermissionType> List<T> getPermissionByTypeAndKeyword(E type, String keyword) {
+        QueryWrapper<T> wrapper = new QueryWrapper<>();
+        if (type != null) {
+            wrapper.eq("type", type);
+        }
+        if (keyword != null) {
+            wrapper.like("name", keyword);
+        }
+        return list(wrapper);
+    }
+
+    /**
+     * 根据权限类型列表和关键字查询权限列表
+     * @param types 权限类型列表
+     * @param keyword 权限名称关键字
+     * @return 权限列表
+     */
+    @Override
+    public <E extends PermissionType> List<T> getPermissionByTypesAndKeyword(List<E> types, String keyword) {
+        QueryWrapper<T> wrapper = new QueryWrapper<>();
+        if (CollectionUtils.isEmpty(types)) {
+            return List.of();
+        }
+        wrapper.in("type", types);
+        wrapper.orderByAsc("parent_id")
+                .orderByAsc("front_id");
+        if (keyword != null) {
+            wrapper.like("name", keyword);
+        }
+        return list(wrapper);
+    }
+
+    /**
+     * 根据权限类型查询权限列表
+     * @param type 权限类型
+     * @return 权限列表
+     */
+    @Override
+    public <E extends PermissionType> List<T> getPermissionByTypes(E type) {
+        return getPermissionByTypeAndKeyword(type, null);
+    }
+
+    /**
+     * 根据权限类型列表查询权限列表
+     * @param types 权限类型列表
+     * @return 权限列表
+     */
+    @Override
+    public <E extends PermissionType> List<T> getPermissionByTypes(List<E> types) {
+        return getPermissionByTypesAndKeyword(types, null);
+    }
 
     /**
      * 获取指定权限ID的所有祖先权限ID（不包含当前权限）
@@ -29,13 +93,13 @@ public class BasePermissionServiceImpl<M extends BaseMapper<T>, T extends BasePe
      */
     @Override
     public List<Integer> getAncestorIds(Integer permissionId) {
-    List<Integer> ancestorIds = new ArrayList<>();
-    T permission = getById(permissionId);
-    while (Objects.nonNull(permission) && !Objects.equals(permission.getParentId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)) {
-        ancestorIds.add(permission.getParentId());
-        permission = getById(permission.getParentId());
-    }
-    return ancestorIds;
+        List<Integer> ancestorIds = new ArrayList<>();
+        T permission = getById(permissionId);
+        while (Objects.nonNull(permission) && !Objects.equals(permission.getParentId(), PermissionConstant.ROOT_PERMISSION_PARENT_ID)) {
+            ancestorIds.add(permission.getParentId());
+            permission = getById(permission.getParentId());
+        }
+        return ancestorIds;
     }
 
     /**

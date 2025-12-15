@@ -1,6 +1,7 @@
 package com.thirty.user.service.basic;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.base.BasePermission;
 
 import java.util.List;
@@ -9,7 +10,38 @@ import java.util.List;
  * 基础权限服务接口
  * @param <T> 基础权限实体类型
  */
-public interface BasePermissionService<T extends BasePermission> extends IService<T> {
+public interface BasePermissionService<T extends BasePermission>
+        extends IService<T> {
+    /**
+     * 根据权限类型和关键词获取权限列表
+     * @param type 权限类型
+     * @param keyword 关键词
+     * @return 权限列表
+     */
+    <E extends PermissionType> List<T> getPermissionByTypeAndKeyword(E type, String keyword);
+
+     /**
+     * 根据权限类型列表和关键词查询权限列表
+     * @param types 权限类型列表
+     * @param keyword 关键词
+     * @return 权限列表
+     */
+    <E extends PermissionType> List<T> getPermissionByTypesAndKeyword(List<E> types, String keyword);
+
+     /**
+     * 根据权限类型查询权限列表
+     * @param type 权限类型
+     * @return 权限列表
+     */
+    <E extends PermissionType> List<T> getPermissionByTypes(E type);
+
+    /**
+     * 根据权限类型列表查询权限列表
+     * @param types 权限类型列表
+     * @return 权限列表
+     */
+    <E extends PermissionType> List<T> getPermissionByTypes(List<E> types);
+
     /**
      * 获取指定权限ID的所有祖先权限ID（不包含当前权限）
      * @param permissionId 权限ID

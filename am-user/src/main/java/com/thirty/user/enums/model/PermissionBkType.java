@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PermissionBkType implements CodeEnum<Integer> {
+public enum PermissionBkType implements PermissionType {
     DIRECTORY(1, "目录"),
     MENU(2, "菜单"),
     PAGE(3, "页面"),

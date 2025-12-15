@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 * @createDate 2025-12-03 15:00:41
 */
 @Service
-public class PermissionFtServiceImpl extends BasePermissionServiceImpl<PermissionFtMapper, PermissionFt>
-    implements PermissionFtService{
+public class PermissionFtServiceImpl extends BasePermissionServiceImpl<
+        PermissionFtMapper,
+        PermissionFt
+        >
+        implements PermissionFtService{
 
 }
 

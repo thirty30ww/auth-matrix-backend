@@ -14,15 +14,15 @@ public class PermissionsBkBuilderFactory {
     @Resource
     private PermissionBkQueryDomain permissionBkQueryDomain;
 
-    public PermissionsBkBuilder create() {
-        return new PermissionsBkBuilder(permissionBkService, permissionBkQueryDomain);
+    public PermissionBkBuilder create() {
+        return new PermissionBkBuilder(permissionBkService, permissionBkQueryDomain);
     }
 
-    public PermissionsBkBuilder create(List<Integer> currentAndChildRoleIds) {
+    public PermissionBkBuilder create(List<Integer> currentAndChildRoleIds) {
         return create().forRoles(currentAndChildRoleIds);
     }
 
-    public PermissionsBkBuilder create(List<Integer> currentAndChildRoleIds, Integer targetRoleId) {
+    public PermissionBkBuilder create(List<Integer> currentAndChildRoleIds, Integer targetRoleId) {
         return create(currentAndChildRoleIds).withTargetRole(targetRoleId);
     }
 }

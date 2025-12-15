@@ -3,7 +3,9 @@ package com.thirty.user.service.domain.permission.bk.builder;
 import com.thirty.common.utils.TreeBuilder;
 import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.constant.RoleConstant;
+import com.thirty.user.converter.PermissionBkConverter;
 import com.thirty.user.enums.model.PermissionBkType;
+import com.thirty.user.model.entity.PermissionBk;
 import com.thirty.user.model.vo.PermissionBkVO;
 import com.thirty.user.service.basic.PermissionBkService;
 import com.thirty.user.service.domain.permission.bk.PermissionBkQueryDomain;
@@ -19,12 +21,12 @@ import java.util.Objects;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE) // 所有字段默认私有
-public class PermissionsBkBuilder {
+public class PermissionBkBuilder {
 
     final PermissionBkService permissionBkService;
     final PermissionBkQueryDomain permissionBkQueryDomain;
 
-    public PermissionsBkBuilder(PermissionBkService permissionBkService, PermissionBkQueryDomain permissionBkQueryDomain) {
+    public PermissionBkBuilder(PermissionBkService permissionBkService, PermissionBkQueryDomain permissionBkQueryDomain) {
         this.permissionBkService = permissionBkService;
         this.permissionBkQueryDomain = permissionBkQueryDomain;
     }
@@ -41,7 +43,7 @@ public class PermissionsBkBuilder {
     /**
      * 设置搜索关键词
      */
-    public PermissionsBkBuilder withKeyword(String keyword) {
+    public PermissionBkBuilder withKeyword(String keyword) {
         this.keyword = keyword;
         return this;
     }
@@ -49,7 +51,7 @@ public class PermissionsBkBuilder {
     /**
      * 设置权限列表
      */
-    public PermissionsBkBuilder withPermissionTypes(List<PermissionBkType> permissionBkTypes) {
+    public PermissionBkBuilder withPermissionTypes(List<PermissionBkType> permissionBkTypes) {
         this.permissionBkTypes = permissionBkTypes;
         return this;
     }
@@ -57,7 +59,7 @@ public class PermissionsBkBuilder {
     /**
      * 设置当前角色ID列表
      */
-    public PermissionsBkBuilder forRoles(List<Integer> currentRoleIds) {
+    public PermissionBkBuilder forRoles(List<Integer> currentRoleIds) {
         this.currentRoleIds = currentRoleIds;
         return this;
     }
@@ -65,7 +67,7 @@ public class PermissionsBkBuilder {
     /**
      * 设置目标角色ID
      */
-    public PermissionsBkBuilder withTargetRole(Integer targetRoleId) {
+    public PermissionBkBuilder withTargetRole(Integer targetRoleId) {
         this.targetRoleId = targetRoleId;
         return this;
     }
@@ -73,7 +75,7 @@ public class PermissionsBkBuilder {
     /**
      * 过滤权限（只返回有权限的权限）
      */
-    public PermissionsBkBuilder filterByPermission() {
+    public PermissionBkBuilder filterByPermission() {
         this.filterPermission = true;
         return this;
     }
@@ -81,7 +83,7 @@ public class PermissionsBkBuilder {
     /**
      * 设置变更标志（为每个权限设置hasChange属性）
      */
-    public PermissionsBkBuilder withChangeFlag() {
+    public PermissionBkBuilder withChangeFlag() {
         this.setChangeFlag = true;
         return this;
     }
@@ -89,7 +91,7 @@ public class PermissionsBkBuilder {
     /**
      * 设置权限标志（为每个权限设置hasPermission属性）
      */
-    public PermissionsBkBuilder withPermissionFlag() {
+    public PermissionBkBuilder withPermissionFlag() {
         this.setPermissionFlag = true;
         return this;
     }
@@ -98,7 +100,8 @@ public class PermissionsBkBuilder {
      * 构建成列表（平铺结构）
      */
     public List<PermissionBkVO> build() {
-        List<PermissionBkVO> permissionBkVOS = permissionBkService.getPermissionVOByTypesAndKeyword(permissionBkTypes, keyword);
+        List<PermissionBk> permissionBks = permissionBkService.getPermissionByTypesAndKeyword(permissionBkTypes, keyword);
+        List<PermissionBkVO> permissionBkVOS = PermissionBkConverter.INSTANCE.toPermissionVOS(permissionBks);
         return processPermissions(permissionBkVOS);
     }
 
