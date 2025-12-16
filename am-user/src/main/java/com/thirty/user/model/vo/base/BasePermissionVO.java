@@ -10,7 +10,13 @@ import java.util.stream.Collectors;
 @Data
 public class BasePermissionVO <T extends BasePermission, SELF extends BasePermissionVO<T, SELF>> {
     private T node;
+    /**
+     * 目标角色是否有该权限
+     */
     private Boolean hasPermission = false;
+    /**
+     * 当前用户角色可以修改的权限（即拥有的权限）
+     */
     private Boolean hasChange = false;
     private List<SELF> children = new ArrayList<>();
 
