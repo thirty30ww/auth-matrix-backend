@@ -1,6 +1,5 @@
 package com.thirty.user.model.vo.base;
 
-import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.model.entity.base.BasePermission;
 import lombok.Data;
 
@@ -40,27 +39,6 @@ public class BasePermissionVO <T extends BasePermission, SELF extends BasePermis
     }
 
     /**
-     * 按前端节点id排序
-     * @param permissionVOS 节点列表
-     * @return 按前端节点id排序后的节点列表
-     */
-    public static <T extends BasePermission, V extends BasePermissionVO<T, V>> List<V> sortByFrontId(Collection<V> permissionVOS) {
-        return permissionVOS.stream()
-                .sorted(Comparator.comparingInt(vo -> vo.getNode().getFrontId()))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 按前端节点id排序
-     * @param permissionVOS 节点列表
-     * @param parentId 父节点id
-     * @return 按前端节点id排序后的节点列表
-     */
-    public static <T extends BasePermission, V extends BasePermissionVO<T, V>> List<V> sortByFrontId(Collection<V> permissionVOS, Integer parentId) {
-        return sortByFrontId(getSameParentPermissionVO(permissionVOS, parentId));
-    }
-
-    /**
      * 设置权限是否有权限
      * @param permittedIds 权限ID列表
      * @param permissions 权限列表
@@ -71,19 +49,6 @@ public class BasePermissionVO <T extends BasePermission, SELF extends BasePermis
                 vo.setHasPermission(true);
             }
         });
-    }
-
-    /**
-     * 获取头权限id
-     * @param permissionVOS 权限VO列表
-     * @return 头权限id
-     */
-    public static <T extends BasePermission, V extends BasePermissionVO<T, V>> Integer getHeadPermissionId(List<V> permissionVOS) {
-        return permissionVOS.stream().filter(vo -> vo.getNode().getFrontId().equals(PermissionConstant.HEAD_PERMISSION_FRONT_ID))
-                .findFirst()
-                .map(V::getNode)
-                .map(BasePermission::getId)
-                .orElse(null);
     }
 
     /**

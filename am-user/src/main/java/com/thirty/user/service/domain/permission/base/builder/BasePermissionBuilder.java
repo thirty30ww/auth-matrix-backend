@@ -1,6 +1,5 @@
 package com.thirty.user.service.domain.permission.base.builder;
 
-import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.base.BasePermission;
 import com.thirty.user.model.vo.base.BasePermissionVO;
@@ -10,10 +9,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class BasePermissionBuilder<
@@ -138,34 +134,6 @@ public abstract class BasePermissionBuilder<
         }
 
         return permissionVOS;
-    }
-
-    /**
-     * 对权限VO列表进行排序，根据节点的behindId属性构建链表结构
-     * @param permissions 权限VO列表
-     * @return 排序后的权限VO列表
-     */
-    private List<VO> sortSiblings(List<VO> permissions) {
-        if (CollectionUtils.isEmpty(permissions)) { return permissions; }   // 空列表直接返回
-
-        Map<Integer, VO> permissionMap = VO.buildMap(permissions);  // 构建权限ID到权限VO的映射
-
-        Integer currentId = VO.getHeadPermissionId(permissions);  // 获取头权限的id作为当前节点id
-        List<VO> result = new ArrayList<>();  // 用于存储排序后的权限VO列表
-
-        // 遍历链表，将权限VO添加到结果列表中，直到遇到尾节点
-        while (!Objects.equals(currentId, PermissionConstant.TAIL_PERMISSION_BEHIND_ID)) {
-            VO currentPermission = permissionMap.get(currentId);
-
-            if (currentPermission == null) {    // 若当前节点不存在，则跳出循环
-                break;
-            }
-
-            result.add(currentPermission);  // 将当前节点添加到结果列表中
-
-            currentId = currentPermission.getNode().getBehindId();  // 移动到下一个节点
-        }
-        return result;
     }
 
     /**

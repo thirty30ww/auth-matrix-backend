@@ -24,9 +24,5 @@ public class BasePermissionDTO {
     @NotNull(groups = {Add.class, Modify.class}, message = "父节点ID不能为空")
     private Integer parentId;
 
-    private Integer frontId;
-
-    private Integer behindId;
-
     private Boolean isValid;
 }

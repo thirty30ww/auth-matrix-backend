@@ -3,6 +3,7 @@ package com.thirty.user.service.basic;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.base.BasePermission;
+import io.github.thirty30ww.defargs.annotation.Omittable;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface BasePermissionService<T extends BasePermission>
      */
     <E extends PermissionType> List<T> getPermissionByTypeAndKeyword(E type, String keyword);
 
-     /**
+    /**
      * 根据权限类型列表和关键词查询权限列表
      * @param types 权限类型列表
      * @param keyword 关键词
@@ -28,7 +29,7 @@ public interface BasePermissionService<T extends BasePermission>
      */
     <E extends PermissionType> List<T> getPermissionByTypesAndKeyword(List<E> types, String keyword);
 
-     /**
+    /**
      * 根据权限类型查询权限列表
      * @param type 权限类型
      * @return 权限列表
@@ -70,24 +71,24 @@ public interface BasePermissionService<T extends BasePermission>
      */
     List<Integer> getDescendantIds(List<Integer> permissionIds);
 
-     /**
-      * 获取指定权限ID列表的所有权限码
-      * @param permissionIds 权限ID列表
-      * @return 所有权限码列表
-      */
+    /**
+     * 获取指定权限ID列表的所有权限码
+     * @param permissionIds 权限ID列表
+     * @return 所有权限码列表
+     */
     List<String> getPermissionCodes(List<Integer> permissionIds);
 
-     /**
-      * 在指定权限之后插入权限
-      * @param permission 权限实体
-      * @param frontPermission 前一个权限实体
-      */
+    /**
+     * 在指定权限之后插入权限
+     * @param permission 权限实体
+     * @param frontPermission 前一个权限实体
+     */
     void insert(T permission, T frontPermission);
 
-     /**
-      * 在指定父节点的前头插入权限
-      * @param permission 权限实体
-      */
+    /**
+     * 在指定父节点的前头插入权限
+     * @param permission 权限实体
+     */
     void headInsert(T permission);
 
     /**
@@ -96,22 +97,22 @@ public interface BasePermissionService<T extends BasePermission>
      */
     void tailInsert(T permission);
 
-     /**
-      * 连接权限的邻居节点
-      * @param permission 权限实体
-      */
+    /**
+     * 连接权限的邻居节点
+     * @param permission 权限实体
+     */
     void connectNeighborPermissions(T permission);
 
-     /**
-      * 修改权限
-      * @param permission 权限实体
-      */
+    /**
+     * 修改权限
+     * @param permission 权限实体
+     */
     void modifyPermission(T permission);
 
-     /**
-      * 删除权限
-      * @param permissionId 权限ID
-      */
+    /**
+     * 删除权限
+     * @param permissionId 权限ID
+     */
     void deletePermission(Integer permissionId);
 
     /**
@@ -120,9 +121,37 @@ public interface BasePermissionService<T extends BasePermission>
      */
     void moveUp(Integer permissionId);
 
-     /**
-      * 权限下移
-      * @param permissionId 权限ID
-      */
+    /**
+     * 权限下移
+     * @param permissionId 权限ID
+     */
     void moveDown(Integer permissionId);
+
+    /**
+     * 校验权限是否为尾权限
+     * @param permission 权限实体
+     * @return 是否为尾权限
+     */
+    Boolean isTailPermission(T permission);
+
+    /**
+     * 保存或更新权限
+     * @param permission 权限实体
+     * @return 权限ID
+     */
+    Integer saveOrUpdatePermission(T permission);
+
+     /**
+     * 权限前移
+     * @param permission 权限实体
+     * @param length 前移长度，默认1
+     */
+    void moveForward(T permission, @Omittable Integer length);
+
+     /**
+     * 权限后移
+     * @param permission 权限实体
+     * @param length 后移长度，默认1
+     */
+    void moveBackward(T permission, @Omittable Integer length);
 }

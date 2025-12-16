@@ -110,8 +110,8 @@ public class BasePermissionValidationDomainImpl<
       */
      @Override
      public boolean validateMoveUp(Integer permissionId) {
-        BasePermission permission = permissionService.getById(permissionId);
-        return !Objects.equals(permission.getFrontId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID);
+        T permission = permissionService.getById(permissionId);
+        return !Objects.equals(permission.getOrder(), PermissionConstant.HEAD_PERMISSION_ORDER);
     }
 
      /**
@@ -123,8 +123,8 @@ public class BasePermissionValidationDomainImpl<
       */
      @Override
      public boolean validateMoveDown(Integer permissionId) {
-         BasePermission permission = permissionService.getById(permissionId);
-         return !Objects.equals(permission.getBehindId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
+         T permission = permissionService.getById(permissionId);
+         return !permissionService.isTailPermission(permission);
     }
 
     /**
@@ -138,7 +138,7 @@ public class BasePermissionValidationDomainImpl<
      */
     @Override
     public boolean validateModifyValid(Integer useId, Integer permissionId, Boolean isValid) {
-         BasePermission permission = permissionService.getById(permissionId);
+         T permission = permissionService.getById(permissionId);
         // 验证是否修改了权限的启用状态
         if (permission.getIsValid() == isValid) {
             return true;

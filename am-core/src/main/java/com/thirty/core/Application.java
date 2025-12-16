@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication(
     scanBasePackages = {
@@ -19,6 +20,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfigur
         SpringDataWebAutoConfiguration.class
     }
 )
+@EnableAspectJAutoProxy(exposeProxy = true)
 @MapperScan("com.thirty.**.mapper") // 使用通配符扫描所有模块的 mapper
 @Slf4j
 public class Application {

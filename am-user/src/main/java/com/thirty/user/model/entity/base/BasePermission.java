@@ -1,5 +1,6 @@
 package com.thirty.user.model.entity.base;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.thirty.common.model.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,17 +41,8 @@ public class BasePermission extends BaseEntity {
     /**
      * 权限排序
      */
+    @TableField(value = "`order`")
     private Integer order;
-
-    /**
-     * 该节点的前一个节点ID(若为第1个节点则取0)
-     */
-    private Integer frontId;
-
-    /**
-     * 该节点的后继节点ID
-     */
-    private Integer behindId;
 
     /**
      * 是否启用(1:启用 0:不启用)

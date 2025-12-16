@@ -7,6 +7,8 @@ import com.thirty.user.constant.PermissionConstant;
 import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.base.BasePermission;
 import com.thirty.user.service.basic.BasePermissionService;
+import io.github.thirty30ww.defargs.annotation.DefaultValue;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -26,6 +28,11 @@ public class BasePermissionServiceImpl<
         >
         extends ServiceImpl<M, T>
         implements BasePermissionService<T> {
+
+    @SuppressWarnings("unchecked")
+    protected BasePermissionService<T> getSelf() {
+        return (BasePermissionService<T>) AopContext.currentProxy();
+    }
 
     /**
      * 根据权限类型和关键字查询权限列表
@@ -59,7 +66,7 @@ public class BasePermissionServiceImpl<
         }
         wrapper.in("type", types);
         wrapper.orderByAsc("parent_id")
-                .orderByAsc("front_id");
+                .orderByAsc("`order`");
         if (keyword != null) {
             wrapper.like("name", keyword);
         }
@@ -176,21 +183,11 @@ public class BasePermissionServiceImpl<
      */
     @Override
     public void insert(T permission, T frontPermission) {
-        Integer permissionId = saveOrUpdatePermission(permission);  // 保存或更新权限，获取权限ID
+        T behindPermission = getBehindNode(frontPermission);    // 获取frontPermission的behindPermission
+        if (Objects.nonNull(behindPermission)) { moveBackward(behindPermission); }
 
-        T behindPermission = getById(frontPermission.getBehindId());    // 获取frontPermission的behindPermission
-
-        frontPermission.setBehindId(permissionId);
-        permission.setFrontId(frontPermission.getId());
-
-        if (Objects.nonNull(behindPermission)) {    // 若frontPermission有behindPermission
-            behindPermission.setFrontId(permissionId);
-            permission.setBehindId(behindPermission.getId());
-            updateBatchById(List.of(frontPermission, behindPermission, permission));
-        } else {
-            permission.setBehindId(PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
-            updateBatchById(List.of(frontPermission, permission));
-        }
+        permission.setOrder(frontPermission.getOrder() + 1);
+        saveOrUpdatePermission(permission);  // 保存或更新权限，获取权限ID
     }
 
     /**
@@ -199,19 +196,12 @@ public class BasePermissionServiceImpl<
      */
     @Override
     public void headInsert(T permission) {
-        Integer permissionId = saveOrUpdatePermission(permission);
-        permission.setFrontId(PermissionConstant.HEAD_PERMISSION_FRONT_ID);
-
         T headPermission = getHeadNode(permission.getParentId());   // 获取指定父节点的头子节点
 
-        if(Objects.isNull(headPermission)) {
-            permission.setBehindId(PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
-            updateById(permission);
-        } else {
-            headPermission.setFrontId(permissionId);
-            permission.setBehindId(headPermission.getBehindId());
-            updateBatchById(List.of(headPermission, permission));
-        }
+        // 如果父节点下有子节点，将headPermission及其后的权限后移一位
+        if(Objects.nonNull(headPermission)) { moveBackward(headPermission); }
+
+        saveOrUpdatePermission(permission);
     }
 
     /**
@@ -227,7 +217,6 @@ public class BasePermissionServiceImpl<
         } else {    // 否则在tailPermission之后插入permission
             insert(permission, tailPermission);
         }
-
     }
 
     /**
@@ -236,26 +225,8 @@ public class BasePermissionServiceImpl<
      */
     @Override
     public void connectNeighborPermissions(T permission) {
-        // 将permission前后的邻居节点相互连接
-        List<T> neighborPermissions = new ArrayList<>();
-        // 获取当前父节点下的所有权限
-        Map<Integer, T> permissionMap = T.buildMap(getByParentId(permission.getParentId()));
-
-        // 处理permission前一个权限的behindId
-        if (!Objects.equals(permission.getFrontId(), PermissionConstant.HEAD_PERMISSION_FRONT_ID)) {
-            T frontPermission = permissionMap.get(permission.getFrontId());
-            frontPermission.setBehindId(permission.getBehindId());
-            neighborPermissions.add(frontPermission);
-        }
-        // 处理permission后一个权限的frontId
-        if (!Objects.equals(permission.getBehindId(), PermissionConstant.TAIL_PERMISSION_BEHIND_ID)) {
-            T behindPermission = permissionMap.get(permission.getBehindId());
-            behindPermission.setFrontId(permission.getFrontId());
-            neighborPermissions.add(behindPermission);
-        }
-
-        // 更新邻居节点
-        updateBatchById(neighborPermissions);
+        T behindPermission = getBehindNode(permission);
+        if (Objects.nonNull(behindPermission)) { moveForward(behindPermission); }
     }
 
     /**
@@ -266,11 +237,9 @@ public class BasePermissionServiceImpl<
     public void modifyPermission(T permission) {
         T oldPermission = getById(permission.getId());  // 处理权限父节点变化
         if (!Objects.equals(permission.getParentId(), oldPermission.getParentId())) {   // 如果父节点变化，需要尾插法添加权限
-            tailInsert(permission); // 尾插法添加权限
-            connectNeighborPermissions(oldPermission);  // 处理旧权限的邻居节点连接
-            return;
+            getSelf().tailInsert(permission); // 尾插法添加权限
+            getSelf().connectNeighborPermissions(oldPermission);  // 处理旧权限的邻居节点连接
         }
-
         if (!permission.getIsValid() && oldPermission.getIsValid()) {   // 如果权限状态从有效变为无效，需要更新所有后代权限
             List<Integer> descendantIds = getDescendantIds(permission.getId()); // 获取所有后代权限ID
             List<T> descendantPermissions = T.toNotValidPermission(getEntityClass(), descendantIds);    // 将所有后代权限ID转换为无效权限列表
@@ -288,41 +257,53 @@ public class BasePermissionServiceImpl<
         T permission = getById(permissionId);
         List<Integer> descendantIds = getDescendantIds(permissionId); // 获取所有后代权限ID
         descendantIds.add(permissionId);
+
         removeByIds(descendantIds); // 删除所有后代权限
 
         connectNeighborPermissions(permission); // 连接权限的邻居节点
     }
 
     /**
-     * 权限上移
+     * 权限上移，需先校验可以上移，即permission不是头权限
      * @param permissionId 权限ID
      */
     @Override
     public void moveUp(Integer permissionId) {
+        // 获取权限实体
         T permission = getById(permissionId);
-        T frontPermission = getById(permission.getFrontId());
-        T targetPermission = getById(frontPermission.getFrontId());
+        T frontPermission = getFrontNode(permission);
+        // 移动权限
+        permission.setOrder(permission.getOrder() - 1);
+        frontPermission.setOrder(frontPermission.getOrder() + 1);
 
-        connectNeighborPermissions(permission);
-
-        if (Objects.isNull(targetPermission)) {
-            headInsert(permission);
-        } else {
-            insert(permission, targetPermission);
-        }
+        updateBatchById(List.of(permission, frontPermission));
     }
 
     /**
-     * 权限下移
+     * 权限下移，需先校验可以下移，即permission不是尾权限
      * @param permissionId 权限ID
      */
     @Override
     public void moveDown(Integer permissionId) {
+        // 获取权限实体
         T permission = getById(permissionId);
-        connectNeighborPermissions(permission);
+        T behindPermission = getBehindNode(permission);
+        // 移动权限
+        permission.setOrder(permission.getOrder() + 1);
+        behindPermission.setOrder(behindPermission.getOrder() - 1);
 
-        T behindPermission = getById(permission.getBehindId());
-        insert(permission, behindPermission);
+        updateBatchById(List.of(permission, behindPermission));
+    }
+
+    /**
+     * 校验权限是否为尾权限
+     * @param permission 权限实体
+     * @return 是否为尾权限
+     */
+    @Override
+    public Boolean isTailPermission(T permission) {
+        T tailPermission = getTailNode(permission.getParentId());
+        return Objects.equals(permission.getId(), tailPermission.getId());
     }
 
     /**
@@ -330,7 +311,8 @@ public class BasePermissionServiceImpl<
      * @param permission 权限实体
      * @return 权限ID
      */
-    private Integer saveOrUpdatePermission(T permission) {
+    @Override
+    public Integer saveOrUpdatePermission(T permission) {
         if (permission.getId() == null) {   // 若权限ID为空，执行保存操作
             save(permission);
         } else {    // 若权限ID不为空，执行更新操作
@@ -340,15 +322,41 @@ public class BasePermissionServiceImpl<
     }
 
     /**
+     * 将指定权限及其后的所有权限前移指定长度
+     * @param permission 权限实体
+     * @param length 前移长度，默认值为1
+     */
+    @Override
+    public void moveForward(T permission, @DefaultValue("1") Integer length) {
+        // 将permission及其后的所有权限前移指定长度
+        update().eq("parent_id", permission.getParentId())
+                 .ge("`order`", permission.getOrder())
+                 .set("`order`", permission.getOrder() - length)
+                 .update();
+    }
+
+    /**
+     * 将指定权限及其后的所有权限后移指定长度
+     * @param permission 权限实体
+     * @param length 后移长度，默认值为1
+     */
+    @Override
+    public void moveBackward(T permission, @DefaultValue("1") Integer length) {
+         update().eq("parent_id", permission.getParentId())
+                 .ge("`order`", permission.getOrder())
+                 .set("`order`", permission.getOrder() + length)
+                 .update();
+    }
+
+    /**
      * 获取指定父节点ID的头节点
      * @param parentId 父节点ID
      * @return 头节点
      */
     private T getHeadNode(Integer parentId) {
-        QueryWrapper<T> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id", parentId)
-                .eq("front_id", PermissionConstant.HEAD_PERMISSION_FRONT_ID);
-        return getOne(wrapper);
+        return query().eq("parent_id", parentId)
+                .eq("`order`", PermissionConstant.HEAD_PERMISSION_ORDER)
+                .one();
     }
 
     /**
@@ -357,10 +365,34 @@ public class BasePermissionServiceImpl<
      * @return 最后一个子节点
      */
     private T getTailNode(Integer parentId) {
-        QueryWrapper<T> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id", parentId)
-                .eq("behind_id", PermissionConstant.TAIL_PERMISSION_BEHIND_ID);
-        return getOne(wrapper);
+        return query().eq("parent_id", parentId)
+                .orderByDesc("`order`")
+                .last("limit 1")
+                .one();
+    }
+
+    /**
+     * 获取指定权限的前一个权限
+     * @param permission 权限实体
+     * @return 前一个权限
+     */
+    private T getFrontNode(T permission) {
+        Integer order = permission.getOrder();
+        if (Objects.equals(order, PermissionConstant.HEAD_PERMISSION_ORDER)) { return null; }
+        return query().eq("parent_id", permission.getParentId())
+                .eq("`order`", order - 1)
+                .one();
+    }
+
+    /**
+     * 获取指定权限的后一个权限
+     * @param permission 权限实体
+     * @return 后一个权限
+     */
+    private T getBehindNode(T permission) {
+        return query().eq("parent_id", permission.getParentId())
+                .eq("`order`", permission.getOrder() + 1)
+                .one();
     }
 
     /**
