@@ -25,51 +25,56 @@ public class BasePermission extends BaseEntity {
     /**
      * 组件路径
      */
-     private String component;
+    private String component;
 
-     /**
-      * 权限码
-      */
-     private String permissionCode;
+    /**
+     * 权限码
+     */
+    private String permissionCode;
 
-     /**
-      * 父节点ID(无父结点则为0)
-      */
-     private Integer parentId;
+    /**
+     * 父节点ID(无父结点则为0)
+     */
+    private Integer parentId;
 
-      /**
-       * 该节点的前一个节点ID(若为第1个节点则取0)
-       */
-     private Integer frontId;
+    /**
+     * 权限排序
+     */
+    private Integer order;
 
-     /**
-      * 该节点的后继节点ID
-      */
-     private Integer behindId;
+    /**
+     * 该节点的前一个节点ID(若为第1个节点则取0)
+     */
+    private Integer frontId;
 
-      /**
-       * 是否启用(1:启用 0:不启用)
-       */
-     private Boolean isValid;
+    /**
+     * 该节点的后继节点ID
+     */
+    private Integer behindId;
 
-     /**
-      * 从权限列表中提取权限ID列表
-      * @param permissions 权限列表
-      * @return 权限ID列表
-      */
-     public static <T extends BasePermission> List<Integer> extractPermissionIds(List<T> permissions) {
-         return permissions.stream().map(BasePermission::getId).distinct().collect(Collectors.toList());
-     }
+    /**
+     * 是否启用(1:启用 0:不启用)
+     */
+    private Boolean isValid;
 
-     /**
-      * 构建权限Map，key为权限ID，value为权限对象
-      * @param permissions 权限列表
-      * @param <T> 权限类型，必须继承自BasePermission
-      * @return 权限Map
-      */
-     public static <T extends BasePermission> Map<Integer, T> buildMap(List<T> permissions) {
-         return permissions.stream().collect(Collectors.toMap(BasePermission::getId, permission -> permission));
-     }
+    /**
+     * 从权限列表中提取权限ID列表
+     * @param permissions 权限列表
+     * @return 权限ID列表
+     */
+    public static <T extends BasePermission> List<Integer> extractPermissionIds(List<T> permissions) {
+        return permissions.stream().map(BasePermission::getId).distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 构建权限Map，key为权限ID，value为权限对象
+     * @param permissions 权限列表
+     * @param <T> 权限类型，必须继承自BasePermission
+     * @return 权限Map
+     */
+    public static <T extends BasePermission> Map<Integer, T> buildMap(List<T> permissions) {
+        return permissions.stream().collect(Collectors.toMap(BasePermission::getId, permission -> permission));
+    }
 
     /**
      * 构建父节点ID和子节点列表的Map，key为父节点ID，value为子节点列表
@@ -93,8 +98,8 @@ public class BasePermission extends BaseEntity {
 
     /**
      * 将权限ID列表转换为无效权限列表
+     * @param entityClass 权限实体类
      * @param permissionIds 权限ID列表
-     * @param supplier 权限对象供应商
      * @param <T> 权限类型，必须继承自BasePermission
      * @return 无效权限列表
      */
