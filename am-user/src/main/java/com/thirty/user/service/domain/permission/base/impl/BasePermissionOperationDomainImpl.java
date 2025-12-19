@@ -11,7 +11,9 @@ import com.thirty.user.service.basic.factory.RolePermissionServiceFactory;
 import com.thirty.user.service.domain.permission.base.BasePermissionOperationDomain;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(rollbackFor = Exception.class)
 public class BasePermissionOperationDomainImpl<
         T extends BasePermission,
         RP extends BaseRolePermission,

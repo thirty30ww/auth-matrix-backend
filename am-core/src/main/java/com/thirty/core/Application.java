@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(
     scanBasePackages = {
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 )
 @EnableAspectJAutoProxy(exposeProxy = true)
 @MapperScan("com.thirty.**.mapper") // 使用通配符扫描所有模块的 mapper
+@EnableTransactionManagement
 @Slf4j
 public class Application {
     public static void main(String[] args) {

@@ -8,7 +8,6 @@ import com.thirty.user.enums.model.PermissionType;
 import com.thirty.user.model.entity.base.BasePermission;
 import com.thirty.user.service.basic.BasePermissionService;
 import io.github.thirty30ww.defargs.annotation.DefaultValue;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -28,11 +27,6 @@ public class BasePermissionServiceImpl<
         >
         extends ServiceImpl<M, T>
         implements BasePermissionService<T> {
-
-    @SuppressWarnings("unchecked")
-    protected BasePermissionService<T> getSelf() {
-        return (BasePermissionService<T>) AopContext.currentProxy();
-    }
 
     /**
      * 根据权限类型和关键字查询权限列表
@@ -237,8 +231,8 @@ public class BasePermissionServiceImpl<
     public void modifyPermission(T permission) {
         T oldPermission = getById(permission.getId());  // 处理权限父节点变化
         if (!Objects.equals(permission.getParentId(), oldPermission.getParentId())) {   // 如果父节点变化，需要尾插法添加权限
-            getSelf().tailInsert(permission); // 尾插法添加权限
-            getSelf().connectNeighborPermissions(oldPermission);  // 处理旧权限的邻居节点连接
+            tailInsert(permission); // 尾插法添加权限
+            connectNeighborPermissions(oldPermission);  // 处理旧权限的邻居节点连接
         }
         if (!permission.getIsValid() && oldPermission.getIsValid()) {   // 如果权限状态从有效变为无效，需要更新所有后代权限
             List<Integer> descendantIds = getDescendantIds(permission.getId()); // 获取所有后代权限ID
@@ -292,7 +286,7 @@ public class BasePermissionServiceImpl<
         permission.setOrder(permission.getOrder() + 1);
         behindPermission.setOrder(behindPermission.getOrder() - 1);
 
-        updateBatchById(List.of(permission, behindPermission));
+        this.updateBatchById(List.of(permission, behindPermission));
     }
 
     /**
