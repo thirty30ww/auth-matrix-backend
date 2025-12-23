@@ -13,7 +13,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -157,8 +156,7 @@ public class JwtUtil {
     /**
      * 验证token是否有效
      */
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
+    public Boolean validateToken(String token) {
         // 检查token是否在黑名单中
         if (isAccessToken(token) && isAccessTokenInBlacklist(token)) {
             return false;
@@ -166,7 +164,7 @@ public class JwtUtil {
         if (isRefreshToken(token) && isRefreshTokenInBlacklist(token)) {
             return false;
         }
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return !isTokenExpired(token);
     }
     
     /**
