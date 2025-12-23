@@ -3,12 +3,11 @@ package com.thirty.user.config;
 import com.thirty.user.service.basic.UserOnlineService;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import java.util.Objects;
 
 /**
  * WebSocket事件监听器
@@ -27,11 +26,21 @@ public class WebSocketEvenListener {
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
-
-        String userId = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("userId");
-
-        if (userId != null) {
-            userOnlineService.userOnline(userId, sessionId);
+        
+        // 从 CONNECT 消息中获取 session attributes
+        Object connectMessage = headerAccessor.getHeader("simpConnectMessage");
+        if (connectMessage instanceof Message) {
+            @SuppressWarnings("unchecked")
+            Message<byte[]> msg = (Message<byte[]>) connectMessage;
+            StompHeaderAccessor connectAccessor = StompHeaderAccessor.wrap(msg);
+            
+            if (connectAccessor.getSessionAttributes() != null) {
+                String userId = (String) connectAccessor.getSessionAttributes().get("userId");
+                
+                if (userId != null) {
+                    userOnlineService.userOnline(userId, sessionId);
+                }
+            }
         }
     }
 
@@ -44,10 +53,13 @@ public class WebSocketEvenListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
 
-        String userId = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("userId");
-
-        if (userId != null) {
-            userOnlineService.userOffline(userId, sessionId);
+        // 从 session attributes 中获取 userId
+        if (headerAccessor.getSessionAttributes() != null) {
+            String userId = (String) headerAccessor.getSessionAttributes().get("userId");
+            
+            if (userId != null) {
+                userOnlineService.userOffline(userId, sessionId);
+            }
         }
     }
 }

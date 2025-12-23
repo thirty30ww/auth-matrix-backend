@@ -24,5 +24,6 @@ public class SecurityProperties {
         // 设置默认的允许访问路径
         permitAllPaths.add("/auth/**");
         permitAllPaths.add("/setting/public/**");
+        permitAllPaths.add("/ws/**"); // WebSocket 端点
     }
 }

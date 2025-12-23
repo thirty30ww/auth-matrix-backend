@@ -1,7 +1,7 @@
 package com.thirty.user.config;
 
-import com.thirty.user.constant.JwtConstant;
 import com.thirty.user.utils.JwtUtil;
+import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.server.ServerHttpRequest;
@@ -26,16 +26,28 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
                                    @NonNull ServerHttpResponse response,
                                    @NonNull WebSocketHandler wsHandler,
                                    @NonNull Map<String, Object> attributes) {
-        // 从请求头中获取JWT令牌
-        String authHeader = request.getHeaders().getFirst(JwtConstant.JWT_HEADER_NAME);
-        String token = jwtUtil.extractToken(authHeader);
+        String token = null;
+        
+        // 从URL参数中获取token（用于SockJS）
+        String query = request.getURI().getQuery();
+        if (query != null && query.contains("token=")) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                if (param.startsWith("token=")) {
+                    token = param.substring(6); // 去掉 "token="
+                    break;
+                }
+            }
+        }
+        
         // 验证访问令牌
-        if (jwtUtil.isAccessToken(token) && !jwtUtil.isTokenExpired(token)) {
+        if (StringUtils.isNotBlank(token) && jwtUtil.isAccessToken(token) && !jwtUtil.isTokenExpired(token)) {
             Integer userId = jwtUtil.extractUserId(token);
             // 将用户ID存储到属性中，后续可以在WebSocketHandler中使用
-            attributes.put("userId", userId);
+            attributes.put("userId", String.valueOf(userId));
             return true;
         }
+
         return false;
     }
 
