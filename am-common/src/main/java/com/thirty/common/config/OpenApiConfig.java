@@ -78,7 +78,12 @@ public class OpenApiConfig {
     public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
                 .group("用户模块")  // 分组名称
-                .pathsToMatch("/user/**", "/auth/**", "/role/**", "/permission/**", "/log/**")  // 匹配的路径
+                .pathsToMatch("/user/**",
+                        "/auth/**",
+                        "/role/**",
+                        "/permission/**",
+                        "/log/**",
+                        "/statistic/**")  // 匹配的路径
                 .build();
     }
 

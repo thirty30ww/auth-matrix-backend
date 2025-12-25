@@ -1,5 +1,7 @@
 package com.thirty.user.service.basic;
 
+import java.util.List;
+
 public interface UserOnlineService {
     /**
      * 用户上线
@@ -14,6 +16,12 @@ public interface UserOnlineService {
      * @param sessionId 会话ID
      */
     void userOffline(Integer userId, String sessionId);
+
+    /**
+     * 获取所有在线用户的ID列表
+     * @return 在线用户ID列表
+     */
+    List<Integer> getOnlineUserIds();
 
     /**
      * 获取在线用户数量

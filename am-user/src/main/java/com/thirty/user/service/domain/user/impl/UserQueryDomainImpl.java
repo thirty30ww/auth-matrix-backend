@@ -1,8 +1,11 @@
 package com.thirty.user.service.domain.user.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.thirty.common.enums.model.DataRangeType;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
+import com.thirty.common.model.vo.BaseChartVO;
+import com.thirty.common.utils.DateRangeUtil;
 import com.thirty.user.converter.UserConverter;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.GetUsersDTO;
@@ -11,14 +14,18 @@ import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.basic.DetailService;
+import com.thirty.user.service.basic.UserOnlineService;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.user.UserQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserQueryDomainImpl implements UserQueryDomain {
@@ -29,7 +36,8 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     private DetailService detailService;
     @Resource
     private UserRoleService userRoleService;
-
+    @Resource
+    private UserOnlineService userOnlineService;
 
     /**
      * 获取用户
@@ -96,6 +104,71 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         }
 
         return users;
+    }
+
+    /**
+     * 获取在线用户列表
+     * @return 在线用户列表
+     */
+    @Override
+    public List<UserVO> getOnlineUsers() {
+        List<Integer> userIds = userOnlineService.getOnlineUserIds();
+        List<User> users = userService.listByIds(userIds);
+        List<Detail> details = detailService.listByIds(userIds);
+        return UserConverter.INSTANCE.toUserVOS(users, details);
+    }
+
+    /**
+     * 获取按时间单位分组的用户创建数量图表数据
+     * @param type 时间范围类型
+     * @return 按时间单位分组的用户创建数量图表数据
+     */
+    @Override
+    public BaseChartVO<Integer, Long> getCreatedUserCount(DataRangeType type) {
+        // 从工具类获取时间范围信息
+        LocalDateTime now = LocalDateTime.now();
+        DateRangeUtil.TimeRangeInfo timeRangeInfo = DateRangeUtil.getTimeRangeInfo(type, now);
+
+        // 查询符合时间范围内创建的用户
+        List<User> users = userService.listByCreateTimeBetween(timeRangeInfo.startTime(), timeRangeInfo.endTime());
+
+        // 按时间单位分组统计用户数量
+        Map<Integer, Long> userCountByTimeUnit = users.stream()
+                .collect(Collectors.groupingBy(
+                        user -> timeRangeInfo.groupingFunction().apply(user.getCreateTime()),
+                        Collectors.counting()
+                ));
+
+        // 转换为图表VO
+        List<Integer> allTimeUnits = DateRangeUtil.getAllTimeUnits(type, now);
+        return new BaseChartVO<>(
+                allTimeUnits,
+                allTimeUnits.stream()
+                        .map(timeUnit -> userCountByTimeUnit.getOrDefault(timeUnit, 0L))
+                        .collect(Collectors.toList())
+        );
+    }
+
+     /**
+     * 获取最近两天的用户创建数量
+     * @return 最近两天的用户创建数量
+     */
+     @Override
+     public Map<String, Long> getLastTwoDayCreatedUserCount() {
+        LocalDateTime now = LocalDateTime.now();
+        // 获取今天创建用户数
+        LocalDateTime startOfToday = DateRangeUtil.getTodayStart(now);
+        Long todayCreatedUserCount = userService.getCreatedUserCount(startOfToday, now);
+
+        // 获取昨天创建用户数
+        LocalDateTime startOfYesterday = startOfToday.minusDays(1);
+        Long yesterdayCreatedUserCount = userService.getCreatedUserCount(startOfYesterday, startOfToday);
+
+        // 转换为Map
+        return Map.of(
+                "today", todayCreatedUserCount,
+                "yesterday", yesterdayCreatedUserCount
+        );
     }
 
     /**

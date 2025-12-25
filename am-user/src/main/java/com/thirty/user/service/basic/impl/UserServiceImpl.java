@@ -15,6 +15,7 @@ import com.thirty.user.service.basic.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -105,12 +106,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 获取用户列表
-     * @param request 获取用户列表请求参数
+     * @param dto 获取用户列表请求参数
      * @return 用户列表
      */
     @Override
-    public IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> request) {
-        IPage<UserVO> page = new Page<>(request.getPageNum(), request.getPageSize());
-        return userMapper.getUsers(page, request.getParams());
+    public IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> dto) {
+        IPage<UserVO> page = new Page<>(dto.getPageNum(), dto.getPageSize());
+        return userMapper.getUsers(page, dto.getParams());
+    }
+
+    /**
+     * 根据创建时间范围查询用户
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 用户列表
+     */
+    @Override
+    public List<User> listByCreateTimeBetween(LocalDateTime startTime, LocalDateTime endTime) {
+        return lambdaQuery()
+                .between(User::getCreateTime, startTime, endTime)
+                .list();
+    }
+
+    /**
+     * 获取在指定时间范围内创建的用户数量
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 在指定时间范围内创建的用户数量
+     */
+    @Override
+    public Long getCreatedUserCount(LocalDateTime startTime, LocalDateTime endTime) {
+        return lambdaQuery()
+                .between(User::getCreateTime, startTime, endTime)
+                .count();
     }
 }

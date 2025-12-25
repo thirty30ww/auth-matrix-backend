@@ -7,6 +7,7 @@ import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.UserVO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UserService extends IService<User> {
@@ -53,8 +54,24 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取用户列表
-     * @param request 获取用户列表请求参数
+     * @param dto 获取用户列表请求参数
      * @return 用户列表
      */
-    IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> request);
+    IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> dto);
+
+    /**
+     * 根据创建时间范围查询用户
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 用户列表
+     */
+    List<User> listByCreateTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
+
+     /**
+     * 获取在指定时间范围内创建的用户数量
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 在指定时间范围内创建的用户数量
+     */
+    Long getCreatedUserCount(LocalDateTime startTime, LocalDateTime endTime);
 }

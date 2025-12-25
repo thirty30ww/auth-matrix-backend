@@ -4,6 +4,7 @@ import com.thirty.user.service.basic.UserOnlineService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,6 +56,15 @@ public class UserOnlineServiceImpl implements UserOnlineService {
                 log.info("用户 {} 下线", userId);
             }
         }
+    }
+
+    /**
+     * 获取所有在线用户的ID列表
+     * @return 在线用户ID列表
+     */
+    @Override
+    public List<Integer> getOnlineUserIds() {
+        return onlineUsers.stream().toList();
     }
 
     /**

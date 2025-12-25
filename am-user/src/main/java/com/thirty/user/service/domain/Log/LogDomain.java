@@ -6,9 +6,9 @@ import com.thirty.user.model.dto.LogLoginDTO;
 import com.thirty.user.model.dto.LogOperationDTO;
 import com.thirty.user.model.vo.LogLoginVO;
 import com.thirty.user.model.vo.LogOperationVO;
-import com.thirty.user.service.domain.role.builder.RolesBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LogDomain {
     /**
@@ -47,4 +47,10 @@ public interface LogDomain {
      * @return 操作日志详情
      */
     LogOperationVO getLogOperation(Integer id);
+
+    /**
+     * 获取最近两天的异常操作次数
+     * @return 最近两天的异常操作次数
+     */
+    Map<String, Long> getLastTwoDayAbnormalOperationCount();
 }

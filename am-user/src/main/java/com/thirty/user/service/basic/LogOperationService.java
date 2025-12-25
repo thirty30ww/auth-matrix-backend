@@ -7,6 +7,7 @@ import com.thirty.user.model.entity.LogOperation;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.thirty.user.model.vo.LogOperationVO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,4 +50,12 @@ public interface LogOperationService extends IService<LogOperation> {
       * @return 删除的用户操作日志数量
       */
     Integer deleteLogOperations(Integer limitDays);
+
+     /**
+      * 获取异常操作数量
+      * @param startTime 开始时间
+      * @param endTime 结束时间
+      * @return 异常操作数量
+      */
+    Long getAbnormalOperationCount(LocalDateTime startTime, LocalDateTime endTime);
 }

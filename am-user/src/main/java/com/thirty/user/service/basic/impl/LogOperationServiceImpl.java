@@ -91,4 +91,18 @@ public class LogOperationServiceImpl extends ServiceImpl<LogOperationMapper, Log
         return logOperationMapper.delete(new LambdaQueryWrapper<LogOperation>()
                         .le(LogOperation::getCreateTime, LocalDateTime.now().minusDays(limitDays)));
     }
+
+    /**
+     * 获取异常操作数量
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 异常操作数量
+     */
+    @Override
+    public Long getAbnormalOperationCount(LocalDateTime startTime, LocalDateTime endTime) {
+        return lambdaQuery()
+                .between(LogOperation::getCode, 201, 999)
+                .between(LogOperation::getCreateTime, startTime, endTime)
+                .count();
+    }
 }
