@@ -35,7 +35,7 @@ public class WebSocketEvenListener {
             StompHeaderAccessor connectAccessor = StompHeaderAccessor.wrap(msg);
             
             if (connectAccessor.getSessionAttributes() != null) {
-                String userId = (String) connectAccessor.getSessionAttributes().get("userId");
+                Integer userId = (Integer) connectAccessor.getSessionAttributes().get("userId");
                 
                 if (userId != null) {
                     userOnlineService.userOnline(userId, sessionId);
@@ -55,7 +55,7 @@ public class WebSocketEvenListener {
 
         // 从 session attributes 中获取 userId
         if (headerAccessor.getSessionAttributes() != null) {
-            String userId = (String) headerAccessor.getSessionAttributes().get("userId");
+            Integer userId = (Integer) headerAccessor.getSessionAttributes().get("userId");
             
             if (userId != null) {
                 userOnlineService.userOffline(userId, sessionId);

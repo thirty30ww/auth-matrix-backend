@@ -44,7 +44,7 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
         if (StringUtils.isNotBlank(token) && jwtUtil.isAccessToken(token) && !jwtUtil.isTokenExpired(token)) {
             Integer userId = jwtUtil.extractUserId(token);
             // 将用户ID存储到属性中，后续可以在WebSocketHandler中使用
-            attributes.put("userId", String.valueOf(userId));
+            attributes.put("userId", userId);
             return true;
         }
 

@@ -6,14 +6,14 @@ public interface UserOnlineService {
      * @param userId 用户ID
      * @param sessionId 会话ID
      */
-    void userOnline(String userId, String sessionId);
+    void userOnline(Integer userId, String sessionId);
 
     /**
      * 用户下线
      * @param userId 用户ID
      * @param sessionId 会话ID
      */
-    void userOffline(String userId, String sessionId);
+    void userOffline(Integer userId, String sessionId);
 
     /**
      * 获取在线用户数量
@@ -26,5 +26,5 @@ public interface UserOnlineService {
      * @param userId 用户ID
      * @return 如果用户在线则返回true，否则返回false
      */
-    boolean isUserOnline(String userId);
+    boolean isUserOnline(Integer userId);
 }

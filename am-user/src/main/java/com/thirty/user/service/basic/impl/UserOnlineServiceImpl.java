@@ -17,12 +17,12 @@ public class UserOnlineServiceImpl implements UserOnlineService {
     /**
      * 在线用户集合，存储所有在线用户的ID
      */
-    private final Set<String> onlineUsers = ConcurrentHashMap.newKeySet();
+    private final Set<Integer> onlineUsers = ConcurrentHashMap.newKeySet();
 
     /**
      * 在线用户映射表，键为用户ID，值为WebSocket会话ID
      */
-    private final ConcurrentHashMap<String, Set<String>> userSessions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Set<String>> userSessions = new ConcurrentHashMap<>();
 
     /**
      * 用户上线
@@ -30,7 +30,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
      * @param sessionId WebSocket会话ID
      */
     @Override
-    public void userOnline(String userId, String sessionId) {
+    public void userOnline(Integer userId, String sessionId) {
         if (onlineUsers.add(userId)) {
             log.info("用户 {} 上线", userId);
         }
@@ -45,14 +45,13 @@ public class UserOnlineServiceImpl implements UserOnlineService {
      * @param sessionId WebSocket会话ID
      */
     @Override
-    public void userOffline(String userId, String sessionId) {
+    public void userOffline(Integer userId, String sessionId) {
         Set<String> sessions = userSessions.get(userId);    // 获取用户的会话集合
         if (sessions != null) {
             sessions.remove(sessionId);    // 从会话集合中移除指定会话
             if (sessions.isEmpty()) {
                 // 如果用户没有会话了，从在线用户集合中移除
                 onlineUsers.remove(userId);
-                onlineUsers.remove(sessionId);
                 log.info("用户 {} 下线", userId);
             }
         }
@@ -73,7 +72,7 @@ public class UserOnlineServiceImpl implements UserOnlineService {
      * @return 如果用户在线则返回true，否则返回false
      */
     @Override
-    public boolean isUserOnline(String userId) {
+    public boolean isUserOnline(Integer userId) {
         return onlineUsers.contains(userId);
     }
 }
