@@ -1,6 +1,6 @@
 package com.thirty.user.service.facade;
 
-import com.thirty.common.enums.model.DataRangeType;
+import com.thirty.common.enums.model.DateRangeType;
 import com.thirty.common.model.vo.BaseChartVO;
 import com.thirty.user.model.vo.UserVO;
 
@@ -19,7 +19,7 @@ public interface StatisticFacade {
      * @param type 时间范围类型
      * @return 按时间单位分组的用户创建数量图表数据
      */
-    BaseChartVO<Integer, Long> getCreatedUserCount(DataRangeType type);
+    BaseChartVO<Integer, Long> getCreatedUserCountChart(DateRangeType type);
 
      /**
      * 获取最近两天的用户创建数量

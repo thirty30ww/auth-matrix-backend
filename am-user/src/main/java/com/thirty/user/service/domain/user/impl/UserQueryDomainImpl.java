@@ -1,7 +1,7 @@
 package com.thirty.user.service.domain.user.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.thirty.common.enums.model.DataRangeType;
+import com.thirty.common.enums.model.DateRangeType;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.vo.BaseChartVO;
@@ -124,7 +124,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
      * @return 按时间单位分组的用户创建数量图表数据
      */
     @Override
-    public BaseChartVO<Integer, Long> getCreatedUserCount(DataRangeType type) {
+    public BaseChartVO<Integer, Long> getCreatedUserCountChart(DateRangeType type) {
         // 从工具类获取时间范围信息
         LocalDateTime now = LocalDateTime.now();
         DateRangeUtil.TimeRangeInfo timeRangeInfo = DateRangeUtil.getTimeRangeInfo(type, now);

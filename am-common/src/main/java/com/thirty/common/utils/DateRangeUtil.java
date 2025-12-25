@@ -1,6 +1,6 @@
 package com.thirty.common.utils;
 
-import com.thirty.common.enums.model.DataRangeType;
+import com.thirty.common.enums.model.DateRangeType;
 
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
@@ -23,7 +23,7 @@ public class DateRangeUtil {
      * @param now 当前时间
      * @return 时间范围信息
      */
-    public static TimeRangeInfo getTimeRangeInfo(DataRangeType type, LocalDateTime now) {
+    public static TimeRangeInfo getTimeRangeInfo(DateRangeType type, LocalDateTime now) {
         return switch (type) {
             case TODAY -> getTodayTimeRange(now);
             case THIS_WEEK -> getWeekTimeRange(now);
@@ -38,7 +38,7 @@ public class DateRangeUtil {
      * @param now 当前时间
      * @return 所有可能的时间单位列表
      */
-    public static List<Integer> getAllTimeUnits(DataRangeType type, LocalDateTime now) {
+    public static List<Integer> getAllTimeUnits(DateRangeType type, LocalDateTime now) {
         return switch (type) {
             case TODAY -> getTodayTimeUnits();
             case THIS_WEEK -> getWeekTimeUnits();

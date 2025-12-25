@@ -1,6 +1,6 @@
 package com.thirty.user.service.facade.impl;
 
-import com.thirty.common.enums.model.DataRangeType;
+import com.thirty.common.enums.model.DateRangeType;
 import com.thirty.common.model.vo.BaseChartVO;
 import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.domain.Log.LogDomain;
@@ -34,8 +34,8 @@ public class StatisticFacadeImpl implements StatisticFacade {
      * @return 按时间单位分组的用户创建数量图表数据
      */
     @Override
-    public BaseChartVO<Integer, Long> getCreatedUserCount(DataRangeType type) {
-        return userQueryDomain.getCreatedUserCount(type);
+    public BaseChartVO<Integer, Long> getCreatedUserCountChart(DateRangeType type) {
+        return userQueryDomain.getCreatedUserCountChart(type);
     }
 
     /**

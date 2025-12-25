@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum DataRangeType implements CodeEnum<Integer> {
+public enum DateRangeType implements CodeEnum<Integer> {
     TODAY(1),
     THIS_WEEK(2),
     THIS_MONTH(3),

@@ -2,7 +2,7 @@ package com.thirty.user.controller;
 
 import com.thirty.common.annotation.OperateLog;
 import com.thirty.common.annotation.OperateModule;
-import com.thirty.common.enums.model.DataRangeType;
+import com.thirty.common.enums.model.DateRangeType;
 import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.common.model.vo.BaseChartVO;
@@ -41,8 +41,8 @@ public class StatisticController {
      */
     @GetMapping("/created-user-count")
     @OperateLog(type = OperationType.SELECT, description = "获取创建用户数量图表数据")
-    public ResultDTO<BaseChartVO<Integer, Long>> getCreatedUserCount(DataRangeType type) {
-        return ResultDTO.of(StatisticResultCode.GET_CREATED_USER_COUNT_SUCCESS, statisticFacade.getCreatedUserCount(type));
+    public ResultDTO<BaseChartVO<Integer, Long>> getCreatedUserCountChart(DateRangeType type) {
+        return ResultDTO.of(StatisticResultCode.GET_CREATED_USER_COUNT_SUCCESS, statisticFacade.getCreatedUserCountChart(type));
     }
 
     /**
