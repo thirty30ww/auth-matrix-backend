@@ -1,6 +1,6 @@
 package com.thirty.user.mapper;
 
-import com.thirty.user.model.entity.Detail;
+import com.thirty.user.model.entity.UserDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2025-07-18 12:09:47
 * @Entity com.thirty.user.domain.Detail
 */
-public interface DetailMapper extends BaseMapper<Detail> {
+public interface DetailMapper extends BaseMapper<UserDetail> {
 
 }
 

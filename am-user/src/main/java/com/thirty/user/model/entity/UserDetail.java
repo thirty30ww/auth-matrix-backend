@@ -11,9 +11,9 @@ import lombok.EqualsAndHashCode;
  * @TableName detail
  */
 @EqualsAndHashCode(callSuper = true)
-@TableName(value ="detail")
+@TableName(value ="user_detail")
 @Data
-public class Detail extends BaseEntity {
+public class UserDetail extends BaseEntity {
     /**
      * 用户的名字
      */

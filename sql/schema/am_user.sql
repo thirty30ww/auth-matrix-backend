@@ -19,12 +19,12 @@
 USE am_user;
 
 --
--- Table structure for table `detail`
+-- Table structure for table `userDetail`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `detail` (
+CREATE TABLE `user_detail` (
   `id` int NOT NULL COMMENT '用户ID',
   `name` varchar(255) NOT NULL COMMENT '用户的名字',
   `avatar_url` varchar(1024) DEFAULT NULL COMMENT '用户头像链接',

@@ -1,8 +1,8 @@
 package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thirty.user.model.entity.Detail;
-import com.thirty.user.service.basic.DetailService;
+import com.thirty.user.model.entity.UserDetail;
+import com.thirty.user.service.basic.UserDetailService;
 import com.thirty.user.mapper.DetailMapper;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 * @createDate 2025-07-18 12:09:47
 */
 @Service
-public class DetailServiceImpl extends ServiceImpl<DetailMapper, Detail>
-    implements DetailService{
+public class UserDetailServiceImpl extends ServiceImpl<DetailMapper, UserDetail>
+    implements UserDetailService {
 
     /**
      * 创建用户详情
      * @param userId 用户ID
-     * @param detail 用户详情
+     * @param userDetail 用户详情
      */
     @Override
-    public void createDetail(Integer userId, Detail detail) {
+    public void createDetail(Integer userId, UserDetail userDetail) {
         // 设置用户ID
-        detail.setId(userId);
+        userDetail.setId(userId);
         // 保存用户详情
-        save(detail);
+        save(userDetail);
     }
 }
 

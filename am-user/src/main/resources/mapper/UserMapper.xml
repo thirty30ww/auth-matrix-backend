@@ -37,7 +37,7 @@
             d.create_time AS createTime,
             d.update_time AS updateTime
         FROM user u
-        LEFT JOIN detail d ON u.id = d.id
+        LEFT JOIN user_detail d ON u.id = d.id
         <if test="params.roleIds != null and params.roleIds.size() > 0">
         INNER JOIN user_role ur ON u.id = ur.user_id
         </if>

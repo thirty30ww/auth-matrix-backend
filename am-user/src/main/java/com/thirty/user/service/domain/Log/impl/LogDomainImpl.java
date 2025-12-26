@@ -9,7 +9,7 @@ import com.thirty.user.model.dto.LogOperationDTO;
 import com.thirty.user.model.entity.LogOperation;
 import com.thirty.user.model.vo.LogLoginVO;
 import com.thirty.user.model.vo.LogOperationVO;
-import com.thirty.user.service.basic.DetailService;
+import com.thirty.user.service.basic.UserDetailService;
 import com.thirty.user.service.basic.LogLoginService;
 import com.thirty.user.service.basic.LogOperationService;
 import com.thirty.user.service.domain.Log.LogDomain;
@@ -27,7 +27,7 @@ public class LogDomainImpl implements LogDomain {
     @Resource
     private LogLoginService logLoginService;
     @Resource
-    private DetailService detailService;
+    private UserDetailService userDetailService;
 
     /**
      * 获取日志列表
@@ -83,7 +83,7 @@ public class LogDomainImpl implements LogDomain {
         // 获取用户名称
         String name = null;
         if (userId != null) {
-            name = detailService.getById(userId).getName();
+            name = userDetailService.getById(userId).getName();
         }
         return LogOperationConverter.INSTANCE.toLogOperationVO(logOperation, name);
     }

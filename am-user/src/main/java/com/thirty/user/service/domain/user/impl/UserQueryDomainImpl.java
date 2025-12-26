@@ -9,11 +9,11 @@ import com.thirty.common.utils.DateRangeUtil;
 import com.thirty.user.converter.UserConverter;
 import com.thirty.user.enums.result.UserResultCode;
 import com.thirty.user.model.dto.GetUsersDTO;
-import com.thirty.user.model.entity.Detail;
+import com.thirty.user.model.entity.UserDetail;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.UserVO;
-import com.thirty.user.service.basic.DetailService;
+import com.thirty.user.service.basic.UserDetailService;
 import com.thirty.user.service.basic.UserOnlineService;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
@@ -35,7 +35,7 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Resource
     private UserService userService;
     @Resource
-    private DetailService detailService;
+    private UserDetailService userDetailService;
     @Resource
     private UserRoleService userRoleService;
     @Resource
@@ -52,12 +52,12 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         User user = userService.getUser(currentUsername);
 
         // 获取用户详情
-        Detail detail = detailService.getById(user.getId());
+        UserDetail userDetail = userDetailService.getById(user.getId());
 
         // 获取用户角色
         List<Role> roles = userRoleService.getRolesByUserId(user.getId());
 
-        return UserConverter.INSTANCE.toUserVO(user, detail, roles);
+        return UserConverter.INSTANCE.toUserVO(user, userDetail, roles);
     }
 
     /**
@@ -76,12 +76,12 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         }
 
         // 获取用户详情
-        Detail detail = detailService.getById(user.getId());
+        UserDetail userDetail = userDetailService.getById(user.getId());
 
         // 获取用户角色
         List<Role> roles = userRoleService.getRolesByUserId(user.getId());
 
-        return UserConverter.INSTANCE.toUserVO(user, detail, roles);
+        return UserConverter.INSTANCE.toUserVO(user, userDetail, roles);
     }
 
     /**
@@ -120,8 +120,8 @@ public class UserQueryDomainImpl implements UserQueryDomain {
         }
 
         List<User> users = userService.listByIds(userIds);
-        List<Detail> details = detailService.listByIds(userIds);
-        return UserConverter.INSTANCE.toUserVOS(users, details);
+        List<UserDetail> userDetails = userDetailService.listByIds(userIds);
+        return UserConverter.INSTANCE.toUserVOS(users, userDetails);
     }
 
     /**

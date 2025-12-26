@@ -3,7 +3,7 @@ package com.thirty.user.converter;
 import com.thirty.user.model.dto.AddUserDTO;
 import com.thirty.user.model.dto.ModifyUserDTO;
 import com.thirty.user.model.dto.UpdateUserDTO;
-import com.thirty.user.model.entity.Detail;
+import com.thirty.user.model.entity.UserDetail;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.UserVO;
@@ -26,40 +26,40 @@ public interface UserConverter {
     /**
      * 将AddUserDTO对象转换为Detail对象
      */
-    Detail addUserDTOToDetail(AddUserDTO request);
+    UserDetail addUserDTOToDetail(AddUserDTO request);
 
     /**
      * 将ModifyUserDTO对象转换为Detail对象
      */
-    Detail modifyUserDTOToDetail(ModifyUserDTO request);
+    UserDetail modifyUserDTOToDetail(ModifyUserDTO request);
 
     /**
      * 将UpdateUserDTO对象转换为Detail对象
      */
-    Detail updateUserDTOToDetail(UpdateUserDTO request);
+    UserDetail updateUserDTOToDetail(UpdateUserDTO request);
     
     /**
      * 将User和Detail对象转换为UserVO对象
      */
     @Mapping(source = "user.id", target = "id")
-    @Mapping(source = "detail.createTime", target = "createTime")
-    @Mapping(source = "detail.updateTime", target = "updateTime")
-    UserVO toUserVO(User user, Detail detail, List<Role> roles);
+    @Mapping(source = "userDetail.createTime", target = "createTime")
+    @Mapping(source = "userDetail.updateTime", target = "updateTime")
+    UserVO toUserVO(User user, UserDetail userDetail, List<Role> roles);
 
     /**
      * 将User列表、Detail列表和Role列表转换为UserVO列表
      */
-    default List<UserVO> toUserVOS(List<User> users, List<Detail> details) {
-        if (ObjectUtils.isEmpty(users) || ObjectUtils.isEmpty(details)) {
+    default List<UserVO> toUserVOS(List<User> users, List<UserDetail> userDetails) {
+        if (ObjectUtils.isEmpty(users) || ObjectUtils.isEmpty(userDetails)) {
             return new ArrayList<>();
         }
         List<UserVO> userVOS = new ArrayList<>();
         users.forEach(user -> {
-            Detail detail = details.stream()
+            UserDetail userDetail = userDetails.stream()
                     .filter(d -> Objects.equals(d.getId(), user.getId()))
                     .findFirst()
                     .orElse(null);
-            userVOS.add(toUserVO(user, detail, new ArrayList<>()));
+            userVOS.add(toUserVO(user, userDetail, new ArrayList<>()));
         });
         return userVOS;
     }

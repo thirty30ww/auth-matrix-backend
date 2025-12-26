@@ -18,7 +18,7 @@
             lo.operate_time,
             lo.create_time
         FROM log_operation lo
-        LEFT JOIN `detail` d on lo.user_id = d.id
+        LEFT JOIN `user_detail` d on lo.user_id = d.id
         <where>
             <!-- 角色权限过滤：只显示用户的所有角色都在permittedRoleIds列表中的操作日志 -->
             <if test="permittedRoleIds != null and permittedRoleIds.size() > 0">

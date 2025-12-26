@@ -7,9 +7,9 @@ import com.thirty.user.model.dto.AddUserDTO;
 import com.thirty.user.model.dto.ChangePasswordDTO;
 import com.thirty.user.model.dto.ModifyUserDTO;
 import com.thirty.user.model.dto.UpdateUserDTO;
-import com.thirty.user.model.entity.Detail;
+import com.thirty.user.model.entity.UserDetail;
 import com.thirty.user.model.entity.User;
-import com.thirty.user.service.basic.DetailService;
+import com.thirty.user.service.basic.UserDetailService;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.user.UserOperationDomain;
@@ -26,7 +26,7 @@ public class UserOperationDomainImpl implements UserOperationDomain {
     @Resource
     private UserService userService;
     @Resource
-    private DetailService detailService;
+    private UserDetailService userDetailService;
     @Resource
     private UserRoleService userRoleService;
 
@@ -46,8 +46,8 @@ public class UserOperationDomainImpl implements UserOperationDomain {
         Integer userId = userService.createUser(addUserDTO.getUsername(), encodedPassword);
 
         // 绑定用户详情
-        Detail detail = UserConverter.INSTANCE.addUserDTOToDetail(addUserDTO);
-        detailService.createDetail(userId, detail);
+        UserDetail userDetail = UserConverter.INSTANCE.addUserDTOToDetail(addUserDTO);
+        userDetailService.createDetail(userId, userDetail);
 
         // 关联用户角色
         userRoleService.addUserRoles(userId, addUserDTO.getRoleIds());
@@ -68,10 +68,10 @@ public class UserOperationDomainImpl implements UserOperationDomain {
         }
 
         // 转换为Detail对象
-        Detail detail = UserConverter.INSTANCE.modifyUserDTOToDetail(modifyUserDTO);
+        UserDetail userDetail = UserConverter.INSTANCE.modifyUserDTOToDetail(modifyUserDTO);
 
         // 更新Detail信息
-        detailService.updateById(detail);
+        userDetailService.updateById(userDetail);
 
         // 更新用户角色
         userRoleService.updateUserRoles(user.getId(), modifyUserDTO.getRoleIds());
@@ -84,10 +84,10 @@ public class UserOperationDomainImpl implements UserOperationDomain {
     @Override
     public void updateUser(UpdateUserDTO updateUserDTO) {
         // 转换为Detail对象
-        Detail detail = UserConverter.INSTANCE.updateUserDTOToDetail(updateUserDTO);
+        UserDetail userDetail = UserConverter.INSTANCE.updateUserDTOToDetail(updateUserDTO);
 
         // 更新Detail信息
-        detailService.updateById(detail);
+        userDetailService.updateById(userDetail);
     }
 
     /**
