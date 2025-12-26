@@ -17,10 +17,10 @@
 
     <packaging>pom</packaging>
     <modules>
-        <module>am-user</module>
-        <module>am-core</module>
         <module>am-common</module>
         <module>am-system</module>
+        <module>am-user</module>
+        <module>am-core</module>
     </modules>
 
     <properties>
@@ -47,17 +47,17 @@
             </dependency>
             <dependency>
                 <groupId>com.thirty</groupId>
+                <artifactId>am-system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.thirty</groupId>
                 <artifactId>am-user</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.thirty</groupId>
                 <artifactId>am-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.thirty</groupId>
-                <artifactId>am-system</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

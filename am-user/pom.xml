@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>am-user</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>am-user</name>
     <description>用户组件模块</description>
 

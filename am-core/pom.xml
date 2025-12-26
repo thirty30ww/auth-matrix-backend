@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>am-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>am-core</name>
     <description>核心启动组件模块</description>
 

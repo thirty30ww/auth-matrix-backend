@@ -20,8 +20,10 @@ import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.user.UserQueryDomain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +115,10 @@ public class UserQueryDomainImpl implements UserQueryDomain {
     @Override
     public List<UserVO> getOnlineUsers() {
         List<Integer> userIds = userOnlineService.getOnlineUserIds();
+        if (CollectionUtils.isEmpty(userIds)) {
+            return new ArrayList<>();
+        }
+
         List<User> users = userService.listByIds(userIds);
         List<Detail> details = detailService.listByIds(userIds);
         return UserConverter.INSTANCE.toUserVOS(users, details);

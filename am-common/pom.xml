@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>am-common</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>am-common</name>
     <description>通用组件模块</description>
 </project>

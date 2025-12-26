@@ -39,7 +39,7 @@ public class StatisticController {
      * @param type 时间范围类型
      * @return 按时间单位分组的用户创建数量图表数据
      */
-    @GetMapping("/created-user-count")
+    @GetMapping("/created-user-count-chart")
     @OperateLog(type = OperationType.SELECT, description = "获取创建用户数量图表数据")
     public ResultDTO<BaseChartVO<Integer, Long>> getCreatedUserCountChart(DateRangeType type) {
         return ResultDTO.of(StatisticResultCode.GET_CREATED_USER_COUNT_SUCCESS, statisticFacade.getCreatedUserCountChart(type));
