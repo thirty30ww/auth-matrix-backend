@@ -20,6 +20,12 @@ public class NoticeQueryDomainImpl implements NoticeQueryDomain {
     @Resource
     private UserService userService;
 
+    /**
+     * 获取通知列表
+     * @param dto 分页查询DTO
+     * @return 通知列表
+     */
+    @Override
     public IPage<NoticeVO> getNotices(PageQueryDTO<Void> dto) {
         IPage<Notice> page = new Page<>(dto.getPageNum(), dto.getPageSize());
         return noticeMapper.getNotices(page);

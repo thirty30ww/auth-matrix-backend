@@ -20,12 +20,12 @@ public @interface RateLimiter {
     /**
      * 限流时间，单位：秒
      */
-    int time() default 60;
+    int time() default 5;
 
     /**
      * 限流次数
      */
-    int count() default 100;
+    int count() default 20;
 
     /**
      * 限流策略

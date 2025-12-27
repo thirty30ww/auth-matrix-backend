@@ -83,7 +83,9 @@ public class OpenApiConfig {
                         "/role/**",
                         "/permission/**",
                         "/log/**",
-                        "/statistic/**")  // 匹配的路径
+                        "/statistic/**",
+                        "/notice/**"
+                )  // 匹配的路径
                 .build();
     }
 
