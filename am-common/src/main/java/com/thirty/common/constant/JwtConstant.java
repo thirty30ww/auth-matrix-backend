@@ -1,4 +1,4 @@
-package com.thirty.user.constant;
+package com.thirty.common.constant;
 
 public class JwtConstant {
     // JWT 相关常量

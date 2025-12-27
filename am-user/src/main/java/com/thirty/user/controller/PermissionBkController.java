@@ -2,13 +2,15 @@ package com.thirty.user.controller;
 
 import com.thirty.common.annotation.OperateLog;
 import com.thirty.common.annotation.OperateModule;
+import com.thirty.common.annotation.RateLimiter;
+import com.thirty.common.enums.model.LimitType;
 import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.PermissionResultCode;
 import com.thirty.user.model.dto.PermissionBkDTO;
 import com.thirty.user.model.vo.PermissionBkVO;
 import com.thirty.user.service.facade.PermissionBkFacade;
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/permission/bk")
 @OperateModule("权限管理")
+@RateLimiter(limitType = LimitType.TOKEN)
 public class PermissionBkController {
     @Resource
     private PermissionBkFacade permissionBkFacade;

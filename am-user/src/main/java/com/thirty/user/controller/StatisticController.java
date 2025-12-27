@@ -2,7 +2,9 @@ package com.thirty.user.controller;
 
 import com.thirty.common.annotation.OperateLog;
 import com.thirty.common.annotation.OperateModule;
+import com.thirty.common.annotation.RateLimiter;
 import com.thirty.common.enums.model.DateRangeType;
+import com.thirty.common.enums.model.LimitType;
 import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.common.model.vo.BaseChartVO;
@@ -20,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/statistic")
 @OperateModule("数据统计")
+@RateLimiter(limitType = LimitType.TOKEN)
 public class StatisticController {
     @Resource
     private StatisticFacade statisticFacade;

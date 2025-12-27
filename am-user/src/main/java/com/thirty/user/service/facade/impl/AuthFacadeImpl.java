@@ -3,7 +3,7 @@ package com.thirty.user.service.facade.impl;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.system.api.SettingApi;
 import com.thirty.user.converter.AuthConverter;
-import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.common.enums.result.AuthResultCode;
 import com.thirty.user.model.dto.AddUserDTO;
 import com.thirty.user.model.dto.LoginDTO;
 import com.thirty.user.model.dto.RegisterDTO;

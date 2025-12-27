@@ -1,7 +1,6 @@
-package com.thirty.user.enums.result;
+package com.thirty.common.enums.result;
 
 import com.thirty.common.enums.IResult;
-import com.thirty.common.enums.result.GlobalResultCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

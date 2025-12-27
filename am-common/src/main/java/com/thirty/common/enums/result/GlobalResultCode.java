@@ -20,6 +20,7 @@ public enum GlobalResultCode implements IResult {
     NOT_FOUND(404, "资源不存在"),
     INTERFACE_NOT_EXIST(404, "接口不存在"),
     METHOD_NOT_ALLOWED(405, "请求方法不支持"),
+    RATE_LIMIT_EXCEEDED(429, "访问过于频繁，请稍后再试"),
     ;
 
     private final Integer code;

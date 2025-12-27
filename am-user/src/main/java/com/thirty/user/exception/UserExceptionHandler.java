@@ -2,7 +2,7 @@ package com.thirty.user.exception;
 
 import com.thirty.common.enums.result.GlobalResultCode;
 import com.thirty.common.model.dto.ResultDTO;
-import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.common.enums.result.AuthResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;

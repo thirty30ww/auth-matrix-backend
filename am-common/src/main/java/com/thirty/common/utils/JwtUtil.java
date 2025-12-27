@@ -1,8 +1,8 @@
-package com.thirty.user.utils;
+package com.thirty.common.utils;
 
 import com.thirty.common.exception.BusinessException;
-import com.thirty.user.constant.JwtConstant;
-import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.common.constant.JwtConstant;
+import com.thirty.common.enums.result.AuthResultCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -234,7 +234,7 @@ public class JwtUtil {
      */
     public boolean isAccessTokenInBlacklist(String token) {
         String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.ACCESS_TOKEN_BLACKLIST_SUFFIX + token;
-        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+        return redisTemplate.hasKey(key);
     }
     
     /**
@@ -244,6 +244,6 @@ public class JwtUtil {
      */
     public boolean isRefreshTokenInBlacklist(String token) {
         String key = JwtConstant.TOKEN_BLACKLIST_PREFIX + JwtConstant.REFRESH_TOKEN_BLACKLIST_SUFFIX + token;
-        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+        return redisTemplate.hasKey(key);
     }
 }

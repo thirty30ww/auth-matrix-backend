@@ -1,6 +1,8 @@
 package com.thirty.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.thirty.common.annotation.RateLimiter;
+import com.thirty.common.enums.model.LimitType;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.result.LogResultCode;
@@ -9,7 +11,7 @@ import com.thirty.user.model.dto.LogOperationDTO;
 import com.thirty.user.model.vo.LogLoginVO;
 import com.thirty.user.model.vo.LogOperationVO;
 import com.thirty.user.service.facade.LogFacade;
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/log")
+@RateLimiter(limitType = LimitType.TOKEN)
 public class LogController {
 
     @Resource

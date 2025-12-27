@@ -1,7 +1,7 @@
 package com.thirty.user.filter;
 
-import com.thirty.user.constant.JwtConstant;
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.constant.JwtConstant;
+import com.thirty.common.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

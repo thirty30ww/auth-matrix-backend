@@ -2,6 +2,8 @@ package com.thirty.user.controller;
 
 import com.thirty.common.annotation.OperateLog;
 import com.thirty.common.annotation.OperateModule;
+import com.thirty.common.annotation.RateLimiter;
+import com.thirty.common.enums.model.LimitType;
 import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.user.enums.model.RolesType;
@@ -11,7 +13,7 @@ import com.thirty.user.model.dto.RoleDTO;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.vo.RoleVO;
 import com.thirty.user.service.facade.RoleFacade;
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/role")
 @OperateModule("角色管理")
+@RateLimiter(limitType = LimitType.TOKEN)
 public class RoleController {
     @Resource
     private RoleFacade roleFacade;

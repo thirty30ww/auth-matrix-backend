@@ -1,5 +1,7 @@
 package com.thirty.system.controller;
 
+import com.thirty.common.annotation.RateLimiter;
+import com.thirty.common.enums.model.LimitType;
 import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.system.enums.model.SettingField;
 import com.thirty.system.enums.result.SettingResultCode;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/setting")
+@RateLimiter(limitType = LimitType.TOKEN)
 public class SettingController {
     @Resource
     private SettingService settingService;

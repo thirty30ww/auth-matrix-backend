@@ -1,9 +1,11 @@
 package com.thirty.system.controller;
 
+import com.thirty.common.annotation.RateLimiter;
+import com.thirty.common.enums.model.LimitType;
+import com.thirty.common.model.dto.ResultDTO;
 import com.thirty.system.constant.FileConstant;
 import com.thirty.system.enums.result.FileResultCode;
 import com.thirty.system.service.basic.FileService;
-import com.thirty.common.model.dto.ResultDTO;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,13 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.thirty.system.utils.FileUtil.*;
+import static com.thirty.system.utils.FileUtil.isImage;
+import static com.thirty.system.utils.FileUtil.isImageSizeExceeded;
 
 /**
  * 文件上传
  */
 @RestController
 @RequestMapping("/file")
+@RateLimiter(count = 3, limitType = LimitType.TOKEN)
 public class FileController {
 
     @Resource

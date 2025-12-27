@@ -1,13 +1,13 @@
 package com.thirty.user.service.domain.auth.impl;
 
 import com.thirty.common.exception.BusinessException;
-import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.common.enums.result.AuthResultCode;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.model.vo.JwtVO;
 import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.basic.UserService;
 import com.thirty.user.service.domain.auth.AuthDomain;
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;

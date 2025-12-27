@@ -1,6 +1,6 @@
 package com.thirty.user.config;
 
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.utils.JwtUtil;
 import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
 import org.jspecify.annotations.NonNull;

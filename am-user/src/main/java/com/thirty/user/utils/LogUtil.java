@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thirty.common.annotation.OperateLog;
 import com.thirty.common.annotation.OperateModule;
-import com.thirty.common.model.dto.ResultDTO;
-import com.thirty.user.constant.JwtConstant;
 import com.thirty.common.enums.model.MethodType;
+import com.thirty.common.model.dto.ResultDTO;
+import com.thirty.common.utils.WebUtil;
+import com.thirty.common.constant.JwtConstant;
 import com.thirty.user.enums.model.LoginType;
 import com.thirty.user.model.dto.LoginDTO;
 import com.thirty.user.model.entity.LogLogin;
@@ -32,7 +33,7 @@ public class LogUtil {
     @Resource
     private ObjectMapper objectMapper;
     @Resource
-    private JwtUtil jwtUtil;
+    private com.thirty.common.utils.JwtUtil jwtUtil;
     @Resource
     private UserAgentUtil userAgentUtil;
     @Resource
@@ -56,7 +57,7 @@ public class LogUtil {
         UserAgentUtil.UserAgentInfo userAgentInfo = userAgentUtil.parseUserAgent(userAgent);
 
         loginLog.setType(loginType) // 设置登录类型
-                .setIp(getIpAddress(request))   // 设置登录IP地址
+                .setIp(WebUtil.getIpAddress(request))   // 设置登录IP地址
                 .setDeviceModel(userAgentInfo.getDeviceModel())   // 设置设备型号
                 .setOperatingSystem(userAgentInfo.getOperatingSystem())   // 设置操作系统
                 .setBrowser(userAgentInfo.getBrowser());   // 设置浏览器
@@ -115,7 +116,7 @@ public class LogUtil {
             return;
         }
         // 获取用户Ip，Url，请求方法
-        logOperation.setIp(getIpAddress(request))
+        logOperation.setIp(WebUtil.getIpAddress(request))
                 .setUrl(request.getRequestURI())
                 .setMethod(MethodType.getByCode(request.getMethod().toUpperCase()));
 
@@ -175,25 +176,6 @@ public class LogUtil {
             }
         }
         return null;
-    }
-
-    /**
-     * 获取请求的IP地址
-     * @param request HttpServletRequest对象
-     * @return IP地址
-     */
-    public String getIpAddress(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
     }
 
     /**

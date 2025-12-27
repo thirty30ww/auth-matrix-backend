@@ -3,6 +3,8 @@ package com.thirty.user.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.thirty.common.annotation.OperateLog;
 import com.thirty.common.annotation.OperateModule;
+import com.thirty.common.annotation.RateLimiter;
+import com.thirty.common.enums.model.LimitType;
 import com.thirty.common.enums.model.OperationType;
 import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.common.model.dto.ResultDTO;
@@ -11,7 +13,7 @@ import com.thirty.user.model.dto.*;
 import com.thirty.user.model.entity.Preference;
 import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.facade.UserFacade;
-import com.thirty.user.utils.JwtUtil;
+import com.thirty.common.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,7 @@ import java.util.List;
 @RestController
 @OperateModule("用户管理")
 @RequestMapping("/user")
+@RateLimiter(limitType = LimitType.TOKEN)
 public class UserController {
     @Resource
     private UserFacade userFacade;

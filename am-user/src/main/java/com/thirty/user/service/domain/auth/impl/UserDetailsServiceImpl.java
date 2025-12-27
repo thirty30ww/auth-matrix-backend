@@ -1,6 +1,6 @@
 package com.thirty.user.service.domain.auth.impl;
 
-import com.thirty.user.enums.result.AuthResultCode;
+import com.thirty.common.enums.result.AuthResultCode;
 import com.thirty.user.model.entity.User;
 import com.thirty.user.service.basic.UserRoleService;
 import com.thirty.user.service.basic.UserService;

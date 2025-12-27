@@ -3,7 +3,7 @@ package com.thirty.user.aspect;
 import com.thirty.common.enums.model.Status;
 import com.thirty.common.utils.LogContext;
 import com.thirty.user.annotation.LoginLog;
-import com.thirty.user.constant.JwtConstant;
+import com.thirty.common.constant.JwtConstant;
 import com.thirty.user.enums.model.LoginType;
 import com.thirty.user.model.entity.LogLogin;
 import com.thirty.user.service.basic.LogLoginService;
