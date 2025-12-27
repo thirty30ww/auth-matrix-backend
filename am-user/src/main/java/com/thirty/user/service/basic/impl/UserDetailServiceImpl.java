@@ -3,7 +3,7 @@ package com.thirty.user.service.basic.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.thirty.user.model.entity.UserDetail;
 import com.thirty.user.service.basic.UserDetailService;
-import com.thirty.user.mapper.DetailMapper;
+import com.thirty.user.mapper.UserDetailMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 * @createDate 2025-07-18 12:09:47
 */
 @Service
-public class UserDetailServiceImpl extends ServiceImpl<DetailMapper, UserDetail>
+public class UserDetailServiceImpl extends ServiceImpl<UserDetailMapper, UserDetail>
     implements UserDetailService {
 
     /**

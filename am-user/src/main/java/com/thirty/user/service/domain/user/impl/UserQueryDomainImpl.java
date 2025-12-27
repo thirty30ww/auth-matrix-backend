@@ -1,6 +1,7 @@
 package com.thirty.user.service.domain.user.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.thirty.common.enums.model.DateRangeType;
 import com.thirty.common.exception.BusinessException;
 import com.thirty.common.model.dto.PageQueryDTO;
@@ -8,10 +9,11 @@ import com.thirty.common.model.vo.BaseChartVO;
 import com.thirty.common.utils.DateRangeUtil;
 import com.thirty.user.converter.UserConverter;
 import com.thirty.user.enums.result.UserResultCode;
+import com.thirty.user.mapper.UserMapper;
 import com.thirty.user.model.dto.GetUsersDTO;
-import com.thirty.user.model.entity.UserDetail;
 import com.thirty.user.model.entity.Role;
 import com.thirty.user.model.entity.User;
+import com.thirty.user.model.entity.UserDetail;
 import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.basic.UserDetailService;
 import com.thirty.user.service.basic.UserOnlineService;
@@ -31,6 +33,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserQueryDomainImpl implements UserQueryDomain {
+
+    @Resource
+    private UserMapper userMapper;
 
     @Resource
     private UserService userService;
@@ -86,15 +91,16 @@ public class UserQueryDomainImpl implements UserQueryDomain {
 
     /**
      * 获取用户列表
-     * @param pageQueryDTO 获取用户列表请求参数
+     * @param dto 获取用户列表请求参数
      * @param permittedRoleIds 有权限的角色ID列表
      * @param hasPermissionDisplay 是否仅显示有权限操作的用户
      * @return 用户列表
      */
     @Override
-    public IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> pageQueryDTO, List<Integer> permittedRoleIds, boolean hasPermissionDisplay) {
+    public IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> dto, List<Integer> permittedRoleIds, boolean hasPermissionDisplay) {
         // 获取基础用户列表
-        IPage<UserVO> users = userService.getUsers(pageQueryDTO);
+        IPage<UserVO> page = new Page<>(dto.getPageNum(), dto.getPageSize());
+        IPage<UserVO> users = userMapper.getUsers(page, dto.getParams());
 
         // 设置用户列表中每个用户的hasPermission属性
         setUsersHasPermission(permittedRoleIds, users);

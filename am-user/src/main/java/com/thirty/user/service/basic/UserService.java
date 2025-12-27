@@ -1,11 +1,7 @@
 package com.thirty.user.service.basic;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.thirty.common.model.dto.PageQueryDTO;
-import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.User;
-import com.thirty.user.model.vo.UserVO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,13 +47,6 @@ public interface UserService extends IService<User> {
      * @param userIds 要解封的用户ID列表
      */
     void unbanUsers(List<Integer> userIds);
-
-    /**
-     * 获取用户列表
-     * @param dto 获取用户列表请求参数
-     * @return 用户列表
-     */
-    IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> dto);
 
     /**
      * 根据创建时间范围查询用户

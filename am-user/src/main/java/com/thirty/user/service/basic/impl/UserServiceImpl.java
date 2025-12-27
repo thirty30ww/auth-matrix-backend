@@ -3,14 +3,9 @@ package com.thirty.user.service.basic.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.thirty.common.model.dto.PageQueryDTO;
 import com.thirty.user.mapper.UserMapper;
-import com.thirty.user.model.dto.GetUsersDTO;
 import com.thirty.user.model.entity.User;
-import com.thirty.user.model.vo.UserVO;
 import com.thirty.user.service.basic.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -102,17 +97,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateWrapper.in(User::getId, userIds);
         updateWrapper.set(User::getIsValid, true);
         update(updateWrapper);
-    }
-
-    /**
-     * 获取用户列表
-     * @param dto 获取用户列表请求参数
-     * @return 用户列表
-     */
-    @Override
-    public IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> dto) {
-        IPage<UserVO> page = new Page<>(dto.getPageNum(), dto.getPageSize());
-        return userMapper.getUsers(page, dto.getParams());
     }
 
     /**

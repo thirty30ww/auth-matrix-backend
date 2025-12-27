@@ -28,12 +28,12 @@ public interface UserQueryDomain {
 
     /**
      * 获取用户列表
-     * @param pageQueryDTO 获取用户列表请求参数
+     * @param dto 获取用户列表请求参数
      * @param permittedRoleIds 有权限的角色ID列表
      * @param hasPermissionDisplay 是否仅显示有权限操作的用户
      * @return 用户列表
      */
-    IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> pageQueryDTO, List<Integer> permittedRoleIds, boolean hasPermissionDisplay);
+    IPage<UserVO> getUsers(PageQueryDTO<GetUsersDTO> dto, List<Integer> permittedRoleIds, boolean hasPermissionDisplay);
 
     /**
      * 获取在线用户列表
