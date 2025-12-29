@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.39, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: am_user
 -- ------------------------------------------------------
@@ -15,32 +15,17 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- 使用 am_user 数据库
-USE am_user;
-
 --
--- Table structure for table `userDetail`
+-- Use database `am_user`
 --
 
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_detail` (
-  `id` int NOT NULL COMMENT '用户ID',
-  `name` varchar(255) NOT NULL COMMENT '用户的名字',
-  `avatar_url` varchar(1024) DEFAULT NULL COMMENT '用户头像链接',
-  `sex` tinyint NOT NULL DEFAULT '3' COMMENT '性别(1:男,2:女,3:未知)',
-  `signature` varchar(1024) DEFAULT NULL COMMENT '签名',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户的具体信息';
-/*!40101 SET character_set_client = @saved_cs_client */;
+USE `am_user`;
 
 --
 -- Table structure for table `log_login`
 --
 
+DROP TABLE IF EXISTS `log_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `log_login` (
@@ -56,63 +41,110 @@ CREATE TABLE `log_login` (
   `operate_time` int NOT NULL COMMENT '操作时间',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='登录日志表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `log_operation`
 --
 
+DROP TABLE IF EXISTS `log_operation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `log_operation` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '日志ID',
   `user_id` int DEFAULT NULL COMMENT '用户ID',
-  `module` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的模块',
-  `description` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作描述',
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的类型(SELECT OR UPDATE...)',
-  `method` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的方法(POST OR GET...)',
+  `module` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的模块',
+  `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作描述',
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的类型(SELECT OR UPDATE...)',
+  `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '操作的方法(POST OR GET...)',
   `code` int NOT NULL COMMENT '返回的操作码',
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '请求的URL',
-  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '发出请求的IP地址',
-  `request_param` text COLLATE utf8mb4_unicode_ci COMMENT '请求的参数',
-  `response_param` text COLLATE utf8mb4_unicode_ci COMMENT '相应的参数',
-  `error_message` longtext COLLATE utf8mb4_unicode_ci COMMENT '错误信息',
+  `url` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '请求的URL',
+  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '发出请求的IP地址',
+  `request_param` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '请求的参数',
+  `response_param` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '相应的参数',
+  `error_message` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '错误信息',
   `operate_time` int NOT NULL COMMENT '操作的时间(单位是毫秒)',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6400 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='操作日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=18076 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='操作日志表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `permissionBk`
+-- Table structure for table `notice`
 --
 
+DROP TABLE IF EXISTS `notice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `permissionBk` (
+CREATE TABLE `notice` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '公告ID',
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '公告标题',
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '公告内容',
+  `publisher_id` int NOT NULL COMMENT '发布人ID',
+  `is_top` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否置顶',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='公告表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `permission_bk`
+--
+
+DROP TABLE IF EXISTS `permission_bk`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permission_bk` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
   `name` varchar(1024) NOT NULL COMMENT '菜单名',
   `path` varchar(1024) DEFAULT NULL COMMENT '路由路径',
   `component` varchar(1024) DEFAULT NULL COMMENT '组件路径',
   `type` tinyint NOT NULL DEFAULT '3' COMMENT '页面类型(1目录, 2菜单, 3页面)',
   `permission_code` varchar(1024) DEFAULT NULL COMMENT '权限码',
-  `parent_node_id` int NOT NULL DEFAULT '0' COMMENT '父节点ID(无父结点则为0)',
-  `front_node_id` int NOT NULL DEFAULT '0' COMMENT '该节点的前一个节点ID(若为第1个节点则取0)',
-  `behind_node_id` int NOT NULL DEFAULT '0' COMMENT '该节点的后继节点ID(没有后继则为0)',
+  `parent_id` int NOT NULL DEFAULT '0' COMMENT '父节点ID(无父结点则为0)',
+  `order` int NOT NULL DEFAULT '1' COMMENT '权限排序',
   `icon` varchar(1024) DEFAULT NULL COMMENT '菜单的图标',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_valid` tinyint NOT NULL DEFAULT '1' COMMENT '是否启用(1:是 0:否)',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='页面表';
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='后台权限表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `permission_ft`
+--
+
+DROP TABLE IF EXISTS `permission_ft`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permission_ft` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '前台权限ID',
+  `name` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '权限名',
+  `path` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '路由路径',
+  `component` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '组件路径',
+  `permission_code` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '权限码',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '类型 1-页面 2-按钮',
+  `parent_id` int NOT NULL DEFAULT '0' COMMENT '父权限ID',
+  `order` int NOT NULL DEFAULT '1' COMMENT '权限排序',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `need_verify` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否需要验证登录',
+  `is_valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='前台权限表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `preference`
 --
 
+DROP TABLE IF EXISTS `preference`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `preference` (
@@ -125,13 +157,14 @@ CREATE TABLE `preference` (
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除',
   PRIMARY KEY (`id`),
   UNIQUE KEY `preference_pk` (`field`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户偏好设置';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户偏好设置';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `role`
 --
 
+DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `role` (
@@ -148,41 +181,85 @@ CREATE TABLE `role` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `role_permission`
+-- Table structure for table `role_permission_bk`
 --
 
+DROP TABLE IF EXISTS `role_permission_bk`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role_permission` (
+CREATE TABLE `role_permission_bk` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '角色页面ID',
   `role_id` int NOT NULL COMMENT '角色ID（关联role表）',
-  `permission_id` int NOT NULL COMMENT '页面ID（关联view表）',
+  `permission_id` int NOT NULL COMMENT '页面ID（关联permission_bk~表）',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色页面表';
+) ENGINE=InnoDB AUTO_INCREMENT=308 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色后台权限表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `role_permission_ft`
+--
+
+DROP TABLE IF EXISTS `role_permission_ft`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_permission_ft` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '角色-前台权限ID',
+  `role_id` int NOT NULL COMMENT '角色ID（关联role表）',
+  `permission_id` int NOT NULL COMMENT '前台权限ID（关联permission_ft表）',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色前台权限表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `username` varchar(255) NOT NULL COMMENT '用户名',
   `password` varchar(255) NOT NULL COMMENT '用户密码',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效(1:有效 0:无效)',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户主表';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户主表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_detail`
+--
+
+DROP TABLE IF EXISTS `user_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_detail` (
+  `id` int NOT NULL COMMENT '用户ID',
+  `name` varchar(255) NOT NULL COMMENT '用户的名字',
+  `avatar_url` varchar(1024) DEFAULT NULL COMMENT '用户头像链接',
+  `sex` tinyint NOT NULL DEFAULT '3' COMMENT '性别(1:男,2:女,3:未知)',
+  `signature` varchar(1024) DEFAULT NULL COMMENT '签名',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户的具体信息';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `user_role`
 --
 
+DROP TABLE IF EXISTS `user_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_role` (
@@ -190,9 +267,10 @@ CREATE TABLE `user_role` (
   `user_id` int NOT NULL COMMENT '用户的ID(关联user表)',
   `role_id` int NOT NULL COMMENT '角色的ID(关联role表)',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否被删除(1:是 0:否)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -204,4 +282,4 @@ CREATE TABLE `user_role` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-21 10:22:33
+-- Dump completed on 2025-12-29 14:56:44
