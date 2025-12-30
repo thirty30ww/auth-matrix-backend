@@ -149,7 +149,7 @@ public class RateLimiterAspect {
         String authHeader = request.getHeader(JwtConstant.JWT_HEADER_NAME);
         try {
             return jwtUtil.getUserIdFromAuthHeader(authHeader);
-        } catch (BusinessException e) { // 没有authHeader，返回null
+        } catch (Exception e) { // 没有authHeader，返回null
             return null;
         }
     }
