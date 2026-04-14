@@ -1,0 +1,51 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: your_db_password
+      MYSQL_DATABASE: auth_matrix
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./sql/schema/am_user.sql:/docker-entrypoint-initdb.d/02-am_user-schema.sql
+      - ./sql/schema/am_system.sql:/docker-entrypoint-initdb.d/03-am_system-schema.sql
+      - ./sql/data/am_user.sql:/docker-entrypoint-initdb.d/04-am_user-data.sql
+      - ./sql/data/am_system.sql:/docker-entrypoint-initdb.d/05-am_system-data.sql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pyour_db_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    command: redis-server --requirepass your_redis_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "your_redis_password", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  auth-matrix:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+  redis_data:
